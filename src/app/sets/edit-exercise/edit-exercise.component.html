@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-secondary" (click)="onNavigateBack()">Back</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-danger" (click)="onDeleteExercise()">Delete Exercise</button>
+        </div>
+      </div>
+      <hr>
+
+      <form [formGroup]="setsForm" (ngSubmit)="onSubmit()">
+
+        <!-- ---------------------------------------------------------------- -->
+
+        <label for="exerciseName"> Exercise: </label>
+        <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
+
+        <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
+          <span *ngIf="setsForm.get('exerciseName').errors['charLimit50']">
+            Exercise name maximum 50 characters.
+          </span>
+          <span *ngIf="setsForm.get('exerciseName').errors['required']">
+            Required.
+          </span>
+        </span>
+
+        <hr>
+
+        <!-- --------------------------------------------------------------- -->
+
+        <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
+
+          <div class="col form-group" [formGroup]="setFormGroup">
+
+            <label for="weight"> Weight: </label>
+            <input class="form-control" id="weight" type="number" formControlName="weight">
+
+            <span class="help-block" *ngIf="!formToValidate(i, 'weight').valid && formToValidate(i, 'weight').touched">
+              <span *ngIf="formToValidate(i, 'weight').errors['largeNumbers']">
+                Liar.
+              </span>
+              <span *ngIf="formToValidate(i, 'weight').errors['required']">
+                Required.
+              </span>
+            </span>
+
+            <label for="reps"> Reps: </label>
+            <input class="form-control" id="reps" type="number" formControlName="reps">
+
+            <span class="help-block" *ngIf="!formToValidate(i, 'reps').valid && formToValidate(i, 'reps').touched">
+              <span *ngIf="formToValidate(i, 'reps').errors['negativeNumbers']">
+                Only positive numbers.
+              </span>
+              <span *ngIf="formToValidate(i, 'reps').errors['largeNumbers']">
+                Less than 99.
+              </span>
+              <span *ngIf="formToValidate(i, 'reps').errors['required']">
+                Required.
+              </span>
+            </span>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger" style="float: right;" (click)="onDeleteSet(i)">
+              X
+            </button>
+          </div>
+
+          <hr>
+
+        </div>
+
+        <!-- --------------------------------------------------------------- -->
+
+        <div class="row">
+          <div class="col-xs-3">
+            <button class="btn btn-success" type="button" (click)="onAddSet()">Add Set</button>
+          </div>
+          <div class="col">
+            <button class="btn btn-success" type="submit" [disabled]=!setsForm.valid>SUBMIT</button>
+          </div>
+        </div>
+
+      </form>
+      <br>
+
+    </div>
+  </div>
+</div>
