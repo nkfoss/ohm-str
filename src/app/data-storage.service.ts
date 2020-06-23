@@ -10,11 +10,19 @@ export class DataStorageService {
 
   constructor(private http: HttpClient, private workoutService: WorkoutService) { }
 
-  storeWorkouts() {
+  storeWorkout() {
     const workout = this.workoutService.getWorkout();
     const date = workout.date.toDateString();
     const url = 'https://strengthpractice-7e443.firebaseio.com/' + date + '.json'
 
     this.http.put(url, workout).subscribe(response => { console.log(response) } )
   }
+
+  fetchWorkout() {
+    const date = new Date().toDateString()
+    const url = 'https://strengthpractice-7e443.firebaseio.com/' + date + '.json'
+    this.http.get(url).subscribe(workout => {console.log(workout)})
+  }
+
+  
 }

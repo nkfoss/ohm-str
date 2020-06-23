@@ -30,7 +30,11 @@ export class NavbarComponent {
 	}
 
 	onSaveData() {
-		this.dataStorageService.storeWorkouts();
+		this.dataStorageService.storeWorkout();
+	}
+
+	onFetchData(){
+		this.dataStorageService.fetchWorkout();
 	}
 
 
