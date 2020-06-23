@@ -10,7 +10,8 @@ import { NavbarComponent } from './header/navbar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SetListComponent } from './sets/setList/setList.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
-import { AlertComponent } from './shared/alert.component'
+import { AlertComponent } from './shared/alert.component';
+import { HomeComponent } from './home/home.component'
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AlertComponent } from './shared/alert.component'
     SetItemComponent,
     SetListComponent,
     NavbarComponent,
-    AlertComponent
+    AlertComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
