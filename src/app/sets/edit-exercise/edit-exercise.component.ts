@@ -12,6 +12,7 @@ import { ThrowStmt } from '@angular/compiler';
   styleUrls: ['./edit-exercise.component.css']
 })
 
+
 //=========================================================================
 
 export class EditExerciseComponent implements OnInit {
@@ -19,6 +20,7 @@ export class EditExerciseComponent implements OnInit {
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
+
 
   //======================================================================
 
@@ -34,7 +36,7 @@ export class EditExerciseComponent implements OnInit {
         this.editMode = params['exerciseId'] != null;
         this.initForm()
       }
-    )
+      )
   }
 
   private initForm() {
@@ -69,7 +71,6 @@ export class EditExerciseComponent implements OnInit {
   //=================================================================================
 
   onSubmit() {
-    console.log(this.setsForm.value)
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
@@ -107,8 +108,10 @@ export class EditExerciseComponent implements OnInit {
   }
 
   onNavigateBack() {
-    this.router.navigate(['exercises'])
+    const date = this.workoutService.getFormattedDate()
+    this.router.navigate(['workout/' + date])
   }
+
 
   //-----------------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { DataStorageService } from "../data-storage.service";
+import { WorkoutService } from "../workout.service";
 
 @Component({
 	selector: 'app-navbar',
@@ -20,7 +20,7 @@ export class NavbarComponent {
 	// =====================================================
 
 	constructor(private activatedRoute: ActivatedRoute,
-				private dataStorageService: DataStorageService) {}
+				private workoutService: WorkoutService) {}
 
 	// =====================================================
 
@@ -30,11 +30,12 @@ export class NavbarComponent {
 	}
 
 	onSaveData() {
-		this.dataStorageService.storeWorkout();
+		this.workoutService.storeWorkout();
 	}
 
 	onFetchData(){
-		this.dataStorageService.fetchWorkout();
+		const date = new Date().toDateString();
+		this.workoutService.fetchWorkout(date);
 	}
 
 

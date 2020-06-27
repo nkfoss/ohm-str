@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { WorkoutService } from "../../workout.service";
 import { Exercise } from "../../shared/exercise.model";
 import { Subscription } from "rxjs";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, Params } from "@angular/router";
 
 @Component({
 	selector: 'app-setList',
@@ -10,35 +10,44 @@ import { Router, ActivatedRoute } from "@angular/router";
 	styleUrls: ['./setList.component.css']
 })
 
-// =====================================================
 
+// =====================================================
 
 export class SetListComponent {
 
 	exercises: Exercise[];
-	exercisesSub: Subscription;
+	exerciseSub: Subscription;
 
 	isNavbarCollapsed = true;
-	date: String;
+	date: string;
+
 
 	// =====================================================
 
-
-	constructor(private workoutService: WorkoutService,
-				private router: Router,
-				private activatedRoute: ActivatedRoute) {}
+	constructor(
+		private workoutService: WorkoutService,
+		private router: Router,
+		private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
-		this.exercises = this.workoutService.getExercises();
-		this.exercisesSub = this.workoutService.exerciseUpdated.subscribe(
+
+		// First retrieve date from route, and format it for the service.
+		this.activatedRoute.url.subscribe(url => {
+			this.date = url[1].toString();
+			this.date = this.date.split('%20').join(' ');
+		});
+
+		// Use string to fetch workout, and set up subscription
+		this.workoutService.fetchWorkout(this.date);
+		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
 			(updatedExercises: Exercise[]) => {
 				this.exercises = updatedExercises
 			}
 		)
-		this.date = this.workoutService.getFormattedDate();
 	}
 
-	ngOnDestroy() { this.exercisesSub.unsubscribe() }
+	ngOnDestroy() { if (this.exerciseSub) { this.exerciseSub.unsubscribe() } }
+
 
 	// =====================================================
 
@@ -47,11 +56,11 @@ export class SetListComponent {
 	}
 
 	onNewExercise() {
-		this.router.navigate(['new'], {relativeTo: this.activatedRoute})
+		this.router.navigate(['exercise/new'])
 	}
 
 	onEditExercise(exerciseIndex) {
-		this.router.navigate( [exerciseIndex + '/edit'], {relativeTo: this.activatedRoute} )
+		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
 	}
-	
+
 }

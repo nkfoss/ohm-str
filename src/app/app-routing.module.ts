@@ -2,14 +2,23 @@ import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from "@angular/router"
 import { EditExerciseComponent } from './sets/edit-exercise/edit-exercise.component';
 import { SetListComponent } from './sets/setList/setList.component';
+import { HomeComponent } from './home/home.component';
 
 // ======================================================
 
 const appRoutes: Routes = [
 
-  {path: 'exercises', component: SetListComponent},
-  {path: 'exercises/:exerciseId/edit', component: EditExerciseComponent},
-  {path: 'exercises/new', component: EditExerciseComponent}
+  {path: 'home', component: HomeComponent},
+
+  {path: 'workout/:date', component: SetListComponent },
+
+  {path: 'exercise', 
+  children: [
+    {path: ':exerciseId/edit', component: EditExerciseComponent},
+    {path: 'new', component: EditExerciseComponent}
+  ]},
+
+  // {path: '', redirectTo: 'home', pathMatch: 'full'}
 
 ]
 
