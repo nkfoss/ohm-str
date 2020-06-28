@@ -88,22 +88,6 @@ export class WorkoutService {
     })
   }
 
-  qwe(dateString?: string) {
-
-    let data = [
-      "Jun 19 2020",
-      "Jun 26 2020",
-      "Jun 22 2020",
-      "Jun 20 2020",
-      "Jun 25 2020",
-      "Jun 23 2020"
-    ]
-    let url = 'https://strengthpractice-7e443.firebaseio.com/dates.json'
-    this.http.put(url, data).subscribe((response) => {
-      console.log(response.toString());
-    })
-  }
-
 }
 
  // private workout: Workout = {

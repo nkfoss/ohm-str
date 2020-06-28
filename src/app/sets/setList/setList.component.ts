@@ -65,8 +65,4 @@ export class SetListComponent {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
 	}
 
-	qwe() {
-		this.workoutService.qwe()
-	}
-
 }
