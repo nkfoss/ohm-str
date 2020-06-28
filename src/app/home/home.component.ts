@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StringHandlerService } from '../string-handler.service';
 
 @Component({
   selector: 'app-home',
@@ -12,13 +13,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class HomeComponent {
 
   constructor(private activatedRoute: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private stringHandlerService: StringHandlerService) { }
 
 
   // =============================================================
 
   getTodaysWorkout() {
-    const today = new Date().toDateString();
+    const today = this.stringHandlerService.stripWeekday( 
+      new Date().toDateString()
+    )
     const toNavigate = 'workout/' + today;
     this.router.navigate([toNavigate])
   }

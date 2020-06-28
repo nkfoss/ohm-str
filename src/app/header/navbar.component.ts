@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 import { WorkoutService } from "../workout.service";
 
 @Component({
@@ -19,14 +19,18 @@ export class NavbarComponent {
 
 	// =====================================================
 
-	constructor(private activatedRoute: ActivatedRoute,
-				private workoutService: WorkoutService) {}
+	constructor(private workoutService: WorkoutService,
+				private router: Router) {}
 
 	// =====================================================
 
 	toggleLogStatus() {
 		this.logStatus = !this.logStatus;
 		this.logStatusChanged = true;
+	}
+
+	onNavigateHome() {
+		this.router.navigate(['home'])
 	}
 
 	onSaveData() {

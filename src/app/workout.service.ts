@@ -3,6 +3,7 @@ import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { StringHandlerService } from './string-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ import { HttpClient } from '@angular/common/http';
 
 export class WorkoutService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private stringHandlerService: StringHandlerService) { }
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   workout: Workout = {
@@ -21,7 +23,7 @@ export class WorkoutService {
     notes: "",
     exercises: []
   }
-  
+
 
   //========================================================
 
@@ -35,6 +37,7 @@ export class WorkoutService {
 
   addExercise(newExercise: Exercise) {
     this.workout.exercises.push(newExercise);
+    console.log(this.getExercises())
     this.exerciseUpdated.next(this.getExercises())
   }
 
@@ -58,8 +61,8 @@ export class WorkoutService {
 
 
   storeWorkout() {
-    const url = 'https://strengthpractice-7e443.firebaseio.com/' + this.workout.date + '.json'
-    this.http.put(url, this.workout).subscribe(response => { console.log(response) })
+    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json'
+    this.http.patch(url, this.workout).subscribe(response => { console.log(response) })
   }
 
   fetchWorkout(dateString?: string) {
@@ -69,10 +72,10 @@ export class WorkoutService {
 
     if (dateString) {
       this.workout.date = dateString
-      url = 'https://strengthpractice-7e443.firebaseio.com/' + dateString + '.json'
+      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + dateString + '.json'
     } else {
-      const date = new Date().toDateString()
-      url = 'https://strengthpractice-7e443.firebaseio.com/' + date + '.json'
+      const date = new Date().toLocaleString()
+      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
     this.http.get(url).subscribe((workout: Workout) => {
@@ -81,7 +84,23 @@ export class WorkoutService {
       if (workout) {
         this.workout = workout;
         this.exerciseUpdated.next(this.workout.exercises)
-      } 
+      }
+    })
+  }
+
+  qwe(dateString?: string) {
+
+    let data = [
+      "Jun 19 2020",
+      "Jun 26 2020",
+      "Jun 22 2020",
+      "Jun 20 2020",
+      "Jun 25 2020",
+      "Jun 23 2020"
+    ]
+    let url = 'https://strengthpractice-7e443.firebaseio.com/dates.json'
+    this.http.put(url, data).subscribe((response) => {
+      console.log(response.toString());
     })
   }
 

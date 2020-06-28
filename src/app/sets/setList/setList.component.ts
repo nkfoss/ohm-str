@@ -37,8 +37,10 @@ export class SetListComponent {
 			this.date = this.date.split('%20').join(' ');
 		});
 
-		// Use string to fetch workout, and set up subscription
-		this.workoutService.fetchWorkout(this.date);
+		// If no exercises exist, then fetch them using the string.
+		if (this.workoutService.getExercises().length < 1) {
+			this.workoutService.fetchWorkout(this.date);
+		}
 		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
 			(updatedExercises: Exercise[]) => {
 				this.exercises = updatedExercises
@@ -61,6 +63,10 @@ export class SetListComponent {
 
 	onEditExercise(exerciseIndex) {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
+	}
+
+	qwe() {
+		this.workoutService.qwe()
 	}
 
 }

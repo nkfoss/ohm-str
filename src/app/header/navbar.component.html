@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-light bg-light navbar-expand-lg fixed-top">
 
-    <a href="#" class="navbar-brand">Zeta Strength</a>
+    <a (click)="onNavigateHome()" class="navbar-brand">Zeta Strength</a>
     <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="navbarsDefault"
         aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,7 +11,7 @@
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a href="#" class="nav-link">Homepage</a>
+                <a class="nav-link" id="home" (click)="onNavigateHome()">Homepage</a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" (click)="onFetchData()">Fetch Data</a>
