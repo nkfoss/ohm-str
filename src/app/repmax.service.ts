@@ -13,7 +13,8 @@ export class RepmaxService {
   // ===============================================
 
   calculateMax(reps: number, weight: number) {
-    return weight * (1 + (reps/30));
+    let unrounded = weight * (1 + (reps/30));
+    return +unrounded.toFixed(2)
   }
 
   storeAllMaxes(workout: Workout) {
