@@ -31,7 +31,7 @@ export class RepmaxService {
         ORM: calculatedMax
       }
 
-      const url = 'https://strengthpractice-7e443.firebaseio.com/repmax/' + exercise.exerciseName + '.json'
+      const url = 'https://strengthpractice-7e443.firebaseio.com/repmax/' + exercise.exerciseName.toLowerCase() + '.json'
       this.http.patch(url, entry).subscribe(response => { console.log(response) })
       }
     )

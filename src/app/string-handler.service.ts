@@ -13,4 +13,5 @@ export class StringHandlerService {
     const regex = /^.{4}/gi
     return dateString.replace(regex, '')
   }
+
 }
