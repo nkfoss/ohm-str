@@ -16,7 +16,13 @@
         <!-- ---------------------------------------------------------------- -->
 
         <label for="exerciseName"> Exercise: </label>
-        <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
+        <input class="form-control" id="exerciseName" type="text" 
+        formControlName="exerciseName" [matAutoComplete]="auto">
+        <mat-autocomplete #auto="matAutoComplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{ option }}
+          </mat-option>
+        </mat-autocomplete>
 
         <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
           <span *ngIf="setsForm.get('exerciseName').errors['charLimit50']">

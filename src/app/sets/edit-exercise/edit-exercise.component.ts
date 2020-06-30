@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@ang
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { WorkoutService } from '../../workout.service';
-import { Exercise } from '../../shared/exercise.model'
-import { ThrowStmt } from '@angular/compiler';
+import { Exercise } from '../../shared/exercise.model';
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
 
 @Component({
   selector: 'app-edit-exercise',
@@ -20,6 +20,7 @@ export class EditExerciseComponent implements OnInit {
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
+  filteredOptions = ['qwe', 'asd', 'zxc']
 
 
   //======================================================================

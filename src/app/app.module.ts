@@ -11,7 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { SetListComponent } from './sets/setList/setList.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { AlertComponent } from './shared/alert.component';
-import { HomeComponent } from './home/home.component'
+import { HomeComponent } from './home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { HomeComponent } from './home/home.component'
     ReactiveFormsModule,
     AppRoutingModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
