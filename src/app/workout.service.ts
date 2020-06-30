@@ -4,6 +4,7 @@ import { Workout } from './shared/workout.model'
 import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { StringHandlerService } from './string-handler.service';
+import { RepmaxService } from './repmax.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ import { StringHandlerService } from './string-handler.service';
 export class WorkoutService {
 
   constructor(private http: HttpClient,
-    private stringHandlerService: StringHandlerService) { }
+    private stringHandlerService: StringHandlerService,
+    private repmaxService: RepmaxService) { }
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   workout: Workout = {
@@ -86,6 +88,10 @@ export class WorkoutService {
         this.exerciseUpdated.next(this.workout.exercises)
       }
     })
+  }
+
+  patchMaxes() {
+    this.repmaxService.storeAllMaxes(this.workout)
   }
 
 }

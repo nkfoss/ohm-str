@@ -42,5 +42,9 @@ export class NavbarComponent {
 		this.workoutService.fetchWorkout(date);
 	}
 
+	onPatchMaxes() {
+		this.workoutService.patchMaxes()
+	}
+
 
 }
