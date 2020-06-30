@@ -20,8 +20,6 @@ export class EditExerciseComponent implements OnInit {
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
-  filteredOptions = ['qwe', 'asd', 'zxc']
-
 
   //======================================================================
 
