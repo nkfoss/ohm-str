@@ -3,12 +3,15 @@ import { Routes, RouterModule } from "@angular/router"
 import { EditExerciseComponent } from './sets/edit-exercise/edit-exercise.component';
 import { SetListComponent } from './sets/setList/setList.component';
 import { HomeComponent } from './home/home.component';
+import { AuthComponent } from './auth/auth/auth.component';
 
 // ======================================================
 
 const appRoutes: Routes = [
 
   {path: 'home', component: HomeComponent},
+
+  {path: 'auth', component: AuthComponent},
 
   {path: 'workout/:date', component: SetListComponent },
 

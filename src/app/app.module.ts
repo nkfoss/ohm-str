@@ -12,7 +12,8 @@ import { SetListComponent } from './sets/setList/setList.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { AlertComponent } from './shared/alert.component';
 import { HomeComponent } from './home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthComponent } from './auth/auth/auth.component'
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     SetListComponent,
     NavbarComponent,
     AlertComponent,
-    HomeComponent
+    HomeComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
