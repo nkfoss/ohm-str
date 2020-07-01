@@ -8,8 +8,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class AuthComponent implements OnInit {
 
+  isLoginMode = true;
   public authForm: FormGroup;
   constructor(private formBuilder: FormBuilder) { }
+
+  //=====================================================================
 
   ngOnInit(): void {
     let email = '';
@@ -18,6 +21,12 @@ export class AuthComponent implements OnInit {
       email: this.formBuilder.control(email, [Validators.required, Validators.email]),
       password: this.formBuilder.control(password, [Validators.required])
     })
+  }
+
+  //===================================================================================
+
+  onSwitchMode() {
+    this.isLoginMode  = !this.isLoginMode
   }
 
 }
