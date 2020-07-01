@@ -19,7 +19,7 @@ export class AuthComponent implements OnInit {
     let password = '';
     this.authForm = this.formBuilder.group({
       email: this.formBuilder.control(email, [Validators.required, Validators.email]),
-      password: this.formBuilder.control(password, [Validators.required])
+      password: this.formBuilder.control(password, [Validators.required, Validators.minLength(6)])
     })
   }
 
@@ -28,5 +28,11 @@ export class AuthComponent implements OnInit {
   onSwitchMode() {
     this.isLoginMode  = !this.isLoginMode
   }
+
+  onSubmit() {
+    console.log(this.authForm.value)
+  }
+
+
 
 }

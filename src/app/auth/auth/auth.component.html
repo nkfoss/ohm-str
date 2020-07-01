@@ -4,16 +4,24 @@
 			<form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 				<div class="form-group">
 					<label for="email">E-mail</label>
-					<input id="email" type="email" class="form-control">
+					<input id="email" 
+					type="email" 
+					class="form-control"
+					formControlName="email">
 				</div>
 				<div class="form-group">
 					<label for="password">Password</label>
-					<input id="password" type="password" class="form-control">
+					<input id="password" 
+					type="password" 
+					class="form-control"
+					formControlName="password">
 				</div>
 				<div>
-					<button class="btn btn-primary" type="submit">
+					<button class="btn btn-primary" 
+					type="submit"
+					[disabled]="!authForm.valid">
 						{{ isLoginMode ? 'Login' : 'Sign-Up' }}
-					</button> 
+					</button>
 					|
 					<button class="btn btn-primary" type="button" (click)="onSwitchMode()">
 						{{ isLoginMode ? 'Sign-up' : 'Login'}} Instead
