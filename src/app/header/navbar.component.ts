@@ -20,7 +20,7 @@ export class NavbarComponent {
 	// =====================================================
 
 	constructor(private workoutService: WorkoutService,
-				private router: Router) {}
+		private router: Router) { }
 
 	// =====================================================
 
@@ -37,7 +37,7 @@ export class NavbarComponent {
 		this.workoutService.storeWorkout();
 	}
 
-	onFetchData(){
+	onFetchData() {
 		const date = new Date().toDateString();
 		this.workoutService.fetchWorkout(date);
 	}
@@ -46,5 +46,19 @@ export class NavbarComponent {
 		this.workoutService.patchMaxes()
 	}
 
+	onNavigateToToday() {
+		const today = this.stripWeekday(
+			new Date().toDateString()
+		)
+		const toNavigate = 'workout/' + today;
+		this.router.navigate([toNavigate])
+	}
+
+	stripWeekday(dateString: string) {
+		const regex = /^.{4}/gi
+		return dateString.replace(regex, '')
+	}
 
 }
+
+
