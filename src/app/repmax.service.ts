@@ -21,6 +21,8 @@ export class RepmaxService {
 
     workout.exercises.forEach(exercise => {
 
+      if (exercise.sets.length < 1) { return; } // This is essentially 'continue'... to skip iterations with no sets.
+      
       let maxArray = [];
       exercise.sets.forEach(set => {
         maxArray.push(this.calculateMax(set.reps, set.weight));
