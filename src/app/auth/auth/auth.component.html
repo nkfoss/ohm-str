@@ -1,10 +1,13 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
-			<form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+			<div *ngIf="error" class="alert alert-danger">
+				<p>{{ error }}</p>
+			</div>
 			<div style="text-align: center;">
 				<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 			</div>
+			<form *ngIf="!isLoading" [formGroup]="authForm" (ngSubmit)="onSubmit()">
 				<div class="form-group">
 					<label for="email">E-mail</label>
 					<input id="email" 

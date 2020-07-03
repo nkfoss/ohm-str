@@ -11,11 +11,15 @@ export class AuthComponent implements OnInit {
 
   isLoginMode = true;
   isLoading = false;
+  error: string = null;
+
   public authForm: FormGroup;
-  constructor(private formBuilder: FormBuilder,
-    private authService: AuthService) { }
 
   //=====================================================================
+
+
+  constructor(private formBuilder: FormBuilder,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     let email = '';
@@ -38,6 +42,7 @@ export class AuthComponent implements OnInit {
 
     const email = this.authForm.value.email;
     const password = this.authForm.value.password;
+
     this.isLoading = true;
     if (this.isLoginMode) {
       //...
@@ -45,7 +50,9 @@ export class AuthComponent implements OnInit {
       this.authService.signup(email, password).subscribe(resData => {
         console.log(resData)
         this.isLoading = false;
-        console.log(error.message)
+      }, errorMessage => {    // Our service will give us a message, rather than the error object
+        console.log(errorMessage);
+        this.error = errorMessage;
         this.isLoading = false;
       })
       this.authForm.reset()
