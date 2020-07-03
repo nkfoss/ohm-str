@@ -14,6 +14,7 @@ import { AlertComponent } from './shared/alert.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthComponent } from './auth/auth/auth.component'
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AuthComponent } from './auth/auth/auth.component'
     NavbarComponent,
     AlertComponent,
     HomeComponent,
-    AuthComponent
+    AuthComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,
