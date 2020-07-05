@@ -10,24 +10,21 @@
 
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="nav-link" id="home" (click)="onNavigateHome()">Homepage</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="nav-link" (click)="onNavigateToToday()">Today</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="qwe nav-link" (click)="onSaveData()">Save Data</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="qwe nav-link" (click)="onPatchMaxes()">Patch 1RM</a>
 			</li>
-			<li class="nav-item" style="padding-left: 4px">
+			<li class="nav-item" style="padding-left: 4px" *ngIf="isAuthenticated">
 				<div *ngIf="logStatus === true">
-					<button (click)="toggleLogStatus()" type="button" class="btn btn-primary">Login</button>
-				</div>
-				<div *ngIf="logStatus === false">
-					<button (click)="toggleLogStatus()" type="button" class="btn btn-primary">Logout</button>
+					<button (click)="onLogout()" type="button" class="btn btn-primary">Login</button>
 				</div>
             </li>
         </ul>
