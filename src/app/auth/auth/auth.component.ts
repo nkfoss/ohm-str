@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService, AuthResponseData } from '../auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -38,25 +39,28 @@ export class AuthComponent implements OnInit {
 
   onSubmit() {
 
+    this.error=null;
     if (!this.authForm.valid) { return }
 
     const email = this.authForm.value.email;
     const password = this.authForm.value.password;
 
+    let authObs: Observable<AuthResponseData>
+
     this.isLoading = true;
-    if (this.isLoginMode) {
-      //...
-    } else {
-      this.authService.signup(email, password).subscribe(resData => {
-        console.log(resData)
+    if (this.isLoginMode) { authObs = this.authService.login(email, password) } 
+    else { authObs = this.authService.signup(email, password) }
+
+    authObs.subscribe( 
+      resData => {
+        console.log(resData);
         this.isLoading = false;
-      }, errorMessage => {    // Our service will give us a message, rather than the error object
-        console.log(errorMessage);
-        this.error = errorMessage;
+      }, 
+      errorMessage => {
+        this.error = errorMessage
         this.isLoading = false;
-      })
-      this.authForm.reset()
-    }
+      }
+    )
   }
 
 
