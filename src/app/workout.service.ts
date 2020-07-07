@@ -66,8 +66,15 @@ export class WorkoutService {
 
 
   storeWorkout() {
+    this.convertToLowerCase(this.workout.exercises)
     const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json'
     this.http.patch(url, this.workout).subscribe(response => { console.log(response) })
+  }
+
+  convertToLowerCase(exercises: Exercise[]) {
+    exercises.forEach(exercise => {
+      exercise.exerciseName = exercise.exerciseName.toLowerCase()
+    })
   }
 
   fetchWorkout(dateString?: string) {
