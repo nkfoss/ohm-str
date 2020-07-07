@@ -1,6 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { WorkoutService } from "../workout.service";
+import { AuthService } from "../auth/auth.service";
+import { Subscription } from "rxjs";
 
 @Component({
 	selector: 'app-navbar',
@@ -11,22 +13,36 @@ import { WorkoutService } from "../workout.service";
 // =====================================================
 
 
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
 
+	isAuthenticated = false;
 	isNavbarCollapsed = true;
 	logStatus = true;
 	logStatusChanged = false;
 
+	private userSub: Subscription
+
 	// =====================================================
 
 	constructor(private workoutService: WorkoutService,
-		private router: Router) { }
+		private router: Router,
+		private authService: AuthService) { }
+
+	ngOnInit() {
+		this.userSub = this.authService.userSubject.subscribe(
+			user => {
+				this.isAuthenticated = !!user 
+				// This makes it so if we get a null user, we will assign 'false'
+		})
+		
+	}
+
+	ngOnDestroy() { this.userSub.unsubscribe() }
 
 	// =====================================================
 
-	toggleLogStatus() {
-		this.logStatus = !this.logStatus;
-		this.logStatusChanged = true;
+	onLogout() {
+		this.authService.logout()
 	}
 
 	onNavigateHome() {

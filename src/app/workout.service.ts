@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
 import { Subject, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { StringHandlerService } from './string-handler.service';
 import { RepmaxService } from './repmax.service';
+import { AuthService } from './auth/auth.service';
+import { take, exhaustMap, tap } from 'rxjs/operators';
+import { ThrowStmt } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +18,8 @@ import { RepmaxService } from './repmax.service';
 export class WorkoutService {
 
   constructor(private http: HttpClient,
-    private stringHandlerService: StringHandlerService,
-    private repmaxService: RepmaxService) { }
+    private repmaxService: RepmaxService,
+    private authService: AuthService) { }
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   workout: Workout = {
@@ -80,14 +83,27 @@ export class WorkoutService {
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
-    this.http.get(url).subscribe((workout: Workout) => {
-      // Check to see if there was an entry for this. 
-      // If not, create a new workout object with the specified date.
-      if (workout) {
-        this.workout = workout;
-        this.exerciseUpdated.next(this.workout.exercises)
-      }
-    })
+    return this.http.get(url).pipe(
+      tap((workout: Workout) => {
+        if (workout) {
+          this.workout = workout;
+          this.exerciseUpdated.next(this.workout.exercises)
+        }
+      })
+    )
+    // Exhaust map allows to combine the user and http observables into one.
+    // Exhaust map waits for the previous observable to complete (in this case, the observable that is
+    // returned from 'take'), and then replaces it with the observable created by the lambda function
+    // within exhaustmap.
+
+    // this.http.get(url).subscribe((workout: Workout) => {
+    //   // Check to see if there was an entry for this. 
+    //   // If not, create a new workout object with the specified date.
+    //   if (workout) {
+    //     this.workout = workout;
+    //     this.exerciseUpdated.next(this.workout.exercises)
+    //   }
+    // })
   }
 
   patchMaxes() {

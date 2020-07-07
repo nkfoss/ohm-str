@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { WorkoutService } from './workout.service';
 import { Exercise } from './shared/exercise.model';
 import { Subscription } from 'rxjs';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit{
 
   //========================================
 
-  constructor(private workoutService: WorkoutService) {}
+  constructor(private workoutService: WorkoutService,
+      private authService: AuthService) {}
 
   ngOnInit() {
     this.exercises = this.workoutService.getExercises();
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit{
           this.exercises = updatedSets;
         }
       )
+    this.authService.autoLogin()
     }
 
   }
