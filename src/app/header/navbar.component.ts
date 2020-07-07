@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				this.isAuthenticated = !!user 
 				// This makes it so if we get a null user, we will assign 'false'
 		})
+		
 	}
 
 	ngOnDestroy() { this.userSub.unsubscribe() }
