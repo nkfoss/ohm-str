@@ -23,7 +23,7 @@ const appRoutes: Routes = [
     {path: 'new', component: EditExerciseComponent}
   ]},
 
-  // {path: '', redirectTo: 'home', pathMatch: 'full'}
+  {path: '', redirectTo: 'auth', pathMatch: 'full'}
 
 ]
 
