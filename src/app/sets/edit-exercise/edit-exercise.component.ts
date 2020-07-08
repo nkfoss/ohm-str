@@ -20,6 +20,7 @@ export class EditExerciseComponent implements OnInit {
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
+  stringSetType: string;
 
   //======================================================================
 
@@ -40,6 +41,7 @@ export class EditExerciseComponent implements OnInit {
 
   private initForm() {
     let exerciseName = '';
+    let setType = '';
     let setsControlArray = new FormArray([]);
 
     if (this.editMode) {
@@ -62,6 +64,7 @@ export class EditExerciseComponent implements OnInit {
 
     this.setsForm = this.formBuilder.group({
       exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
+      setType: this.formBuilder.control(setType, null),
       sets: setsControlArray
     })
   }
@@ -76,6 +79,7 @@ export class EditExerciseComponent implements OnInit {
   }
 
   onAddSet() {
+    console.log(this.stringSetType);
     (<FormArray>this.setsForm.get('sets')).push(
       new FormGroup({
         weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),

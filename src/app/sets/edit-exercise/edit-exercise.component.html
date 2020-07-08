@@ -17,7 +17,7 @@
 
         <label for="exerciseName"> Exercise: </label>
         <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
-        
+
         <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
           <span *ngIf="setsForm.get('exerciseName').errors['charLimit50']">
             Exercise name maximum 50 characters.
@@ -26,6 +26,21 @@
             Required.
           </span>
         </span>
+
+        <hr>
+
+        <!-- --------------------------------------------------------------- -->
+
+
+        <label for="setType">Type of set:</label>
+        <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
+          <option value="mtor">MTOR</option>
+          <option value="myo">Myo-fatigue</option>
+          <option value="rpd">Rest-pause Double</option>
+          <option value="cluster">Heavy Cluster</option>
+          <option value="1rm">One-rep Max</option>
+          <option value="regular">Regular ol' Sets</option>
+        </select>
 
         <hr>
 
