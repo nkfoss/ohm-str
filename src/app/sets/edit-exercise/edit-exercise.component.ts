@@ -4,7 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
-import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import * as setTypeInfo from './setTypeInfo.json';
 
 @Component({
   selector: 'app-edit-exercise',
@@ -24,49 +24,71 @@ export class EditExerciseComponent implements OnInit {
 
   //======================================================================
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private workoutService: WorkoutService,
-              private formBuilder: FormBuilder) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private workoutService: WorkoutService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
       (params: Params) => {
-        this.exerciseId = +params['exerciseId'],
+        this.exerciseId = +params['exerciseId'];
         this.editMode = params['exerciseId'] != null;
-        this.initForm()
       }
-      )
+    );
+    this.initForm()
   }
 
+  // =============================================================================//
+
   private initForm() {
+
+    // Initial values of the form fields
     let exerciseName = '';
     let setType = '';
+    let warmupControlArray = new FormArray([]);
     let setsControlArray = new FormArray([]);
 
-    if (this.editMode) {
-      console.log(
-        'edit mode'
-      )
-      const exercise: Exercise = this.workoutService.getExercise(this.exerciseId)
-      exerciseName = exercise.exerciseName
+    if (this.editMode) { //======= EDIT MODE ======///
+
+      // Get the target exercise object
+      const exercise: Exercise = this.workoutService.getExercise(this.exerciseId);
+
+      // From that, define a formgroup to be used with each warmup set
+      if (exercise['warmupSets']) {
+        for (let warmupSet of exercise.warmupSets) {
+          warmupControlArray.push(
+            new FormGroup({
+              weight: new FormControl(warmupSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+              reps: new FormControl(warmupSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
+            }));
+        }
+      }
+
+      // do the same for regular sets
       if (exercise['sets']) {
         for (let set of exercise.sets) {
           setsControlArray.push(
             new FormGroup({
               weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
               reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps])
-            })
-          )
+            }));
         }
       }
-    } // END EDIT MODE
 
+      // Finally, grab the exercise name.
+      exerciseName = exercise.exerciseName;
+    }
+    //====== END EDIT MODE =========//
+
+    // Build the actual form to be used.
     this.setsForm = this.formBuilder.group({
       exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
       setType: this.formBuilder.control(setType, null),
+      warmupSets: warmupControlArray,
       sets: setsControlArray
-    })
+    });
   }
 
 
@@ -78,9 +100,38 @@ export class EditExerciseComponent implements OnInit {
     this.onNavigateBack();
   }
 
-  onAddSet() {
-    console.log(this.stringSetType);
-    (<FormArray>this.setsForm.get('sets')).push(
+  onGetInfo(setType: string) {
+    let message = ''
+    switch (setType) {
+      case "mtor":
+        message = setTypeInfo.mtor;
+        break;
+      case "myo":
+        message = setTypeInfo.myo;
+        break;
+      case "rpd":
+        message = setTypeInfo.rpd;
+        break;
+      case "clusters":
+        message = setTypeInfo.clusters;
+        break;
+      case "warmup":
+        message = setTypeInfo.warmup;
+        break;
+      case "1rm":
+        message = setTypeInfo.rm;
+        break;
+      case "regular":
+        message = setTypeInfo.regular;
+        break;
+    }
+    console.log(message)
+  }
+
+  onAddSet(event) {
+    let controlName = "warmupSets"
+    if (event.target.id === "addSetButton") { controlName = "sets" }
+    (<FormArray>this.setsForm.get(controlName)).push(
       new FormGroup({
         weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
         reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
@@ -116,14 +167,22 @@ export class EditExerciseComponent implements OnInit {
   }
 
 
-  //-----------------------------------------------------------------------------------
+  //- VALIDATION STUFF --------------------------------------------------------------------
 
   get controls() {
     return (<FormArray>this.setsForm.get('sets')).controls;
   }
 
-  formToValidate(index, variable) {
+  // Sets-Form To Validate
+  SFTV(index, variable) {
     let formArray = this.setsForm.get('sets') as FormArray;
+    let formGroup = formArray.at(index).get(variable);
+    return formGroup
+  }
+
+  // Warmups-Form To Validate
+  WFTV(index, variable) {
+    let formArray = this.setsForm.get('warmupSets') as FormArray;
     let formGroup = formArray.at(index).get(variable);
     return formGroup
   }
