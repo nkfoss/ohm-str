@@ -1,0 +1,9 @@
+{
+	"warmup" : "Warm-up sets are typically done before working sets. The heavier your working sets, the more warm-up sets you will do. No matter the working weight, you should do at least two warm-up sets. Each warm-up set’s weight should be 80% of the set it precedes.",
+	"clusters" : "Cluster sets are typically done very heavy. Pick a weight with which you can do 2-4 reps. Do a rep, and rest 15-20 seconds. Repeat until your form breaks down.",
+	"rpd" : "Rest-pause double sets are done heavy. Pick a weight with which you can do 4-6 reps. Do a set to failure. Rest 20 seconds and do another set to failure. Repeat this until you have doubled the total reps from the first set.",
+	"mtor" : "mTOR-production sets rely on slow-negatives and muscle stretching. Use a weight with which you can do 8-10 reps. Perform each rep with a slow negative (3-4 seconds). After failure, hold the stretched position for as long as possible.",
+	"myo" : "Myo-rep sets are for muscle-fiber fatigue. Pick a weight you do 10-12 reps with. Perform a normal set, and then rest for 20 seconds. Then try to perform 3 reps. Repeat the rest/reps until you cannot get 3 reps.",
+	"regular" : "Do I really need to explain this?",
+	"rm" : "This set is used to determine your one-rep max (1rm). It's typically done as close to your estimated 1rm weight as possible."
+}
