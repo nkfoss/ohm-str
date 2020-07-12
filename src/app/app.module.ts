@@ -10,7 +10,7 @@ import { NavbarComponent } from './header/navbar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SetListComponent } from './sets/setList/setList.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
-import { AlertComponent } from './shared/alert.component';
+import { AlertComponent } from './shared/alert/alert.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthComponent } from './auth/auth/auth.component'
