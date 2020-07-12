@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
-import { Subject, BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { StringHandlerService } from './string-handler.service';
+import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { RepmaxService } from './repmax.service';
 import { AuthService } from './auth/auth.service';
-import { take, exhaustMap, tap } from 'rxjs/operators';
-import { ThrowStmt } from '@angular/compiler';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
