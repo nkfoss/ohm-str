@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
-import * as setTypeInfo from './setTypeInfo.json';
 
 @Component({
   selector: 'app-edit-exercise',
@@ -20,6 +18,7 @@ export class EditExerciseComponent implements OnInit {
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
+
   stringSetType: string;
 
   //======================================================================
@@ -28,7 +27,8 @@ export class EditExerciseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private resolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
@@ -98,34 +98,6 @@ export class EditExerciseComponent implements OnInit {
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
-  }
-
-  onGetInfo(setType: string) {
-    let message = ''
-    switch (setType) {
-      case "mtor":
-        message = setTypeInfo.mtor;
-        break;
-      case "myo":
-        message = setTypeInfo.myo;
-        break;
-      case "rpd":
-        message = setTypeInfo.rpd;
-        break;
-      case "clusters":
-        message = setTypeInfo.clusters;
-        break;
-      case "warmup":
-        message = setTypeInfo.warmup;
-        break;
-      case "1rm":
-        message = setTypeInfo.rm;
-        break;
-      case "regular":
-        message = setTypeInfo.regular;
-        break;
-    }
-    console.log(message)
   }
 
   onAddSet(event) {

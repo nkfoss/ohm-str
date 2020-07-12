@@ -41,7 +41,7 @@
           <option value="rpd">Rest-pause Double</option>
           <option value="clusters">Heavy Cluster</option>
           <option value="1rm">One-rep Max</option>
-          <option value="regular">Regular ol' Sets</option>
+          <option value="regular">Regular ol'' Sets</option>
         </select>
 
         <hr>
@@ -53,10 +53,9 @@
             <h3> WARM-UP SETS </h3>
           </div>
           <div class="col-sm-1">
-            <button id="addWarmUpButton" class="btn btn-primary" type="button" (click)="onAddSet($event)">+</button>
-          </div>
-          <div class="col-sm-1">
-            <button class="btn btn-info" type="button" (click)="onGetInfo('warmup')">?</button>
+            <button id="addWarmUpButton" class="btn btn-primary" type="button" (click)="onAddSet($event)">
+              +
+            </button>
           </div>
         </div>
 
@@ -111,9 +110,6 @@
           </div>
           <div class="col-sm-1">
             <button id="addSetButton" class="btn btn-primary" type="button" (click)="onAddSet($event)">+</button>
-          </div>
-          <div class="col-sm-1">
-            <button class="btn btn-info" type="button" (click)="onGetInfo(this.stringSetType)">?</button>
           </div>
         </div>
 
