@@ -82,19 +82,21 @@ export class WorkoutService {
 
     if (dateString) {
       this.workout.date = dateString
+      dateString = dateString.split(' ').join('%20');
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + dateString + '.json'
     } else {
       const date = new Date().toLocaleString()
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
-    return this.http.get(url).pipe(
-      tap((workout: Workout) => {
+    this.http.get(url).subscribe(
+      (workout: Workout) => {
         if (workout) {
+          console.log(workout)
           this.workout = workout;
           this.exerciseUpdated.next(this.workout.exercises)
         }
-      })
+      }
     )
     // Exhaust map allows to combine the user and http observables into one.
     // Exhaust map waits for the previous observable to complete (in this case, the observable that is

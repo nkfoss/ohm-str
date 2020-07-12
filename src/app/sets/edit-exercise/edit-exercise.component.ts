@@ -128,6 +128,11 @@ export class EditExerciseComponent implements OnInit {
     setsArray.removeAt(index);
   }
 
+  onDeleteWarmup(index) {
+    let warmupArray = this.setsForm.controls.warmupSets as FormArray;
+    warmupArray.removeAt(index);
+  }
+
   onDeleteExercise() {
     this.workoutService.deleteExercise(this.exerciseId)
     this.onNavigateBack();

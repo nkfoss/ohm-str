@@ -39,7 +39,10 @@ export class SetListComponent {
 
 		// If no exercises exist, then fetch them using the string.
 		if (this.workoutService.getExercises().length < 1) {
+			console.log(this.date)
 			this.workoutService.fetchWorkout(this.date);
+			console.log('fetch')
+			console.log(this.workoutService.workout)
 		}
 		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
 			(updatedExercises: Exercise[]) => {
@@ -63,6 +66,10 @@ export class SetListComponent {
 
 	onEditExercise(exerciseIndex) {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
+	}
+
+	onSaveWorkout() {
+		this.workoutService.storeWorkout();
 	}
 
 }

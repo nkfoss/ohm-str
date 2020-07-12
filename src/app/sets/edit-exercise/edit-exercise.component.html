@@ -59,31 +59,31 @@
           </div>
         </div>
 
-        <div *ngFor="let warmupFormGroup of setsForm.controls.warmupSets.controls; let i = index" class="row">
+        <div *ngFor="let warmupFormGroup of setsForm.controls.warmupSets.controls; let j = index" class="row">
 
           <div class="col form-group" [formGroup]="warmupFormGroup">
 
             <label for="weight"> Weight: </label>
             <input class="form-control" id="weight" type="number" formControlName="weight">
-            <span class="help-block" *ngIf="!WFTV(i, 'weight').valid && WFTV(i, 'weight').touched">
-              <span *ngIf="WFTV(i, 'weight').errors['largeNumbers']">
+            <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
+              <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
                 Liar.
               </span>
-              <span *ngIf="WFTV(i, 'weight').errors['required']">
+              <span *ngIf="WFTV(j, 'weight').errors['required']">
                 Required.
               </span>
             </span>
 
             <label for="reps"> Reps: </label>
             <input class="form-control" id="reps" type="number" formControlName="reps">
-            <span class="help-block" *ngIf="!WFTV(i, 'reps').valid && WFTV(i, 'reps').touched">
-              <span *ngIf="WFTV(i, 'reps').errors['negativeNumbers']">
+            <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
+              <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
                 Only positive numbers.
               </span>
-              <span *ngIf="WFTV(i, 'reps').errors['largeNumbers']">
+              <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
                 Less than 99.
               </span>
-              <span *ngIf="WFTV(i, 'reps').errors['required']">
+              <span *ngIf="WFTV(j, 'reps').errors['required']">
                 Required.
               </span>
             </span>
@@ -91,7 +91,7 @@
           </div>
 
           <div class="col">
-            <button class="btn btn-danger" style="float: right;" (click)="onDeleteSet(i)">
+            <button class="btn btn-danger" style="float: right;" (click)="onDeleteWarmup(j)">
               X
             </button>
           </div>
