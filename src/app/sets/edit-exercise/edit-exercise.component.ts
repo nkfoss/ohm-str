@@ -15,6 +15,7 @@ import { Exercise } from '../../shared/exercise.model';
 
 export class EditExerciseComponent implements OnInit {
 
+  @ViewChild('setType') selectElement;
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = false; // False when adding new exercise, false when editing existing
@@ -31,14 +32,16 @@ export class EditExerciseComponent implements OnInit {
     private resolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
+    console.log(this.selectElement)
     this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.exerciseId = +params['exerciseId'];
         this.editMode = params['exerciseId'] != null;
       }
     );
-    this.initForm()
+    this.initForm();
   }
+
 
   // =============================================================================//
 
@@ -46,7 +49,7 @@ export class EditExerciseComponent implements OnInit {
 
     // Initial values of the form fields
     let exerciseName = '';
-    let setType = '';
+    this.stringSetType = '';
     let warmupControlArray = new FormArray([]);
     let setsControlArray = new FormArray([]);
 
@@ -54,6 +57,10 @@ export class EditExerciseComponent implements OnInit {
 
       // Get the target exercise object
       const exercise: Exercise = this.workoutService.getExercise(this.exerciseId);
+
+      // Grab the exercise name and setType
+      exerciseName = exercise.exerciseName;
+      this.stringSetType = exercise.setType;
 
       // From that, define a formgroup to be used with each warmup set
       if (exercise['warmupSets']) {
@@ -77,20 +84,18 @@ export class EditExerciseComponent implements OnInit {
         }
       }
 
-      // Finally, grab the exercise name.
-      exerciseName = exercise.exerciseName;
+      
     }
     //====== END EDIT MODE =========//
 
     // Build the actual form to be used.
     this.setsForm = this.formBuilder.group({
       exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
-      setType: this.formBuilder.control(setType, null),
+      setType: this.formBuilder.control(this.stringSetType, null),
       warmupSets: warmupControlArray,
       sets: setsControlArray
     });
   }
-
 
   //=================================================================================
 
