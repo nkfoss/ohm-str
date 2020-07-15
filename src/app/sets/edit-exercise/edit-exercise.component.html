@@ -188,18 +188,16 @@
                     </span>
                   </span>
                 </div>
+
+
+                <div *ngIf="this.getRestPauseFormArray(i)" class="row">
+                  <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls">
+                      <h6>Hello noob</h6>
+                  </div>
+                </div>
                 <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                   Add rest/pause set
                 </button>
-
-                <!-- <div class="row">
-                  <div *ngFor="let restPauseSetForm of setsForm.controls.sets.controls[1].controls">
-
-                  </div>
-                  <button class="btn btn-success" type="button" (click)="debug()">
-                    Add rest/pause set
-                  </button>
-                </div> -->
 
               </div>
 

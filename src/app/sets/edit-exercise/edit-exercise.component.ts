@@ -31,7 +31,6 @@ export class EditExerciseComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    console.log(this.selectElement)
     this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.exerciseId = +params['exerciseId'];
@@ -109,16 +108,15 @@ export class EditExerciseComponent implements OnInit {
   //=================================================================================
 
   addRestPauseSet(index: number) {
-    let targetFormGroup = <FormGroup> (<FormArray> this.setsForm.get('sets')).at(index)
-    if ( !targetFormGroup.get('restPauseSets') ) {
+    let targetFormGroup = this.getSetFormGroup(index)
+    if ( !targetFormGroup.get('restPauseSets') ) 
+    {
       targetFormGroup.addControl(
         'restPauseSets', new FormArray([])
-      )
-    }
+      )}
     (<FormArray> targetFormGroup.get('restPauseSets')).push(
       new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps]),
     )
-    console.log(targetFormGroup)
   }
 
   onSubmit() {
@@ -158,12 +156,17 @@ export class EditExerciseComponent implements OnInit {
     this.router.navigate(['workout/' + date])
   }
 
+  //-- GETTERS AND SETTERS -----------------------------------------------------------------//
+
+  getSetFormGroup(index: number) {
+    return <FormGroup> (<FormArray> this.setsForm.get('sets')).at(index)
+  }
+
+  getRestPauseFormArray(index: number): FormArray {
+    return <FormArray> this.getSetFormGroup(index).get('restPauseSets')
+  }
 
   //- VALIDATION STUFF --------------------------------------------------------------------
-
-  get controls() {
-    return (<FormArray>this.setsForm.get('sets')).controls;
-  }
 
   // Sets-Form To Validate
   SFTV(index, variable) {
