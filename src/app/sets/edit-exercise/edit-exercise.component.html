@@ -113,7 +113,7 @@
           </div>
         </div>
 
-        <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
+        <!-- <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
 
           <div class="col form-group" [formGroup]="setFormGroup">
 
@@ -152,7 +152,69 @@
 
           <hr>
 
+        </div> -->
+
+        <div [ngSwitch]="stringSetType">
+
+          <div *ngSwitchCase="'myo'">
+            <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
+
+              <div class="col form-group" [formGroup]="setFormGroup">
+                <div class="row">
+                  <label for="weight"> Weight: </label>
+                  <input class="form-control" id="weight" type="number" formControlName="weight">
+                  <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
+                    <span *ngIf="SFTV(i, 'weight').errors['largeNumbers']">
+                      Liar.
+                    </span>
+                    <span *ngIf="SFTV(i, 'weight').errors['required']">
+                      Required.
+                    </span>
+                  </span>
+                </div>
+
+                <div class="row">
+                  <label for="reps"> Reps: </label>
+                  <input class="form-control" id="reps" type="number" formControlName="reps">
+                  <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
+                    <span *ngIf="SFTV(i, 'reps').errors['negativeNumbers']">
+                      Only positive numbers.
+                    </span>
+                    <span *ngIf="SFTV(i, 'reps').errors['largeNumbers']">
+                      Less than 99.
+                    </span>
+                    <span *ngIf="SFTV(i, 'reps').errors['required']">
+                      Required.
+                    </span>
+                  </span>
+                </div>
+                <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
+                  Add rest/pause set
+                </button>
+
+                <!-- <div class="row">
+                  <div *ngFor="let restPauseSetForm of setsForm.controls.sets.controls[1].controls">
+
+                  </div>
+                  <button class="btn btn-success" type="button" (click)="debug()">
+                    Add rest/pause set
+                  </button>
+                </div> -->
+
+              </div>
+
+              <div class="col">
+                <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
+                  X
+                </button>
+              </div>
+
+            </div>
+          </div>
+
         </div>
+
+        <hr>
 
         <!-- --------------------------------------------------------------- -->
 

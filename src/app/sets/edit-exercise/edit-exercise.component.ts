@@ -1,4 +1,4 @@
-import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
@@ -18,7 +18,7 @@ export class EditExerciseComponent implements OnInit {
   @ViewChild('setType') selectElement;
   public setsForm: FormGroup;
   exerciseId: number;
-  editMode = false; // False when adding new exercise, false when editing existing
+  editMode = true; // False when adding new exercise, false when editing existing
 
   stringSetType: string;
 
@@ -28,8 +28,7 @@ export class EditExerciseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private formBuilder: FormBuilder,
-    private resolver: ComponentFactoryResolver) { }
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     console.log(this.selectElement)
@@ -39,6 +38,7 @@ export class EditExerciseComponent implements OnInit {
         this.editMode = params['exerciseId'] != null;
       }
     );
+    this.editMode = true;
     this.initForm();
   }
 
@@ -53,12 +53,13 @@ export class EditExerciseComponent implements OnInit {
     let warmupControlArray = new FormArray([]);
     let setsControlArray = new FormArray([]);
 
-    if (this.editMode) { //======= EDIT MODE ======///
+    if (this.editMode) { //=================== EDIT MODE ================///
+      console.log('edit mode')
 
-      // Get the target exercise object
+      // From the target exercise object...
       const exercise: Exercise = this.workoutService.getExercise(this.exerciseId);
 
-      // Grab the exercise name and setType
+      // ...get the exercise name and setType
       exerciseName = exercise.exerciseName;
       this.stringSetType = exercise.setType;
 
@@ -73,20 +74,27 @@ export class EditExerciseComponent implements OnInit {
         }
       }
 
-      // do the same for regular sets
+      // Do the same for regular sets
       if (exercise['sets']) {
         for (let set of exercise.sets) {
-          setsControlArray.push(
-            new FormGroup({
-              weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
-              reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps])
-            }));
+
+          let formGroup = new FormGroup({
+            weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+            reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps]),
+            restPauseSets: new FormArray([])
+          })
+          setsControlArray.push(formGroup);
+
+          // Now check for rest-pause sets...
+          for (let restPauseSet of set.restPauseReps) {
+            (<FormArray> formGroup.get('restPauseSets') ).push
+              (new FormControl(
+                restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight])); }
+
         }
       }
 
-      
-    }
-    //====== END EDIT MODE =========//
+    }  //====== END EDIT MODE ===================//
 
     // Build the actual form to be used.
     this.setsForm = this.formBuilder.group({
@@ -97,7 +105,21 @@ export class EditExerciseComponent implements OnInit {
     });
   }
 
+
   //=================================================================================
+
+  addRestPauseSet(index: number) {
+    let targetFormGroup = <FormGroup> (<FormArray> this.setsForm.get('sets')).at(index)
+    if ( !targetFormGroup.get('restPauseSets') ) {
+      targetFormGroup.addControl(
+        'restPauseSets', new FormArray([])
+      )
+    }
+    (<FormArray> targetFormGroup.get('restPauseSets')).push(
+      new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps]),
+    )
+    console.log(targetFormGroup)
+  }
 
   onSubmit() {
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
@@ -115,18 +137,6 @@ export class EditExerciseComponent implements OnInit {
       })
     )
   }
-
-  // onAddDropSet() {
-  //   let setsArray = this.setsForm.controls.sets as FormArray;
-  //   let arrayLength = setsArray.length;
-
-  //   let newSetGroup: FormGroup = this.formBuilder.group({
-  //     weight: [null, [Validators.required, this.largeWeight]],
-  //     reps: [null, [Validators.required, this.negativeNumbers, this.largeReps]]
-  //   })
-
-  //   setsArray.insert(arrayLength, newSetGroup)
-  // }
 
   onDeleteSet(index) {
     let setsArray = this.setsForm.controls.sets as FormArray;
