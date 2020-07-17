@@ -37,7 +37,6 @@ export class EditExerciseComponent implements OnInit {
         this.editMode = params['exerciseId'] != null;
       }
     );
-    this.editMode = true;
     this.initForm();
   }
 
@@ -158,7 +157,7 @@ export class EditExerciseComponent implements OnInit {
 
   //-- GETTERS AND SETTERS -----------------------------------------------------------------//
 
-  getSetFormGroup(index: number) {
+  getSetFormGroup(index: number): FormGroup {
     return <FormGroup> (<FormArray> this.setsForm.get('sets')).at(index)
   }
 

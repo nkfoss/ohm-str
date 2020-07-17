@@ -190,14 +190,19 @@
                 </div>
 
 
-                <div *ngIf="this.getRestPauseFormArray(i)" class="row">
-                  <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls">
-                      <h6>Hello noob</h6>
+                <div>
+                  <div *ngIf="this.getRestPauseFormArray(i)" class="row">
+                    <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let controlIndex = index">
+                      <div class="row form-group">
+                        <input class="form-control" type="number" [formControl]="restPauseSetForm">
+                      </div>
+                    </div>
                   </div>
+                  <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
+                    Add rest/pause set
+                  </button>
                 </div>
-                <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
-                  Add rest/pause set
-                </button>
+
 
               </div>
 
