@@ -155,6 +155,11 @@ export class EditExerciseComponent implements OnInit {
     this.router.navigate(['workout/' + date])
   }
 
+  isRestPauseSet() {
+    if (this.stringSetType === 'myo' || this.stringSetType === 'rpd') { return true;}
+    return false;
+  }
+
   //-- GETTERS AND SETTERS -----------------------------------------------------------------//
 
   getSetFormGroup(index: number): FormGroup {

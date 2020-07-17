@@ -154,9 +154,8 @@
 
         </div> -->
 
-        <div [ngSwitch]="stringSetType">
+        <div *ngIf="isRestPauseSet()">
 
-          <div *ngSwitchCase="'myo'">
             <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
 
               <div class="col form-group" [formGroup]="setFormGroup">
@@ -213,7 +212,7 @@
               </div>
 
             </div>
-          </div>
+          
 
         </div>
 
