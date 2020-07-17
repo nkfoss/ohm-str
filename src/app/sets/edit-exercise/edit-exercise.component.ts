@@ -84,7 +84,7 @@ export class EditExerciseComponent implements OnInit {
           setsControlArray.push(formGroup);
 
           // Now check for rest-pause sets...
-          for (let restPauseSet of set.restPauseReps) {
+          for (let restPauseSet of set.restPauseSets) {
             (<FormArray> formGroup.get('restPauseSets') ).push
               (new FormControl(
                 restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight])); }
