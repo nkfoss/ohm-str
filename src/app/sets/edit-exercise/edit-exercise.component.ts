@@ -118,6 +118,11 @@ export class EditExerciseComponent implements OnInit {
     )
   }
 
+  deleteRestPauseSet(setFormIndex: number, restPauseIndex: number) {
+    let restPauseArray = <FormArray> this.getSetFormGroup(setFormIndex).get('restPauseSets');
+    restPauseArray.removeAt(restPauseIndex);
+  }
+
   onSubmit() {
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
