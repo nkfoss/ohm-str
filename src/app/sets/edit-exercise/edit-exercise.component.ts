@@ -10,19 +10,18 @@ import { Exercise } from '../../shared/exercise.model';
   styleUrls: ['./edit-exercise.component.css']
 })
 
-
 //=========================================================================
 
 export class EditExerciseComponent implements OnInit {
-
+  //#region fields
   @ViewChild('setType') selectElement;
   public setsForm: FormGroup;
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
-
   stringSetType: string;
+  //#endregion
 
-  //======================================================================
+  //#region lifecycle hooks
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -39,15 +38,16 @@ export class EditExerciseComponent implements OnInit {
     );
     this.initForm();
   }
+  //#endregion
 
-
-  // =============================================================================//
+  // #region intialize form //
 
   private initForm() {
 
     // Initial values of the form fields
     let exerciseName = '';
     this.stringSetType = '';
+    let exerciseNotes = '';
     let warmupControlArray = new FormArray([]);
     let setsControlArray = new FormArray([]);
 
@@ -57,9 +57,10 @@ export class EditExerciseComponent implements OnInit {
       // From the target exercise object...
       const exercise: Exercise = this.workoutService.getExercise(this.exerciseId);
 
-      // ...get the exercise name and setType
+      // ...get the exercise name, setType, and notes
       exerciseName = exercise.exerciseName;
       this.stringSetType = exercise.setType;
+      exerciseNotes = exercise.notes;
 
       // From that, define a formgroup to be used with each warmup set
       if (exercise['warmupSets']) {
@@ -84,11 +85,13 @@ export class EditExerciseComponent implements OnInit {
           setsControlArray.push(formGroup);
 
           // Now check for rest-pause sets...
-          for (let restPauseSet of set.restPauseSets) {
-            (<FormArray> formGroup.get('restPauseSets') ).push
-              (new FormControl(
-                restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight])); }
-
+          if (set.restPauseSets) {
+            for (let restPauseSet of set.restPauseSets) {
+              (<FormArray>formGroup.get('restPauseSets')).push
+                (new FormControl(
+                  restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight]));
+            }
+          }
         }
       }
 
@@ -98,36 +101,40 @@ export class EditExerciseComponent implements OnInit {
     this.setsForm = this.formBuilder.group({
       exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
       setType: this.formBuilder.control(this.stringSetType, null),
+      exerciseNotesControl: this.formBuilder.control(exerciseNotes, null),
       warmupSets: warmupControlArray,
       sets: setsControlArray
     });
   }
+  // #endregion
 
-
-  //=================================================================================
+  //#region set functions
 
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)
-    if ( !targetFormGroup.get('restPauseSets') ) 
-    {
+    if (!targetFormGroup.get('restPauseSets')) {
       targetFormGroup.addControl(
         'restPauseSets', new FormArray([])
-      )}
-    (<FormArray> targetFormGroup.get('restPauseSets')).push(
+      )
+    }
+    (<FormArray>targetFormGroup.get('restPauseSets')).push(
       new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps]),
     )
   }
 
+
   deleteRestPauseSet(setFormIndex: number, restPauseIndex: number) {
-    let restPauseArray = <FormArray> this.getSetFormGroup(setFormIndex).get('restPauseSets');
+    let restPauseArray = <FormArray>this.getSetFormGroup(setFormIndex).get('restPauseSets');
     restPauseArray.removeAt(restPauseIndex);
   }
+
 
   onSubmit() {
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
   }
+
 
   onAddSet(event) {
     let controlName = "warmupSets"
@@ -139,6 +146,7 @@ export class EditExerciseComponent implements OnInit {
       })
     )
   }
+
 
   onDeleteSet(index) {
     let setsArray = this.setsForm.controls.sets as FormArray;
@@ -161,21 +169,23 @@ export class EditExerciseComponent implements OnInit {
   }
 
   isRestPauseSet() {
-    if (this.stringSetType === 'myo' || this.stringSetType === 'rpd') { return true;}
+    if (this.stringSetType === 'myo' || this.stringSetType === 'rpd') { return true; }
     return false;
   }
+  //#endregion 
 
-  //-- GETTERS AND SETTERS -----------------------------------------------------------------//
-
+  // #region GETTERS AND SETTERS -----------------------------------------------------------------//
+  
   getSetFormGroup(index: number): FormGroup {
-    return <FormGroup> (<FormArray> this.setsForm.get('sets')).at(index)
+    return <FormGroup>(<FormArray>this.setsForm.get('sets')).at(index)
   }
 
   getRestPauseFormArray(index: number): FormArray {
-    return <FormArray> this.getSetFormGroup(index).get('restPauseSets')
+    return <FormArray>this.getSetFormGroup(index).get('restPauseSets')
   }
+  //#endregion
 
-  //- VALIDATION STUFF --------------------------------------------------------------------
+  // #region VALIDATION STUFF --------------------------------------------------------------------
 
   // Sets-Form To Validate
   SFTV(index, variable) {
@@ -220,5 +230,5 @@ export class EditExerciseComponent implements OnInit {
       return { 'largeNumbers': true }
     }
   }
-
+  //#endregion
 }

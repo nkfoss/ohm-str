@@ -31,8 +31,8 @@
 
         <hr>
 
-        <!-- SET TYPES --------------------------------------------------->
 
+        <!-- SET TYPES --------------------------------------------------->
 
         <label for="setType">Type of set:</label>
         <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
@@ -43,7 +43,14 @@
           <option value="1rm">One-rep Max</option>
           <option value="regular">Regular ol'' Sets</option>
         </select>
+        <hr>
 
+
+        <!-- SET TYPES --------------------------------------------------->
+
+        <label for="notesInput">Exercise notes:</label>
+        <textarea class="form-control" formControlName="exerciseNotesControl" id="notesInput" rows="6"
+          placeholder="Enter notes if needed."> </textarea>
         <hr>
 
         <!-- WARM-UP SETS ------------------------------------------------>
@@ -113,81 +120,39 @@
           </div>
         </div>
 
-        <!-- <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
+        <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
 
           <div class="col form-group" [formGroup]="setFormGroup">
-
-            <label for="weight"> Weight: </label>
-            <input class="form-control" id="weight" type="number" formControlName="weight">
-
-            <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
-              <span *ngIf="SFTV(i, 'weight').errors['largeNumbers']">
-                Liar.
-              </span>
-              <span *ngIf="SFTV(i, 'weight').errors['required']">
-                Required.
-              </span>
-            </span>
-
-            <label for="reps"> Reps: </label>
-            <input class="form-control" id="reps" type="number" formControlName="reps">
-
-            <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
-              <span *ngIf="SFTV(i, 'reps').errors['negativeNumbers']">
-                Only positive numbers.
-              </span>
-              <span *ngIf="SFTV(i, 'reps').errors['largeNumbers']">
-                Less than 99.
-              </span>
-              <span *ngIf="SFTV(i, 'reps').errors['required']">
-                Required.
-              </span>
-            </span>
-          </div>
-          <div class="col">
-            <button class="btn btn-danger" style="float: right;" (click)="onDeleteSet(i)">
-              X
-            </button>
-          </div>
-
-          <hr>
-
-        </div> -->
-
-        <div *ngIf="isRestPauseSet()">
-
-          <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
-
-            <div class="col form-group" [formGroup]="setFormGroup">
-              <div class="row">
-                <label for="weight"> Weight: </label>
-                <input class="form-control" id="weight" type="number" formControlName="weight">
-                <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
-                  <span *ngIf="SFTV(i, 'weight').errors['largeNumbers']">
-                    Liar.
-                  </span>
-                  <span *ngIf="SFTV(i, 'weight').errors['required']">
-                    Required.
-                  </span>
+            <div class="row">
+              <label for="weight"> Weight: </label>
+              <input class="form-control" id="weight" type="number" formControlName="weight">
+              <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
+                <span *ngIf="SFTV(i, 'weight').errors['largeNumbers']">
+                  Liar.
                 </span>
-              </div>
-
-              <div class="row">
-                <label for="reps"> Reps: </label>
-                <input class="form-control" id="reps" type="number" formControlName="reps">
-                <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
-                  <span *ngIf="SFTV(i, 'reps').errors['negativeNumbers']">
-                    Only positive numbers.
-                  </span>
-                  <span *ngIf="SFTV(i, 'reps').errors['largeNumbers']">
-                    Less than 99.
-                  </span>
-                  <span *ngIf="SFTV(i, 'reps').errors['required']">
-                    Required.
-                  </span>
+                <span *ngIf="SFTV(i, 'weight').errors['required']">
+                  Required.
                 </span>
-              </div>
+              </span>
+            </div>
 
+            <div class="row">
+              <label for="reps"> Reps: </label>
+              <input class="form-control" id="reps" type="number" formControlName="reps">
+              <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
+                <span *ngIf="SFTV(i, 'reps').errors['negativeNumbers']">
+                  Only positive numbers.
+                </span>
+                <span *ngIf="SFTV(i, 'reps').errors['largeNumbers']">
+                  Less than 99.
+                </span>
+                <span *ngIf="SFTV(i, 'reps').errors['required']">
+                  Required.
+                </span>
+              </span>
+            </div>
+
+            <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
                 <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let controlIndex = index">
                   <div class="row form-group">
@@ -205,19 +170,20 @@
               <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                 Add rest/pause set
               </button>
-
-            </div>
-
-            <div class="col">
-              <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
-                X
-              </button>
             </div>
 
           </div>
 
+          <div class="col">
+            <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
+              X
+            </button>
+          </div>
 
         </div>
+
+
+
 
         <hr>
 

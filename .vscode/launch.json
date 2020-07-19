@@ -1,0 +1,14 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "pwa-chrome",
+			"request": "launch",
+			"name": "Open edit-exercise.component.html",
+			"file": "c:\\Users\\fossp\\Desktop\\udemy\\Z-str\\Z-str\\src\\app\\sets\\edit-exercise\\edit-exercise.component.html"
+		}
+	]
+}
