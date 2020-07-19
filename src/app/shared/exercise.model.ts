@@ -5,6 +5,7 @@ export class Exercise {
     constructor(
         public exerciseName: string,
         public setType: string,
+        public notes: string,
         public warmupSets: WeightReps[],
         public sets: WeightReps[]
     ) { }
