@@ -15,7 +15,7 @@
 
       <form [formGroup]="setsForm" (ngSubmit)="onSubmit()">
 
-        <!-- SET NAME ---------------------------------------------------->
+        <!-- #region SET NAME ---------------------------------------------------->
 
         <label for="exerciseName"> Exercise: </label>
         <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
@@ -30,9 +30,9 @@
         </span>
 
         <hr>
+        <!-- #endregion -->
 
-
-        <!-- SET TYPES --------------------------------------------------->
+        <!--#region SET TYPES --------------------------------------------------->
 
         <label for="setType">Type of set:</label>
         <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
@@ -45,15 +45,18 @@
         </select>
         <hr>
 
+        <!-- #endregion -->
 
-        <!-- SET TYPES --------------------------------------------------->
+        <!-- #region NOTES --------------------------------------------------->
 
         <label for="notesInput">Exercise notes:</label>
         <textarea class="form-control" formControlName="exerciseNotesControl" id="notesInput" rows="6"
           placeholder="Enter notes if needed."> </textarea>
         <hr>
 
-        <!-- WARM-UP SETS ------------------------------------------------>
+        <!-- #endregion --------------------------------------------------->
+
+        <!-- #region WARM-UP SETS ------------------------------------------------>
 
         <div class="row">
           <div class="col-sm-8">
@@ -109,7 +112,9 @@
 
         <hr>
 
-        <!-- MAIN SETS ------------------------------------------------------------------>
+        <!-- #endregion --------------------------------------------------->
+
+        <!-- #region MAIN SETS ------------------------------------------------------------------>
 
         <div class="row">
           <div class="col-sm-8">
@@ -152,6 +157,9 @@
               </span>
             </div>
 
+                    
+
+            <!-- #region Rest Pause Sets -->
             <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
                 <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let controlIndex = index">
@@ -171,6 +179,7 @@
                 Add rest/pause set
               </button>
             </div>
+            <!-- #endregion --------------------------------------------------->
 
           </div>
 
@@ -182,12 +191,7 @@
 
         </div>
 
-
-
-
         <hr>
-
-        <!-- --------------------------------------------------------------- -->
 
         <div class="row">
           <!-- <div class="col-xs-3">
@@ -198,7 +202,10 @@
           </div>
         </div>
 
+        <!--#endregion --------------------------------------------------------------- -->
+
       </form>
+      
       <br>
 
     </div>
