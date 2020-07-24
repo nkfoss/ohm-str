@@ -41,6 +41,7 @@
           <option value="rpd">Rest-pause Double</option>
           <option value="clusters">Heavy Cluster</option>
           <option value="1rm">One-rep Max</option>
+          <option value="drop">Drop Set</option>
           <option value="regular">Regular ol'' Sets</option>
         </select>
         <hr>
@@ -127,7 +128,10 @@
 
         <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
 
+          
           <div class="col form-group" [formGroup]="setFormGroup">
+
+            <!-- Weight -->
             <div class="row">
               <label for="weight"> Weight: </label>
               <input class="form-control" id="weight" type="number" formControlName="weight">
@@ -141,6 +145,7 @@
               </span>
             </div>
 
+            <!-- reps -->
             <div class="row">
               <label for="reps"> Reps: </label>
               <input class="form-control" id="reps" type="number" formControlName="reps">
@@ -157,18 +162,44 @@
               </span>
             </div>
 
-                    
+            <!-- #region Drop Sets -->
+            <div *ngIf="this.stringSetType === 'drop'">
+              <div style="margin: 20px">
+                <div *ngFor="let dropSetFormGroup for getDropSetFormArray(i).controls; let dropSetIndex = index">
+                  <div class="row form-group">
+                    <div class="col-md-4">
+                      <label for="dropSetWeight"> Weight: </label>
+                      <input class="form-control" id="dropSetWeight" type="number" formControl="this.getDropSetControl(dropSetFormGroup, 'weight')">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="dropSetReps"> Reps: </label>
+                      <input class="form-control" id="dropSetReps" type="number" formControl="this.getDropSetControl(dropSetFormGroup, 'reps')">
+                    </div>
+                    <div class="col-md-4">
+                      <button class="btn btn-danger" type=button (click)="deleteDropSet(i, dropSetIndex)">
+                        X
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-success" type="button" (click)="addDropSet(i)">
+                Add drop set
+              </button>
+            </div>
+            <!-- #endregion -->
 
             <!-- #region Rest Pause Sets -->
             <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
-                <div *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let controlIndex = index">
+                <div
+                  *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
                   <div class="row form-group">
                     <div class="col-md-6">
                       <input class="form-control" type="number" [formControl]="restPauseSetForm">
                     </div>
                     <div class="col-md-6">
-                      <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, controlIndex)">
+                      <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
                         X
                       </button>
                     </div>
@@ -183,6 +214,7 @@
 
           </div>
 
+          <!-- Reps -->
           <div class="col">
             <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
               X
@@ -205,7 +237,7 @@
         <!--#endregion --------------------------------------------------------------- -->
 
       </form>
-      
+
       <br>
 
     </div>

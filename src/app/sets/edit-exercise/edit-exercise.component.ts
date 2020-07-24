@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
@@ -40,8 +40,6 @@ export class EditExerciseComponent implements OnInit {
   }
   //#endregion
 
-  // #region intialize form //
-
   private initForm() {
 
     // Initial values of the form fields
@@ -80,7 +78,8 @@ export class EditExerciseComponent implements OnInit {
           let formGroup = new FormGroup({
             weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
             reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps]),
-            restPauseSets: new FormArray([])
+            restPauseSets: new FormArray([]),
+            dropSets: new FormArray([])
           })
           setsControlArray.push(formGroup);
 
@@ -92,10 +91,21 @@ export class EditExerciseComponent implements OnInit {
                   restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight]));
             }
           }
+
+          if (set.dropSets) {
+            for (let dropSet of set.dropSets) {
+              (<FormArray>formGroup.get('dropSets')).push
+                (new FormGroup({
+                  weight: new FormControl(dropSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+                  reps: new FormControl(dropSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
+                }))
+            }
+          }
+
         }
       }
-
-    }  //====== END EDIT MODE ===================//
+      //====== END EDIT MODE ===================//
+    }  
 
     // Build the actual form to be used.
     this.setsForm = this.formBuilder.group({
@@ -106,9 +116,8 @@ export class EditExerciseComponent implements OnInit {
       sets: setsControlArray
     });
   }
-  // #endregion
 
-  //#region set functions
+  // #region set functions
 
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)
@@ -122,10 +131,30 @@ export class EditExerciseComponent implements OnInit {
     )
   }
 
+  addDropSet(index: number) {
+    let targetFormGroup = this.getSetFormGroup(index)
+    if (!targetFormGroup.get('dropSets')) {
+      targetFormGroup.addControl(
+        'dropSets', new FormArray([])
+      )
+    }
+    (<FormArray>targetFormGroup.get('dropSets')).push(
+      new FormGroup({
+        weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
+        reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
+      })
+    )
+  }
+
 
   deleteRestPauseSet(setFormIndex: number, restPauseIndex: number) {
-    let restPauseArray = <FormArray>this.getSetFormGroup(setFormIndex).get('restPauseSets');
+    let restPauseArray = <FormArray> this.getSetFormGroup(setFormIndex).get('restPauseSets');
     restPauseArray.removeAt(restPauseIndex);
+  }
+
+  deleteDropSet(setFormIndex: number, dropSetIndex: number) {
+    let dropSetArray = <FormArray>this.getSetFormGroup(setFormIndex).get('dropSets');
+    dropSetArray.removeAt(dropSetIndex);
   }
 
 
@@ -182,6 +211,14 @@ export class EditExerciseComponent implements OnInit {
 
   getRestPauseFormArray(index: number): FormArray {
     return <FormArray>this.getSetFormGroup(index).get('restPauseSets')
+  }
+
+  getDropSetFormArray(index: number): FormArray {
+    return <FormArray>this.getSetFormGroup(index).get('dropSets')
+  }
+
+  getDropSetControl(dropSetFormGroup: AbstractControl, controlName: string) {
+    return (<FormGroup> dropSetFormGroup).get(controlName)
   }
   //#endregion
 
