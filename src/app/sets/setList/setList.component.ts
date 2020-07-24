@@ -35,10 +35,12 @@ export class SetListComponent {
 		this.activatedRoute.url.subscribe(url => {
 			this.date = url[1].toString();
 			this.date = this.date.split('%20').join(' ');
-			this.workoutService.fetchWorkout(this.date);
 		});
 
 		// fetch exercises using the date string.
+		if (this.workoutService.getExercises().length < 1) {
+			this.workoutService.fetchWorkout(this.date);
+		}
 		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
 			(updatedExercises: Exercise[]) => {
 				this.exercises = updatedExercises
