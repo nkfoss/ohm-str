@@ -1,11 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { RepmaxService } from './repmax.service';
-import { AuthService } from './auth/auth.service';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +12,6 @@ import { tap } from 'rxjs/operators';
 
 export class WorkoutService {
 
-  constructor(private http: HttpClient,
-    private repmaxService: RepmaxService,
-    private authService: AuthService) { }
-
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   workout: Workout = {
     date: "",
@@ -27,6 +20,9 @@ export class WorkoutService {
     exercises: []
   }
 
+  // =============================================================
+
+  constructor(private http: HttpClient) { }
 
   //========================================================
 
@@ -39,12 +35,15 @@ export class WorkoutService {
   getExercise(exerciseIndex: number): Exercise { return { ...this.workout.exercises[exerciseIndex] }; }
 
   addExercise(newExercise: Exercise) {
+    newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
     this.workout.exercises.push(newExercise);
     console.log(this.getExercises())
     this.exerciseUpdated.next(this.getExercises())
   }
 
   updateExercise(exerciseIndex: number, newExercise: Exercise) {
+    newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
+    console.log(newExercise.exerciseName);
     this.workout.exercises[exerciseIndex] = newExercise;
     this.exerciseUpdated.next(this.getExercises())
   }
@@ -78,7 +77,6 @@ export class WorkoutService {
   fetchWorkout(dateString?: string) {
 
     let url: string;
-    let fetchedWorkout: Workout;
 
     if (dateString) {
       this.workout.date = dateString
@@ -92,7 +90,6 @@ export class WorkoutService {
     this.http.get(url).subscribe(
       (workout: Workout) => {
         if (workout) {
-          console.log(workout)
           this.workout = workout;
           this.exerciseUpdated.next(this.workout.exercises)
         }
@@ -111,10 +108,6 @@ export class WorkoutService {
     //     this.exerciseUpdated.next(this.workout.exercises)
     //   }
     // })
-  }
-
-  patchMaxes() {
-    this.repmaxService.storeAllMaxes(this.workout)
   }
 
 }
