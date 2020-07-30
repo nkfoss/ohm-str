@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { WorkoutService } from "../workout.service";
 import { AuthService } from "../auth/auth.service";
 import { Subscription } from "rxjs";
+import { RepmaxService } from "../repmax.service";
 
 @Component({
 	selector: 'app-navbar',
@@ -25,6 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	// =====================================================
 
 	constructor(private workoutService: WorkoutService,
+		private repMaxService: RepmaxService,
 		private router: Router,
 		private authService: AuthService) { }
 
@@ -59,7 +61,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	onPatchMaxes() {
-		this.workoutService.patchMaxes()
+		this.repMaxService.storeAllMaxes(this.workoutService.workout)
+	}
+
+	qwe() {
+		this.repMaxService.setTodaysRecords(this.workoutService.getExercises())
 	}
 
 	onNavigateToToday() {

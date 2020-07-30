@@ -1,15 +1,27 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Workout } from './shared/workout.model';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { WorkoutService } from './workout.service';
+import { Exercise } from './shared/exercise.model';
+import { RepMaxRecord } from './shared/repMaxRecord.model';
+import { ThrowStmt } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepmaxService {
 
-  recordMaxes: Object;
+  recordMaxes: JSON;
+  asd: JSON;
+  todaysMaxes: RepMaxRecord[] = [];
+  recordMaxUpdated = new Subject<JSON>();
+  todaysMaxesUpdated = new Subject<RepMaxRecord[]>();
 
-  constructor(private http: HttpClient) { }
+  // ================================================
+
+  constructor(private http: HttpClient,
+    private workoutService: WorkoutService) { }
 
   // ===============================================
 
@@ -38,24 +50,61 @@ export class RepmaxService {
       const url = 'https://strengthpractice-7e443.firebaseio.com/daymaxes/'
         + exercise.exerciseName.toLowerCase() + '/' + entry.date + '.json'
       this.http.patch(url, entry).subscribe(response => { console.log(response) })
-    }
-    )
+    })
   }
 
   fetchRecords() {
-    let url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json'
+    let url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
     this.http.get(url).subscribe(response => {
-      this.recordMaxes = response;
-      console.log(this.recordMaxes)
-    } )
+      this.recordMaxes = <JSON> response;
+    });
+    this.recordMaxUpdated.next( this.recordMaxes )
+
+    let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
+    this.http.get(dayMaxUrl).subscribe(response => {
+      this.asd = <JSON> response;
+    });
   }
 
-  getNames(obj, name) {
+  setTodaysRecords(exercises: Exercise[]) {
+    exercises.forEach(exercise => {
+      let record = new RepMaxRecord( 
+        exercise.exerciseName, this.getRepMaxFromName(this.recordMaxes, exercise.exerciseName) 
+        );
+      this.todaysMaxes.push(record)
+    });
+    this.todaysMaxesUpdated.next(this.todaysMaxes)
+  }
+
+  asdMethod() {
+    for (var exerciseName in this.recordMaxes) {
+      for (var key in this.asd) {
+        if (this.asd.hasOwnProperty(key)) {
+          if (key == exerciseName) {
+            let liftObj = this.asd[key];
+            for (var date in liftObj) {
+              let dayMax = liftObj[date]['ORM'];
+              if (dayMax > this.recordMaxes[exerciseName]) {
+                console.log('bigger! ' + dayMax + ' ' + this.recordMaxes[exerciseName] + ' ' + exerciseName)
+                this.recordMaxes[exerciseName] = dayMax
+              }
+            }
+          }
+        }
+      }
+    }
+    const url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json'
+      this.http.patch(url, this.recordMaxes).subscribe(response => { console.log(response) })
+
+  }
+
+  
+  getRepMaxFromName(obj, name) {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) {
         if (key == name) {
-          console.log(obj[key])
-        }
+          return(obj[key])
+        } 
       }
     }
   }
