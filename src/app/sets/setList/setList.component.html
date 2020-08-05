@@ -13,14 +13,14 @@
 			<tr>
 				<th>Weight</th>
 				<th>Reps</th>
-				<th>Percent of Effort</th>
+				<th>Proportion of Effort</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr *ngFor="let set of exercises[i].sets; let j = index ">
 				<th>{{ set.weight }}</th>
 				<th>{{ set.reps }}</th>
-				<th> maa </th>
+				<th> {{ set.percentEffort }} </th>
 			</tr>
 		</tbody>
 	</table>
