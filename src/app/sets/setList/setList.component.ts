@@ -38,23 +38,20 @@ export class SetListComponent implements OnInit, OnDestroy{
 	ngOnInit() {
 
 		// Setup sub for repMaxes
-		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe((updatedTodaysMaxes: RepMaxRecord[]) => { 
-				this.todaysMaxes = updatedTodaysMaxes;
-				console.log(this.todaysMaxes)
-			}
-		)
-		this.repMaxService.fetchRecords()
+		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
+			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
+		);
+		this.repMaxService.fetchRecords();
 
 		// Set up exercise subscription and fetch workout from DB for this date.
-		this.getDateFromRoute()
+		this.getDateFromRoute();
 		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
-			(updatedExercises: Exercise[]) => { 
-				this.exercises = updatedExercises  
-			 }
-		)
+			(updatedExercises: Exercise[]) => { this.exercises = updatedExercises; }
+		);
 		if (this.workoutService.getExercises().length < 1) { this.workoutService.fetchWorkout(this.date); }
-
-
+		//  NOTE: The above line is important for updating the exercise list after edit/adding exercises.
+		// 	However, it will need to be removed if I ever fix the navigate-to-today problem.
+		//  	(this is the problem where the old exercises (if any) are still displayed after navigating to today)
 
 	}
 
@@ -90,18 +87,5 @@ export class SetListComponent implements OnInit, OnDestroy{
 		let unrounded = weight * (1 + (reps / 30));
 		return +unrounded.toFixed(2)
 	}
-
-	setPercentEffort() {
-		this.exercises.forEach(exercise => {
-			exercise.sets.forEach(set => {
-				
-			})
-		})
-	}
-
-	asd() {
-		this.repMaxService.asdMethod()
-	}
-
 
 }
