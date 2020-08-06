@@ -3,6 +3,7 @@ import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { RepmaxService } from './repmax.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class WorkoutService {
 
   // =============================================================
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private repMaxService: RepmaxService) { }
 
   //========================================================
 
@@ -36,15 +38,29 @@ export class WorkoutService {
 
   addExercise(newExercise: Exercise) {
     newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
+    // Check to see if a repmax record exists...
+    // If not, then calculate it from the sets, and set the record
+    let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName)
+    if (!recordMax) {
+      recordMax = this.repMaxService.calculateBestMax(newExercise);
+      this.repMaxService.recordMaxes[newExercise.exerciseName] = recordMax;
+    }
+    this.repMaxService.setPercentEffort(newExercise, recordMax)
     this.workout.exercises.push(newExercise);
-    console.log(this.getExercises())
     this.exerciseUpdated.next(this.getExercises())
   }
 
-  updateExercise(exerciseIndex: number, newExercise: Exercise) {
-    newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
-    console.log(newExercise.exerciseName);
-    this.workout.exercises[exerciseIndex] = newExercise;
+  updateExercise(exerciseIndex: number, updatedExercise: Exercise) {
+    updatedExercise.exerciseName = updatedExercise.exerciseName.toLowerCase();
+    // Check to see if a repmax record exists...
+    // If not, then calculate it from the sets
+    let recordMax = this.repMaxService.getRecordMaxFromName(updatedExercise.exerciseName)
+    if (!recordMax) {
+      recordMax = this.repMaxService.calculateBestMax(updatedExercise);
+      this.repMaxService.recordMaxes[updatedExercise.exerciseName] = recordMax;
+    }
+    this.repMaxService.setPercentEffort(updatedExercise, recordMax);
+    this.workout.exercises[exerciseIndex] = updatedExercise;
     this.exerciseUpdated.next(this.getExercises())
   }
 
@@ -76,8 +92,8 @@ export class WorkoutService {
 
   fetchWorkout(dateString?: string) {
 
+    // Set the url. If no datestring provided, use current date.
     let url: string;
-
     if (dateString) {
       this.workout.date = dateString
       dateString = dateString.split(' ').join('%20');
@@ -87,76 +103,60 @@ export class WorkoutService {
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
+
     this.http.get(url).subscribe(
       (workout: Workout) => {
         if (workout) {
+          workout.exercises.forEach(exercise => {
+
+            // Check each exercise has a recordMax. If not, then calculate and set it.
+            let recordMax = this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
+            if (!recordMax) {
+              recordMax = this.repMaxService.calculateBestMax(exercise);
+              this.repMaxService.recordMaxes[exercise.exerciseName] = recordMax;
+            }
+
+            // Set the percent effort.
+            this.repMaxService.setPercentEffort(exercise, recordMax)
+          })
+
+          // Set the official workout and send out the subscription.
           this.workout = workout;
           this.exerciseUpdated.next(this.workout.exercises)
         }
       }
     )
-    // Exhaust map allows to combine the user and http observables into one.
-    // Exhaust map waits for the previous observable to complete (in this case, the observable that is
-    // returned from 'take'), and then replaces it with the observable created by the lambda function
-    // within exhaustmap.
-
-    // this.http.get(url).subscribe((workout: Workout) => {
-    //   // Check to see if there was an entry for this. 
-    //   // If not, create a new workout object with the specified date.
-    //   if (workout) {
-    //     this.workout = workout;
-    //     this.exerciseUpdated.next(this.workout.exercises)
-    //   }
-    // })
   }
+
+  // Note...test runtime for this in two different condition
+  // 1) Calling repMaxService inside the foreach
+  // 2) Calling repMaxService, and its own method uses forEach (current implementation)
+  setPercentEffort() {
+    this.workout.exercises.forEach(exercise => {
+      this.repMaxService.setPercentEffort(
+        exercise, this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
+        );
+    })
+    this.exerciseUpdated.next(this.workout.exercises)
+  }
+
+
+  getExercisesByName(exerciseName: string) {
+    let exercises = this.workout.exercises
+    exercises.forEach((exercise: Exercise) => {
+      if (exercise.exerciseName == exerciseName) {
+        return exercise;
+      } else {
+        return null;
+      }
+    })
+  }
+
+  checkExerciseHasRecord(exerciseName: string) {
+    return this.repMaxService.getRecordMaxFromName(exerciseName)
+  }
+
+
 
 }
 
- // private workout: Workout = {
-  //   date: new Date(),
-  //   category: "category placeholder",
-  //   notes: "notes placeholder......",
-  //   exercises: [
-  //     { exerciseName: "Bench Press",
-  //       sets: [
-  //         { weight: 45, reps: 12 },
-  //         { weight: 95, reps: 10 },
-  //         { weight: 135, reps: 5 },
-  //         { weight: 155, reps: 7 } 
-  //       ] 
-  //     },
-  //       { exerciseName: "Side Lateral Raise",
-  //       sets: [
-  //         { weight: 15, reps: 10 },
-  //         { weight: 15, reps: 10 },
-  //         { weight: 17.5, reps: 8 }
-  //       ]
-  //     },
-  //     { exerciseName: "Tricep Pressdown",
-  //       sets: [
-  //         { weight: 42.5, reps: 10 },
-  //         { weight: 50, reps: 10 },
-  //         { weight: 60, reps: 10 },
-  //         { weight: 60, reps: 1 }
-  //       ]
-  //     },
-  //     { exerciseName: "Leg Press",
-  //       sets: [
-  //         { weight: 180, reps: 8 },
-  //         { weight: 215, reps: 11 },
-  //         { weight: 240, reps: 8 },
-  //         { weight: 270, reps: 10 },
-  //         { weight: 270, reps: 3 },
-  //         { weight: 270, reps: 3 },
-  //         { weight: 270, reps: 3 },
-  //       ]
-  //     },
-  //     { exerciseName: "Cable Crunches",
-  //       sets: [
-  //         { weight: 90, reps: 10 },
-  //         { weight: 110, reps: 9 },
-  //         { weight: 100, reps: 2 },
-  //       ]
-  //     },
-  //   ]
-  // }

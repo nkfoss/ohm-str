@@ -61,12 +61,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	onPatchMaxes() {
-		this.repMaxService.storeAllMaxes(this.workoutService.workout)
+		this.repMaxService.patchDayMaxes(this.workoutService.workout)
 	}
 
-	qwe() {
-		this.repMaxService.setTodaysRecords(this.workoutService.getExercises())
-	}
+	// Button method for posting dayMaxes to database
+	// qwe() {
+	// 	this.repMaxService.setTodaysRecords(this.workoutService.workout)
+	// }
 
 	onNavigateToToday() {
 		const today = this.stripWeekday(
