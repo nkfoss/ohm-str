@@ -58,7 +58,7 @@ export class EditExerciseComponent implements OnInit {
       // ...get the exercise name, setType, and notes
       exerciseName = exercise.exerciseName;
       this.stringSetType = exercise.setType;
-      exerciseNotes = exercise.notes;
+      exerciseNotes = exercise.exerciseNotes;
 
       // From that, define a formgroup to be used with each warmup set
       if (exercise['warmupSets']) {
@@ -111,7 +111,7 @@ export class EditExerciseComponent implements OnInit {
     this.setsForm = this.formBuilder.group({
       exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
       setType: this.formBuilder.control(this.stringSetType, null),
-      exerciseNotesControl: this.formBuilder.control(exerciseNotes, null),
+      exerciseNotes: this.formBuilder.control(exerciseNotes, null),
       warmupSets: warmupControlArray,
       sets: setsControlArray
     });
@@ -159,6 +159,7 @@ export class EditExerciseComponent implements OnInit {
 
 
   onSubmit() {
+    console.log("Form value = " + JSON.stringify(this.setsForm.value) )
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
