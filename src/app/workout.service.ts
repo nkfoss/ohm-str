@@ -104,6 +104,7 @@ export class WorkoutService {
     }
 
 
+
     this.http.get(url).subscribe(
       (workout: Workout) => {
         if (workout) {
@@ -122,6 +123,7 @@ export class WorkoutService {
 
           // Set the official workout and send out the subscription.
           this.workout = workout;
+          console.log('fetched workout: ' + workout)
           this.exerciseUpdated.next(this.workout.exercises)
         }
       }
