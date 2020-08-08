@@ -82,11 +82,19 @@ export class RepmaxService {
   // This fetches day-records AND all-time records. [SetListComponent: ngOnInit]
   fetchRecords() {
     let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
-    this.http.get(recordMaxUrl).subscribe( response => { this.recordMaxes = <JSON> response; });
+    this.http.get(recordMaxUrl).subscribe( response => {
+      console.log("Fetching record maxes...");
+      console.log(response);
+      this.recordMaxes = <JSON> response; 
+    });
     this.recordMaxUpdated.next(this.recordMaxes)
 
     let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
-    this.http.get(dayMaxUrl).subscribe( response => { this.dayMaxes = <JSON>response; });
+    this.http.get(dayMaxUrl).subscribe( response => { 
+      console.log("Fetching day maxes...");
+      console.log(response);
+      this.dayMaxes = <JSON>response; 
+    });
   }
 
   // Takes an exercise and record max...then calculates/sets percent effort based on a recordMax
