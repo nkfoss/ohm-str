@@ -110,10 +110,11 @@ export class RepmaxService {
     if (exercise.sets) {
       exercise.sets.forEach(set => {
         let setMax = this.calculateMax(set.reps, set.weight);
-        set.percentEffort = setMax / recordMax;
+        set.percentEffort = Number((setMax / recordMax).toFixed(2));
       })
     }
   }
+
 
 
 }
