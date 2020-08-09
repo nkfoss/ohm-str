@@ -41,6 +41,7 @@ export class WorkoutService {
     // Check to see if a repmax record exists...
     // If not, then calculate it from the sets, and set the record
     let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName)
+    console.log("Record max " + recordMax)
     if (!recordMax) {
       recordMax = this.repMaxService.calculateBestMax(newExercise);
       this.repMaxService.recordMaxes[newExercise.exerciseName] = recordMax;
@@ -130,8 +131,13 @@ export class WorkoutService {
         
         else {
           // If no workout is returned, then we just set the displayed data to null
-          let emptyExercises: Exercise[];
-          this.workout = new Workout(dateString, null, null, emptyExercises);
+          let emptyWorkout: Workout = {
+            date: dateString,
+            category: "",
+            notes: "",
+            exercises: []
+          }
+          this.workout = emptyWorkout;
           this.exerciseUpdated.next(this.workout.exercises);
         }
       }

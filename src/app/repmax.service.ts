@@ -47,7 +47,7 @@ export class RepmaxService {
     let records = this.recordMaxes
     for (var key in records) {
       if (records.hasOwnProperty(key)) {
-        if (key == name) {
+        if (key == exerciseName) {
           return (records[key])
         }
       }
