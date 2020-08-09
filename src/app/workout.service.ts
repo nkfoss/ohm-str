@@ -97,8 +97,8 @@ export class WorkoutService {
     let url: string;
     if (dateString) {
       this.workout.date = dateString
-      dateString = dateString.split(' ').join('%20');
-      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + dateString + '.json'
+      let URLdateString = dateString.split(' ').join('%20');
+      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
     } else {
       const date = new Date().toLocaleString()
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
@@ -130,8 +130,9 @@ export class WorkoutService {
         
         else {
           // If no workout is returned, then we just set the displayed data to null
-          this.workout = null;
-          this.exerciseUpdated.next(null);
+          let emptyExercises: Exercise[];
+          this.workout = new Workout(dateString, null, null, emptyExercises);
+          this.exerciseUpdated.next(this.workout.exercises);
         }
       }
     )
