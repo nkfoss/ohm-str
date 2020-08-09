@@ -36,7 +36,6 @@ export class SetListComponent implements OnInit, OnDestroy{
 		private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
-
 		// Setup sub for repMaxes
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
 			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }

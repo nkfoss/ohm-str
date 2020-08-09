@@ -69,12 +69,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	// 	this.repMaxService.setTodaysRecords(this.workoutService.workout)
 	// }
 
+	
 	onNavigateToToday() {
 		const today = this.stripWeekday(
 			new Date().toDateString()
 		)
 		const toNavigate = 'workout/' + today;
-		this.router.navigate([toNavigate])
+		this.router.navigate([toNavigate]);
+		this.workoutService.fetchWorkout(today)
 	}
 
 	stripWeekday(dateString: string) {

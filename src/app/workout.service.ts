@@ -92,6 +92,7 @@ export class WorkoutService {
 
   fetchWorkout(dateString?: string) {
 
+    console.log("METHOD: fetchWorkout")
     // Set the url. If no datestring provided, use current date.
     let url: string;
     if (dateString) {
@@ -103,11 +104,11 @@ export class WorkoutService {
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
-
-
+    console.log("URL " + url)
     this.http.get(url).subscribe(
       (workout: Workout) => {
         if (workout) {
+          console.log('workout fetched')
           workout.exercises.forEach(exercise => {
 
             // Check each exercise has a recordMax. If not, then calculate and set it.
@@ -125,6 +126,12 @@ export class WorkoutService {
           this.workout = workout;
           console.log('fetched workout: ' + workout)
           this.exerciseUpdated.next(this.workout.exercises)
+        } 
+        
+        else {
+          // If no workout is returned, then we just set the displayed data to null
+          this.workout = null;
+          this.exerciseUpdated.next(null);
         }
       }
     )
