@@ -24,8 +24,8 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     NavbarComponent,
     HomeComponent,
     AuthComponent,
-    LoadingSpinnerComponent,
-  ],
+    LoadingSpinnerComponent
+    ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
@@ -37,6 +37,6 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent] // This defines which component(s) is available in the index.html file.
 })
 export class AppModule { }

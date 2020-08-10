@@ -3,11 +3,11 @@
 
     <a (click)="onNavigateHome()" class="navbar-brand">Zeta Strength</a>
     <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="navbarsDefault"
-        aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+        aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation" >
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
+    <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault" >
         <ul class="navbar-nav ml-auto">
             <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="nav-link" id="home" (click)="onNavigateHome()">Homepage</a>
