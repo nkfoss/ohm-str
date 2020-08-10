@@ -3,6 +3,7 @@ import { WorkoutService } from './workout.service';
 import { Exercise } from './shared/exercise.model';
 import { Subscription } from 'rxjs';
 import { AuthService } from './auth/auth.service';
+import { RepmaxService } from './repmax.service';
 
 @Component({
   selector: 'app-root',
@@ -20,16 +21,12 @@ export class AppComponent implements OnInit{
   //========================================
 
   constructor(private workoutService: WorkoutService,
-      private authService: AuthService) {}
+      private authService: AuthService,
+      private repMaxService: RepmaxService) {}
 
   ngOnInit() {
-    this.exercises = this.workoutService.getExercises();
-    this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
-        (updatedSets: Exercise[]) => {
-          this.exercises = updatedSets;
-        }
-      )
     this.authService.autoLogin()
+    this.repMaxService.fetchRecords()
     }
 
   }

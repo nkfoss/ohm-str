@@ -40,7 +40,6 @@ export class SetListComponent implements OnInit, OnDestroy{
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
 			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
 		);
-		this.repMaxService.fetchRecords();
 
 		// Set up exercise subscription and fetch workout from DB for this date.
 		this.getDateFromRoute();
