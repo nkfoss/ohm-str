@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppComponent } from './app.component';
 import { EditExerciseComponent } from './sets/edit-exercise/edit-exercise.component';
@@ -15,6 +15,8 @@ import { AuthComponent } from './auth/auth/auth.component'
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
+import { MatInputModule } from '@angular/material/input'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,17 +27,19 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     HomeComponent,
     AuthComponent,
     LoadingSpinnerComponent
-    ],
+  ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatInputModule
+
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
   ],
   bootstrap: [AppComponent] // This defines which component(s) is available in the index.html file.
 })
