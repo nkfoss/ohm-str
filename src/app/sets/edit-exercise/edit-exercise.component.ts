@@ -1,8 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+//======================================================================
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): 
+  boolean {
+    const isSubmitted = form && form.submitted
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  };
+}
 
 @Component({
   selector: 'app-edit-exercise',
@@ -19,6 +30,7 @@ export class EditExerciseComponent implements OnInit {
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
   stringSetType: string;
+  mather = new MyErrorStateMatcher();
   //#endregion
 
   //#region lifecycle hooks

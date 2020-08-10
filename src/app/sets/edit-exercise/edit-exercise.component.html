@@ -17,17 +17,32 @@
 
         <!-- #region SET NAME ---------------------------------------------------->
 
-        <label for="exerciseName"> Exercise: </label>
-        <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
+        <mat-form-field appearance="outline">
+          <mat-label>Exercise name</mat-label>
+          <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift"
+            matInput [errorStateMatcher]="matcher">
+          <!-- <div *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched"> -->
+            <mat-error *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['charLimit50']">
+              Maximum 50 characters.
+            </mat-error>
+            <mat-error *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['required']">
+              Required.
+            </mat-error>
+          <!-- </div> -->
+        </mat-form-field>
 
-        <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
+        <!-- <label for="exerciseName"> Exercise: </label>
+        <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
+         -->
+
+        <!-- <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
           <span *ngIf="setsForm.get('exerciseName').errors['charLimit50']">
             Exercise name maximum 50 characters.
           </span>
           <span *ngIf="setsForm.get('exerciseName').errors['required']">
             Required.
           </span>
-        </span>
+        </span> -->
 
         <hr>
         <!-- #endregion -->
@@ -127,7 +142,7 @@
 
         <div *ngFor="let setFormGroup of this.getSetControls(); let i = index" class="row">
 
-          
+
           <div class="col form-group" [formGroup]="setFormGroup">
 
             <!-- Weight -->
@@ -168,11 +183,13 @@
                   <div class="row form-group">
                     <div class="col-md-4">
                       <label for="dropSetWeight"> Weight: </label>
-                      <input class="form-control" id="dropSetWeight" type="number" formControl="this.getDropSetControl(dropSetFormGroup, 'weight')">
+                      <input class="form-control" id="dropSetWeight" type="number"
+                        formControl="this.getDropSetControl(dropSetFormGroup, 'weight')">
                     </div>
                     <div class="col-md-4">
                       <label for="dropSetReps"> Reps: </label>
-                      <input class="form-control" id="dropSetReps" type="number" formControl="this.getDropSetControl(dropSetFormGroup, 'reps')">
+                      <input class="form-control" id="dropSetReps" type="number"
+                        formControl="this.getDropSetControl(dropSetFormGroup, 'reps')">
                     </div>
                     <div class="col-md-4">
                       <button class="btn btn-danger" type=button (click)="deleteDropSet(i, dropSetIndex)">
