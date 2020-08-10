@@ -239,6 +239,14 @@ export class EditExerciseComponent implements OnInit {
     return formGroup
   }
 
+  getSetControls() {
+    return (<FormArray> this.setsForm.controls.sets).controls
+  }
+
+  getWarmupSetControls() {
+    return (<FormArray> this.setsForm.controls.warmupSets).controls
+  }
+
   charLimit50(control: FormControl): { [s: string]: boolean } {
     if (String(control.value).length > 50) {
       return { 'charLimit50': true }

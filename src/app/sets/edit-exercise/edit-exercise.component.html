@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div *ngFor="let warmupFormGroup of setsForm.controls.warmupSets.controls; let j = index" class="row">
+        <div *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" class="row">
 
           <div class="col form-group" [formGroup]="warmupFormGroup">
 
@@ -125,7 +125,7 @@
           </div>
         </div>
 
-        <div *ngFor="let setFormGroup of setsForm.controls.sets.controls; let i = index" class="row">
+        <div *ngFor="let setFormGroup of this.getSetControls(); let i = index" class="row">
 
           
           <div class="col form-group" [formGroup]="setFormGroup">
