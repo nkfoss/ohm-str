@@ -6,6 +6,7 @@
 	<div class="row">
 		<h4 style="margin-right: 10px;"(click)="onEditExercise(i)" class="exercise-title">{{ exercise.exerciseName }}</h4>
 		<h4> ( {{ exercise.setType }} )</h4>
+		<h4> ( recordMax = {{ getRecordMax(exercise.exerciseName) }} ) </h4>
 	</div>
 
 	<table class="table table-bordered">
