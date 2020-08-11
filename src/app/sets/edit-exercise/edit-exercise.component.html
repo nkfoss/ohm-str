@@ -19,16 +19,16 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Exercise name</mat-label>
-          <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift"
-            matInput [errorStateMatcher]="matcher">
-          <!-- <div *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched"> -->
-            <mat-error *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['charLimit50']">
-              Maximum 50 characters.
-            </mat-error>
-            <mat-error *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['required']">
-              Required.
-            </mat-error>
-          <!-- </div> -->
+          <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift" matInput
+            [errorStateMatcher]="matcher">
+          <mat-error
+            *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['charLimit50']">
+            Maximum 50 characters.
+          </mat-error>
+          <mat-error
+            *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['required']">
+            Required.
+          </mat-error>
         </mat-form-field>
 
         <!-- <label for="exerciseName"> Exercise: </label>
@@ -49,7 +49,20 @@
 
         <!--#region SET TYPES --------------------------------------------------->
 
-        <label for="setType">Type of set:</label>
+        <mat-form-field appearance="fill">
+          <mat-label>Set Type</mat-label>
+          <mat-select [(value)]="stringSetType" formControlName="setType">
+            <mat-option value="mtor">MTOR</mat-option>
+            <mat-option value="myo">Myo-fatigue</mat-option>
+            <mat-option value="rpd">Rest-pause Double</mat-option>
+            <mat-option value="clusters">Heavy Cluster</mat-option>
+            <mat-option value="1rm">One-rep Max</mat-option>
+            <mat-option value="drop">Drop Set</mat-option>
+            <mat-option value="regular">Regular ol'' Sets</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- <label for="setType">Type of set:</label>
         <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
           <option value="mtor">MTOR</option>
           <option value="myo">Myo-fatigue</option>
@@ -58,7 +71,7 @@
           <option value="1rm">One-rep Max</option>
           <option value="drop">Drop Set</option>
           <option value="regular">Regular ol'' Sets</option>
-        </select>
+        </select> -->
         <hr>
 
         <!-- #endregion -->
@@ -208,6 +221,7 @@
             <!-- #region Rest Pause Sets -->
             <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
+                <div *ngIf="this.getRestPauseFormArray(i)">
                 <div
                   *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
                   <div class="row form-group">
@@ -221,6 +235,7 @@
                     </div>
                   </div>
                 </div>
+              </div>
               </div>
               <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                 Add rest/pause set
