@@ -16,6 +16,8 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 import { MatInputModule } from '@angular/material/input'
+import { MatSelectModule } from '@angular/material/select'
+
 
 @NgModule({
   declarations: [
@@ -35,8 +37,8 @@ import { MatInputModule } from '@angular/material/input'
     NgbModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatInputModule
-
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
