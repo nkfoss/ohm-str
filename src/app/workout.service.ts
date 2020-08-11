@@ -42,7 +42,7 @@ export class WorkoutService {
     // If not, then calculate it from the sets, and set the record
     let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName)
     console.log("Record max " + recordMax)
-    if (!recordMax) {
+    if (!recordMax && newExercise.sets.length > 0) {
       recordMax = this.repMaxService.calculateBestMax(newExercise);
       this.repMaxService.recordMaxes[newExercise.exerciseName] = recordMax;
     }
@@ -56,7 +56,7 @@ export class WorkoutService {
     // Check to see if a repmax record exists...
     // If not, then calculate it from the sets
     let recordMax = this.repMaxService.getRecordMaxFromName(updatedExercise.exerciseName)
-    if (!recordMax) {
+    if (!recordMax && updatedExercise.sets.length > 0) {
       recordMax = this.repMaxService.calculateBestMax(updatedExercise);
       this.repMaxService.recordMaxes[updatedExercise.exerciseName] = recordMax;
     }

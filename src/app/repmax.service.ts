@@ -104,10 +104,10 @@ export class RepmaxService {
   setPercentEffort(exercise: Exercise, recordMax: number) {
 
     // If null, calculate it and set it. Print alert statement.
-    if (!recordMax) {
-      console.log('setPercentEffort() received a null recordMax!')
-      this.recordMaxes[exercise.exerciseName] = this.calculateBestMax(exercise)
-    }
+    // if (!recordMax) {
+    //   console.log('setPercentEffort() received a null recordMax!')
+    //   this.recordMaxes[exercise.exerciseName] = this.calculateBestMax(exercise)
+    // }
 
     // For each set (if any), set the percent effort
     if (exercise.sets) {
