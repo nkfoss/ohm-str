@@ -25,8 +25,7 @@ export class AppComponent implements OnInit{
       private repMaxService: RepmaxService) {}
 
   ngOnInit() {
-    this.authService.autoLogin()
-    this.repMaxService.fetchRecords()
+    this.authService.autoLogin();
     }
 
   }

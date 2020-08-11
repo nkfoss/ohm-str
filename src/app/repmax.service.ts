@@ -61,7 +61,7 @@ export class RepmaxService {
   patchDayMaxes(workout: Workout) {
     workout.exercises.forEach(exercise => {
 
-      if (exercise.sets.length < 1 || exercise.setType === "clusters") { return; } 
+      if (exercise.sets.length < 1 || exercise.setType === "clusters") { return; }
       // This is essentially 'continue'... to skip iterations with no sets.
 
       // Find the highest 1rm from the sets, and create a record entry
@@ -80,21 +80,24 @@ export class RepmaxService {
 
 
   // This fetches day-records AND all-time records. [SetListComponent: ngOnInit]
+  // If they've already been fetched, then do nothing.
   fetchRecords() {
-    let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
-    this.http.get(recordMaxUrl).subscribe( response => {
-      console.log("Fetching record maxes...");
-      console.log(response);
-      this.recordMaxes = <JSON> response; 
-    });
-    this.recordMaxUpdated.next(this.recordMaxes)
+    if (!this.recordMaxes) {
+      let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
+      this.http.get(recordMaxUrl).subscribe(response => {
+        console.log("Fetching record maxes...");
+        console.log(response);
+        this.recordMaxes = <JSON>response;
+      });
+      this.recordMaxUpdated.next(this.recordMaxes)
 
-    let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
-    this.http.get(dayMaxUrl).subscribe( response => { 
-      console.log("Fetching day maxes...");
-      console.log(response);
-      this.dayMaxes = <JSON>response; 
-    });
+      let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
+      this.http.get(dayMaxUrl).subscribe(response => {
+        console.log("Fetching day maxes...");
+        console.log(response);
+        this.dayMaxes = <JSON>response;
+      });
+    }
   }
 
   // Takes an exercise and record max...then calculates/sets percent effort based on a recordMax
