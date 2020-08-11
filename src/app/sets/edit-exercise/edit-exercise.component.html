@@ -31,19 +31,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- <label for="exerciseName"> Exercise: </label>
-        <input class="form-control" id="exerciseName" type="text" formControlName="exerciseName">
-         -->
-
-        <!-- <span class="help-block" *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched">
-          <span *ngIf="setsForm.get('exerciseName').errors['charLimit50']">
-            Exercise name maximum 50 characters.
-          </span>
-          <span *ngIf="setsForm.get('exerciseName').errors['required']">
-            Required.
-          </span>
-        </span> -->
-
         <hr>
         <!-- #endregion -->
 
@@ -62,24 +49,16 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- <label for="setType">Type of set:</label>
-        <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
-          <option value="mtor">MTOR</option>
-          <option value="myo">Myo-fatigue</option>
-          <option value="rpd">Rest-pause Double</option>
-          <option value="clusters">Heavy Cluster</option>
-          <option value="1rm">One-rep Max</option>
-          <option value="drop">Drop Set</option>
-          <option value="regular">Regular ol'' Sets</option>
-        </select> -->
         <hr>
 
         <!-- #endregion -->
 
         <!-- #region NOTES --------------------------------------------------->
 
-        <label for="notesInput">Exercise notes:</label>
-        <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"> </textarea>
+        <mat-form-field appearance="outline" style="width: 350px;">
+          <mat-label for="notesInput">Exercise notes</mat-label>
+          <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"  matInput> </textarea>
+        </mat-form-field>
         <hr>
 
         <!-- #endregion --------------------------------------------------->
@@ -222,20 +201,20 @@
             <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
                 <div *ngIf="this.getRestPauseFormArray(i)">
-                <div
-                  *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
-                  <div class="row form-group">
-                    <div class="col-md-6">
-                      <input class="form-control" type="number" [formControl]="restPauseSetForm">
-                    </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
-                        X
-                      </button>
+                  <div
+                    *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
+                    <div class="row form-group">
+                      <div class="col-md-6">
+                        <input class="form-control" type="number" [formControl]="restPauseSetForm">
+                      </div>
+                      <div class="col-md-6">
+                        <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
+                          X
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
               <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                 Add rest/pause set
