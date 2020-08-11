@@ -57,7 +57,7 @@
 
         <mat-form-field appearance="outline" style="width: 350px;">
           <mat-label for="notesInput">Exercise notes</mat-label>
-          <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"  matInput> </textarea>
+          <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6" matInput> </textarea>
         </mat-form-field>
         <hr>
 
@@ -78,32 +78,32 @@
 
         <div *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" class="row">
 
-          <div class="col form-group" [formGroup]="warmupFormGroup">
+          <div [formGroup]="warmupFormGroup" class="col">
 
-            <label for="weight"> Weight: </label>
-            <input class="form-control" id="weight" type="number" formControlName="weight">
-            <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
-              <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
+            <mat-form-field>
+              <mat-label> Weight </mat-label>
+              <input matInput id="weight" type="number" formControlName="weight" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
                 Liar.
-              </span>
-              <span *ngIf="WFTV(j, 'weight').errors['required']">
+              </mat-error>
+              <mat-error *ngIf="WFTV(j, 'weight').errors['required']">
                 Required.
-              </span>
-            </span>
+              </mat-error>
+            </mat-form-field>
 
-            <label for="reps"> Reps: </label>
-            <input class="form-control" id="reps" type="number" formControlName="reps">
-            <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
-              <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
+            <mat-form-field>
+              <mat-label> Reps </mat-label>
+              <input matInput id="reps" type="number" formControlName="reps" [errorStateMatcher]="matcher">
+              <mat-error *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
                 Only positive numbers.
-              </span>
-              <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
+              </mat-error>
+              <mat-error *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
                 Less than 99.
-              </span>
-              <span *ngIf="WFTV(j, 'reps').errors['required']">
+              </mat-error>
+              <mat-error *ngIf="WFTV(j, 'reps').errors['required']">
                 Required.
-              </span>
-            </span>
+              </mat-error>
+            </mat-form-field>
 
           </div>
 

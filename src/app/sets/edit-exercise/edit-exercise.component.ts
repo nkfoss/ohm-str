@@ -15,6 +15,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   };
 }
 
+// =======================================================================
+
 @Component({
   selector: 'app-edit-exercise',
   templateUrl: './edit-exercise.component.html',
@@ -30,7 +32,7 @@ export class EditExerciseComponent implements OnInit {
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
   stringSetType: string;
-  mather = new MyErrorStateMatcher();
+  matcher = new ErrorStateMatcher()
   //#endregion
 
   //#region lifecycle hooks
