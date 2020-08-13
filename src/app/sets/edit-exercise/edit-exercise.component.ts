@@ -30,7 +30,6 @@ export class EditExerciseComponent implements OnInit {
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
   stringSetType: string;
-  mather = new MyErrorStateMatcher();
   //#endregion
 
   //#region lifecycle hooks
