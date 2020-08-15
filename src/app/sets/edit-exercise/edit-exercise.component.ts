@@ -219,7 +219,11 @@ export class EditExerciseComponent implements OnInit {
   }
 
   getRestPauseFormArray(index: number): FormArray {
-    return <FormArray>this.getSetFormGroup(index).get('restPauseSets')
+    let restPauseFormArray = <FormArray>this.getSetFormGroup(index).get('restPauseSets');
+    if (!restPauseFormArray) {
+      return new FormArray([])
+    }
+    return restPauseFormArray;
   }
 
   getDropSetFormArray(index: number): FormArray {

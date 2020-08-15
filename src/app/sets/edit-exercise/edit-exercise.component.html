@@ -6,7 +6,7 @@
         <div class="col">
           <button class="btn btn-secondary" (click)="onNavigateBack()">Back</button>
         </div>
-        <div class="col">
+        <div *ngIf="this.editMode" class="col">
           <button class="btn btn-danger" (click)="onDeleteExercise()">Delete Exercise</button>
         </div>
       </div>
@@ -88,91 +88,57 @@
         </div>
 
         <table *ngIf="this.getWarmupSetControls().length > 0" class="table table-bordered">
+
           <thead class="thead-light">
             <tr>
-              <th>#</th>
-              <th>Weight</th>
-              <th>Reps</th>
+              <th scope="col">#</th>
+              <th scope="col">Weight</th>
+              <th scope="col">Reps</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" [formGroup]="warmupFormGroup">
-              <th> {{ j }} </th>
-                <th>
-                  <input class="form-control" id="weight" type="number" formControlName="weight">
-                  <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
-                    <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
-                      Liar.
-                    </span>
-                    <span *ngIf="WFTV(j, 'weight').errors['required']">
-                      Required.
-                    </span>
+            <tr *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index"
+              [formGroup]="warmupFormGroup">
+
+              <th scope="row"> {{ j }} </th>
+
+              <td>
+                <input class="form-control" id="weight" type="number" formControlName="weight">
+                <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
+                  <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
+                    Liar.
                   </span>
-                </th>
-                <th>
-                  <input class="form-control" id="reps" type="number" formControlName="reps">
-                  <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
-                    <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
-                      Only positive numbers.
-                    </span>
-                    <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
-                      Less than 99.
-                    </span>
-                    <span *ngIf="WFTV(j, 'reps').errors['required']">
-                      Required.
-                    </span>
+                  <span *ngIf="WFTV(j, 'weight').errors['required']">
+                    Required.
                   </span>
-                </th>
-                
-                <th><button class="btn btn-danger" style="float: right;" (click)="onDeleteWarmup(j)">
+                </span>
+              </td>
+
+              <td>
+                <input class="form-control" id="reps" type="number" formControlName="reps">
+                <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
+                  <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
+                    Only positive numbers.
+                  </span>
+                  <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
+                    Less than 99.
+                  </span>
+                  <span *ngIf="WFTV(j, 'reps').errors['required']">
+                    Required.
+                  </span>
+                </span>
+              </td>
+
+              <td>
+                <button class="btn btn-danger btn-sm" style="float: right;" (click)="onDeleteWarmup(j)">
                   X
-                </button></th>
-                  
-               
+                </button>
+              </td>
+
             </tr>
           </tbody>
         </table>
-
-        <!-- <div *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" class="row">
-
-          <div class="col form-group" [formGroup]="warmupFormGroup">
-
-            <label for="weight"> Weight: </label>
-            <input class="form-control" id="weight" type="number" formControlName="weight">
-            <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
-              <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
-                Liar.
-              </span>
-              <span *ngIf="WFTV(j, 'weight').errors['required']">
-                Required.
-              </span>
-            </span>
-
-            <label for="reps"> Reps: </label>
-            <input class="form-control" id="reps" type="number" formControlName="reps">
-            <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
-              <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
-                Only positive numbers.
-              </span>
-              <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
-                Less than 99.
-              </span>
-              <span *ngIf="WFTV(j, 'reps').errors['required']">
-                Required.
-              </span>
-            </span>
-
-          </div>
-
-          <div class="col">
-            <button class="btn btn-danger" style="float: right;" (click)="onDeleteWarmup(j)">
-              X
-            </button>
-          </div>
-
-          <hr>
-
-        </div> -->
 
         <hr>
 
@@ -189,13 +155,97 @@
           </div>
         </div>
 
-        <div *ngFor="let setFormGroup of this.getSetControls(); let i = index" class="row">
+        <table *ngIf="this.getSetControls().length > 0" class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Weight</th>
+              <th scope="col">Reps</th>
+            </tr>
+          </thead>
 
+          <tbody *ngFor="let setFormGroup of this.getSetControls(), let i = index" [formGroup]="setFormGroup">
 
-          <div class="container row" [formGroup]="setFormGroup">
+            <tr>
+              <th scope="row"> {{ i }} </th>
 
-            <!-- Weight -->
-            <div class="col-4">
+              <td>
+                <input class="form-control" id="weight" type="number" formControlName="weight">
+                <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
+                  <span *ngIf="SFTV(i, 'weight').errors['largeNumbers']">
+                    Liar.
+                  </span>
+                  <span *ngIf="SFTV(i, 'weight').errors['required']">
+                    Required.
+                  </span>
+                </span>
+              </td>
+
+              <td>
+                <input class="form-control" id="reps" type="number" formControlName="reps">
+                <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
+                  <span *ngIf="SFTV(i, 'reps').errors['negativeNumbers']">
+                    Only positive numbers.
+                  </span>
+                  <span *ngIf="SFTV(i, 'reps').errors['largeNumbers']">
+                    Less than 99.
+                  </span>
+                  <span *ngIf="SFTV(i, 'reps').errors['required']">
+                    Required.
+                  </span>
+                </span>
+              </td>
+
+              <td class='row'>
+                <button *ngIf="this.isRestPauseSet()" class="btn btn-primary btn-sm" type="button"
+                  (click)="addRestPauseSet(i)">
+                  +
+                </button>
+                <button class="btn btn-danger btn-sm" style="float: right;" type="button" (click)="onDeleteSet(i)">
+                  x
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
+
+              <th scope="row"> R/P </th>
+
+              <td>
+                {{ setFormGroup.controls.weight.value }}
+              </td>
+
+              <td>
+                <input class="form-control" type="number" [formControl]="restPauseSetForm">
+                <span class="help-block" *ngIf="!restPauseSetForm.valid && restPauseSetForm.touched">
+                  <span *ngIf="restPauseSetForm.errors['negativeNumbers']">
+                    Only positive numbers.
+                  </span>
+                  <span *ngIf="restPauseSetForm.errors['largeNumbers']">
+                    Less than 99.
+                  </span>
+                  <span *ngIf="restPauseSetForm.errors['required']">
+                    Required.
+                  </span>
+                </span>
+              </td>
+
+              <td>
+                <button class="btn btn-danger btn-sm" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
+                  x
+                </button>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- <div *ngFor="let setFormGroup of this.getSetControls(); let i = index" class="row">
+
+          <div class="container row" [formGroup]="setFormGroup"> -->
+
+        <!-- Weight -->
+        <!-- <div class="col-4">
               <label for="weight"> Weight: </label>
               <input class="form-control" id="weight" type="number" formControlName="weight">
               <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
@@ -206,10 +256,10 @@
                   Required.
                 </span>
               </span>
-            </div>
+            </div> -->
 
-            <!-- reps -->
-            <div class="col-3">
+        <!-- reps -->
+        <!-- <div class="col-3">
               <label for="reps"> Reps: </label>
               <input class="form-control" id="reps" type="number" formControlName="reps">
               <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
@@ -223,10 +273,10 @@
                   Required.
                 </span>
               </span>
-            </div>
+            </div> -->
 
-            <!-- #region Drop Sets -->
-            <div *ngIf="this.stringSetType === 'drop'">
+        <!-- #region Drop Sets -->
+        <!-- <div *ngIf="this.stringSetType === 'drop'">
               <div style="margin: 20px">
                 <div *ngFor="let dropSetFormGroup for getDropSetFormArray(i).controls; let dropSetIndex = index">
                   <div class="row form-group">
@@ -251,11 +301,11 @@
               <button class="btn btn-success" type="button" (click)="addDropSet(i)">
                 Add drop set
               </button>
-            </div>
-            <!-- #endregion -->
+            </div> -->
+        <!-- #endregion -->
 
-            <!-- #region Rest Pause Sets -->
-            <div *ngIf="this.isRestPauseSet()">
+        <!-- #region Rest Pause Sets -->
+        <!-- <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
                 <div *ngIf="this.getRestPauseFormArray(i)">
                   <div
@@ -276,19 +326,19 @@
               <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                 Add rest/pause set
               </button>
-            </div>
-            <!-- #endregion --------------------------------------------------->
+            </div> -->
+        <!-- #endregion --------------------------------------------------->
 
-          </div>
+        <!-- </div> -->
 
-          <!-- Reps -->
-          <div class="col-1">
+        <!-- Reps -->
+        <!-- <div class="col-1">
             <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
               X
             </button>
           </div>
 
-        </div>
+        </div> -->
 
         <hr>
 
