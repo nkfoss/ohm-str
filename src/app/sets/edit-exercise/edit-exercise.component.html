@@ -61,16 +61,7 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- <label for="setType">Type of set:</label>
-        <select [(ngModel)]="stringSetType" id="setType" class="form-control" formControlName="setType">
-          <option value="mtor">MTOR</option>
-          <option value="myo">Myo-fatigue</option>
-          <option value="rpd">Rest-pause Double</option>
-          <option value="clusters">Heavy Cluster</option>
-          <option value="1rm">One-rep Max</option>
-          <option value="drop">Drop Set</option>
-          <option value="regular">Regular ol'' Sets</option>
-        </select> -->
+
         <hr>
 
         <!-- #endregion -->
@@ -86,17 +77,63 @@
         <!-- #region WARM-UP SETS ------------------------------------------------>
 
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-6">
             <h3> WARM-UP SETS </h3>
           </div>
-          <div class="col-sm-1">
+          <div class="col-1">
             <button id="addWarmUpButton" class="btn btn-primary" type="button" (click)="onAddSet($event)">
               +
             </button>
           </div>
         </div>
 
-        <div *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" class="row">
+        <table *ngIf="this.getWarmupSetControls().length > 0" class="table table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>#</th>
+              <th>Weight</th>
+              <th>Reps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" [formGroup]="warmupFormGroup">
+              <th> {{ j }} </th>
+                <th>
+                  <input class="form-control" id="weight" type="number" formControlName="weight">
+                  <span class="help-block" *ngIf="!WFTV(j, 'weight').valid && WFTV(j, 'weight').touched">
+                    <span *ngIf="WFTV(j, 'weight').errors['largeNumbers']">
+                      Liar.
+                    </span>
+                    <span *ngIf="WFTV(j, 'weight').errors['required']">
+                      Required.
+                    </span>
+                  </span>
+                </th>
+                <th>
+                  <input class="form-control" id="reps" type="number" formControlName="reps">
+                  <span class="help-block" *ngIf="!WFTV(j, 'reps').valid && WFTV(j, 'reps').touched">
+                    <span *ngIf="WFTV(j, 'reps').errors['negativeNumbers']">
+                      Only positive numbers.
+                    </span>
+                    <span *ngIf="WFTV(j, 'reps').errors['largeNumbers']">
+                      Less than 99.
+                    </span>
+                    <span *ngIf="WFTV(j, 'reps').errors['required']">
+                      Required.
+                    </span>
+                  </span>
+                </th>
+                
+                <th><button class="btn btn-danger" style="float: right;" (click)="onDeleteWarmup(j)">
+                  X
+                </button></th>
+                  
+               
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- <div *ngFor="let warmupFormGroup of this.getWarmupSetControls(); let j = index" class="row">
 
           <div class="col form-group" [formGroup]="warmupFormGroup">
 
@@ -135,7 +172,7 @@
 
           <hr>
 
-        </div>
+        </div> -->
 
         <hr>
 
@@ -144,10 +181,10 @@
         <!-- #region MAIN SETS ------------------------------------------------------------------>
 
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-6">
             <h3> {{ this.stringSetType | uppercase }} SETS</h3>
           </div>
-          <div class="col-sm-1">
+          <div class="col-1">
             <button id="addSetButton" class="btn btn-primary" type="button" (click)="onAddSet($event)">+</button>
           </div>
         </div>
@@ -155,10 +192,10 @@
         <div *ngFor="let setFormGroup of this.getSetControls(); let i = index" class="row">
 
 
-          <div class="col form-group" [formGroup]="setFormGroup">
+          <div class="container row" [formGroup]="setFormGroup">
 
             <!-- Weight -->
-            <div class="row">
+            <div class="col-4">
               <label for="weight"> Weight: </label>
               <input class="form-control" id="weight" type="number" formControlName="weight">
               <span class="help-block" *ngIf="!SFTV(i, 'weight').valid && SFTV(i, 'weight').touched">
@@ -172,7 +209,7 @@
             </div>
 
             <!-- reps -->
-            <div class="row">
+            <div class="col-3">
               <label for="reps"> Reps: </label>
               <input class="form-control" id="reps" type="number" formControlName="reps">
               <span class="help-block" *ngIf="!SFTV(i, 'reps').valid && SFTV(i, 'reps').touched">
@@ -221,20 +258,20 @@
             <div *ngIf="this.isRestPauseSet()">
               <div style="margin: 20px">
                 <div *ngIf="this.getRestPauseFormArray(i)">
-                <div
-                  *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
-                  <div class="row form-group">
-                    <div class="col-md-6">
-                      <input class="form-control" type="number" [formControl]="restPauseSetForm">
-                    </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
-                        X
-                      </button>
+                  <div
+                    *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
+                    <div class="row form-group">
+                      <div class="col-md-6">
+                        <input class="form-control" type="number" [formControl]="restPauseSetForm">
+                      </div>
+                      <div class="col-md-6">
+                        <button class="btn btn-danger" type=button (click)="deleteRestPauseSet(i, restPauseIndex)">
+                          X
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
               <button class="btn btn-success" type="button" (click)="addRestPauseSet(i)">
                 Add rest/pause set
@@ -245,7 +282,7 @@
           </div>
 
           <!-- Reps -->
-          <div class="col">
+          <div class="col-1">
             <button class="btn btn-danger" style="float: right;" type="button" (click)="onDeleteSet(i)">
               X
             </button>

@@ -3,17 +3,8 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractCon
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
-import { ErrorStateMatcher } from '@angular/material/core';
 
-//======================================================================
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): 
-  boolean {
-    const isSubmitted = form && form.submitted
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  };
-}
+//========================================================================
 
 @Component({
   selector: 'app-edit-exercise',
@@ -21,7 +12,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./edit-exercise.component.css']
 })
 
-//=========================================================================
+//............................................................................
 
 export class EditExerciseComponent implements OnInit {
   //#region fields
@@ -129,6 +120,12 @@ export class EditExerciseComponent implements OnInit {
   }
 
   // #region set functions
+
+  // openSnackBar() {
+  //   if (this.editMode) {
+      
+  //   }
+  // }
 
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)
