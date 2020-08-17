@@ -189,10 +189,18 @@ export class EditExerciseComponent implements OnInit {
   }
 
 
-  onAddSet(event) {
-    let controlName = "warmupSets"
-    if (event.target.id === "addSetButton") { controlName = "sets" }
-    (<FormArray>this.setsForm.get(controlName)).push(
+  onAddSet() {
+    (<FormArray>this.setsForm.get('sets')).push(
+      new FormGroup({
+        weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
+        reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
+      })
+    )
+  }
+
+  onAddWarmupSet() {
+    let controlName = "warmupSets";
+    (<FormArray>this.setsForm.get('warmupSets')).push(
       new FormGroup({
         weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
         reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
