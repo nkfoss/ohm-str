@@ -77,7 +77,9 @@ export class WorkoutService {
 
 
   // ==========================================================================================
-
+  getRecordNames(): string[] {
+    return this.repMaxService.getRecordNames();
+  }
 
   storeWorkout() {
     this.convertToLowerCase(this.workout.exercises)

@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractCon
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 //========================================================================
 
@@ -21,6 +23,10 @@ export class EditExerciseComponent implements OnInit {
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
   stringSetType: string;
+
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
   //#endregion
 
   //#region lifecycle hooks
@@ -39,6 +45,7 @@ export class EditExerciseComponent implements OnInit {
       }
     );
     this.initForm();
+    this.setOptions();
   }
   //#endregion
 
@@ -121,11 +128,19 @@ export class EditExerciseComponent implements OnInit {
 
   // #region set functions
 
-  // openSnackBar() {
-  //   if (this.editMode) {
-      
-  //   }
-  // }
+  private setOptions() {
+    this.options = this.workoutService.getRecordNames();
+    this.filteredOptions = this.setsForm.get('exerciseName').valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)

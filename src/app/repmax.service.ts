@@ -98,6 +98,15 @@ export class RepmaxService {
         this.dayMaxes = <JSON>response;
       });
     }
+
+  }
+
+  getRecordNames(): string[] {
+    let nameArr: string[] = [];
+    for (var exerciseName in this.recordMaxes) {
+      nameArr.push(exerciseName);
+    }
+    return nameArr;
   }
 
   // Takes an exercise and record max...then calculates/sets percent effort based on a recordMax

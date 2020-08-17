@@ -19,7 +19,13 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Exercise name</mat-label>
-          <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift" matInput>
+          <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift"
+            aria-label="Number" matInput [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
           <mat-error
             *ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['charLimit50']">
             Maximum 50 characters.
