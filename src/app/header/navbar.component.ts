@@ -53,15 +53,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 	onSaveData() {
 		this.workoutService.storeWorkout();
+		this.repMaxService.patchDayMaxes(this.workoutService.workout);
+		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
 	onFetchData() {
 		const date = new Date().toDateString();
 		this.workoutService.fetchWorkout(date);
-	}
-
-	onPatchMaxes() {
-		this.repMaxService.patchDayMaxes(this.workoutService.workout)
 	}
 
 	// Button method for posting dayMaxes to database

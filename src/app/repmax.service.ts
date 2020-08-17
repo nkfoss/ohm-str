@@ -127,9 +127,10 @@ export class RepmaxService {
     }
   }
 
-
-
-}
+  patchRecordMaxes(recordMaxes: JSON) {
+    const url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
+    this.http.patch(url, this.recordMaxes).subscribe( response => {console.log(response)} )
+  }
 
   // asdMethod() {
   //   for (var exerciseName in this.recordMaxes) {
@@ -151,7 +152,12 @@ export class RepmaxService {
   //   const url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json'
   //   this.http.patch(url, this.recordMaxes).subscribe(response => { console.log(response) })
 
-  // }
+}
+
+
+
+
+
 
 
 
