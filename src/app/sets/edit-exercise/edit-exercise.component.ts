@@ -219,7 +219,6 @@ export class EditExerciseComponent implements OnInit {
     )
   }
 
-
   onDeleteSet(index) {
     let setsArray = this.setsForm.controls.sets as FormArray;
     setsArray.removeAt(index);
