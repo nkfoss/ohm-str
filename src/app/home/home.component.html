@@ -5,10 +5,15 @@
 			<h3>Date Selector</h3>
 			<mat-form-field appearance="fill">
 				<mat-label>Input disabled</mat-label>
-				<input matInput [matDatepicker]="dp" disabled>
+
+				<input matInput [matDatepicker]="dp" disabled (dateChange)="setSelectedDate($event)">
+				<!-- ^ The dateChange property must be used in place of 'value'. For some reason, value doens't work. -->
+				<!-- DateChange fires whenever a new date is chosen from the calendar. -->
+
 				<mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
 				<mat-datepicker #dp disabled="false"></mat-datepicker>
 			</mat-form-field>
+			<button class="btn btn-info" type="button" (click)="printDate()">Print date</button>
 		</div>
 	</div>
 </div>
