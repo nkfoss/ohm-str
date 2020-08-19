@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { OnInit, ViewChild, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 //========================================================================
 
@@ -35,7 +36,8 @@ export class EditExerciseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
@@ -142,6 +144,14 @@ export class EditExerciseComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  private openSnackBar() {
+    this._snackBar.open(
+      this.editMode ? 'Exercise successfully editted' : 'Exercise successfully added.', 
+      'dismiss', 
+      { duration: 5000 }
+      )
+  }
+
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)
     if (!targetFormGroup.get('restPauseSets')) {
@@ -186,6 +196,7 @@ export class EditExerciseComponent implements OnInit {
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
+    this.openSnackBar();
   }
 
 
@@ -313,3 +324,5 @@ export class EditExerciseComponent implements OnInit {
   }
   //#endregion
 }
+
+
