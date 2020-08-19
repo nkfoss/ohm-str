@@ -35,8 +35,12 @@ export class HomeComponent {
     console.log(event.value)
   }
 
-  printDate() {
-    console.log( this.selectedDate.toDateString() )
+  navigateToDate() {
+    const formattedDate = this.stringHandlerService.stripWeekday(
+      this.selectedDate.toDateString()
+    )
+    const toNavigate = 'workout/' + formattedDate;
+    this.router.navigate([toNavigate]);
   }
 
 }
