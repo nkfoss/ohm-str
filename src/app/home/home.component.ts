@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StringHandlerService } from '../string-handler.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { WorkoutService } from '../workout.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent {
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
-    private stringHandlerService: StringHandlerService) { }
+    private stringHandlerService: StringHandlerService,
+    private workoutService: WorkoutService) { }
 
 
   // =============================================================
@@ -41,6 +43,9 @@ export class HomeComponent {
     )
     const toNavigate = 'workout/' + formattedDate;
     this.router.navigate([toNavigate]);
+    if (this.workoutService.workout.date !== formattedDate) {
+			this.workoutService.fetchWorkout(formattedDate);
+		}
   }
 
 }
