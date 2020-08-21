@@ -1,6 +1,6 @@
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-12" style="margin-left: 10px;">
 			<div *ngIf="error" class="alert alert-danger">
 				<p>{{ error }}</p>
 			</div>
@@ -8,30 +8,44 @@
 				<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 			</div>
 			<form *ngIf="!isLoading" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+				
 				<div class="form-group">
-					<label for="email">E-mail</label>
+					<mat-form-field appearance="fill">
+						<mat-label>Email</mat-label>
+						<input formControlName="email" id="email" matInput type="email">
+					  </mat-form-field>
+					<!-- <label for="email">E-mail</label>
 					<input id="email" 
 					type="email" 
 					class="form-control"
-					formControlName="email">
+					formControlName="email"> -->
 				</div>
+
+				
 				<div class="form-group">
-					<label for="password">Password</label>
+					<mat-form-field appearance="fill">
+						<mat-label>Password</mat-label>
+						<input formControlName="password" id="password" matInput type="password">
+					  </mat-form-field>
+					<!-- <label for="password">Password</label>
 					<input id="password" 
 					type="password" 
 					class="form-control"
-					formControlName="password">
+					formControlName="password"> -->
 				</div>
 				<div>
-					<button class="btn btn-primary" 
+					<button 
+					class="btn btn-primary" 
+					mat-raised-button
 					type="submit"
-					[disabled]="!authForm.valid">
+					[disabled]="!authForm.valid"
+					color="primary">
 						{{ isLoginMode ? 'Login' : 'Sign-Up' }}
 					</button>
-					|
-					<button class="btn btn-primary" type="button" (click)="onSwitchMode()">
+					<!-- | -->
+					<!-- <button class="btn btn-primary" type="button" (click)="onSwitchMode()">
 						{{ isLoginMode ? 'Sign-up' : 'Login'}} Instead
-					</button>
+					</button> -->
 				</div>
 			</form>
 		</div>
