@@ -15,9 +15,14 @@ import { AuthComponent } from './auth/auth/auth.component'
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
-import { MatInputModule } from '@angular/material/input'
-import { MatSelectModule } from '@angular/material/select'
-
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -38,7 +43,13 @@ import { MatSelectModule } from '@angular/material/select'
     HttpClientModule,
     BrowserAnimationsModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }

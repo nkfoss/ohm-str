@@ -1,21 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { OnInit, ViewChild, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray, AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
 import { Exercise } from '../../shared/exercise.model';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-//======================================================================
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): 
-  boolean {
-    const isSubmitted = form && form.submitted
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  };
-}
-
-// =======================================================================
+//========================================================================
 
 @Component({
   selector: 'app-edit-exercise',
@@ -23,7 +15,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./edit-exercise.component.css']
 })
 
-//=========================================================================
+//............................................................................
 
 export class EditExerciseComponent implements OnInit {
   //#region fields
@@ -32,7 +24,10 @@ export class EditExerciseComponent implements OnInit {
   exerciseId: number;
   editMode = true; // False when adding new exercise, false when editing existing
   stringSetType: string;
-  matcher = new ErrorStateMatcher()
+
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
   //#endregion
 
   //#region lifecycle hooks
@@ -41,7 +36,8 @@ export class EditExerciseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
@@ -51,6 +47,7 @@ export class EditExerciseComponent implements OnInit {
       }
     );
     this.initForm();
+    this.setOptions();
   }
   //#endregion
 
@@ -133,6 +130,28 @@ export class EditExerciseComponent implements OnInit {
 
   // #region set functions
 
+  private setOptions() {
+    this.options = this.workoutService.getRecordNames();
+    this.filteredOptions = this.setsForm.get('exerciseName').valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  private openSnackBar() {
+    this._snackBar.open(
+      this.editMode ? 'Exercise successfully editted' : 'Exercise successfully added.', 
+      'dismiss', 
+      { duration: 5000 }
+      )
+  }
+
   addRestPauseSet(index: number) {
     let targetFormGroup = this.getSetFormGroup(index)
     if (!targetFormGroup.get('restPauseSets')) {
@@ -173,17 +192,24 @@ export class EditExerciseComponent implements OnInit {
 
 
   onSubmit() {
-    console.log("Form value = " + JSON.stringify(this.setsForm.value) )
+    console.log("METHOD: onSubmit()")
+
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
+    this.openSnackBar();
+
+    console.log("CLOSED: onSubmit()")
+  }
+
+  onNavigateBack() {
+    const date = this.workoutService.getFormattedDate()
+    this.router.navigate(['workout/' + date])
   }
 
 
-  onAddSet(event) {
-    let controlName = "warmupSets"
-    if (event.target.id === "addSetButton") { controlName = "sets" }
-    (<FormArray>this.setsForm.get(controlName)).push(
+  onAddSet() {
+    (<FormArray>this.setsForm.get('sets')).push(
       new FormGroup({
         weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
         reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
@@ -191,6 +217,15 @@ export class EditExerciseComponent implements OnInit {
     )
   }
 
+  onAddWarmupSet() {
+    let controlName = "warmupSets";
+    (<FormArray>this.setsForm.get('warmupSets')).push(
+      new FormGroup({
+        weight: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeWeight]),
+        reps: new FormControl(null, [Validators.required, this.negativeNumbers, this.largeReps])
+      })
+    )
+  }
 
   onDeleteSet(index) {
     let setsArray = this.setsForm.controls.sets as FormArray;
@@ -207,11 +242,6 @@ export class EditExerciseComponent implements OnInit {
     this.onNavigateBack();
   }
 
-  onNavigateBack() {
-    const date = this.workoutService.getFormattedDate()
-    this.router.navigate(['workout/' + date])
-  }
-
   isRestPauseSet() {
     if (this.stringSetType === 'myo' || this.stringSetType === 'rpd') { return true; }
     return false;
@@ -225,7 +255,11 @@ export class EditExerciseComponent implements OnInit {
   }
 
   getRestPauseFormArray(index: number): FormArray {
-    return <FormArray>this.getSetFormGroup(index).get('restPauseSets')
+    let restPauseFormArray = <FormArray>this.getSetFormGroup(index).get('restPauseSets');
+    if (!restPauseFormArray) {
+      return new FormArray([])
+    }
+    return restPauseFormArray;
   }
 
   getDropSetFormArray(index: number): FormArray {
@@ -292,3 +326,5 @@ export class EditExerciseComponent implements OnInit {
   }
   //#endregion
 }
+
+

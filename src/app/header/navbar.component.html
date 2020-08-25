@@ -1,7 +1,7 @@
 
 <nav class="navbar navbar-light bg-light navbar-expand-lg">
 
-    <a (click)="onNavigateHome()" class="navbar-brand">Zeta Strength</a>
+    <a (click)="onNavigateHome()" class="navbar-brand">Omega Strength</a>
     <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="navbarsDefault"
         aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation" >
         <span class="navbar-toggler-icon"></span>
@@ -17,9 +17,6 @@
             </li>
             <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="qwe nav-link" (click)="onSaveData()">Save Data</a>
-            </li>
-            <li class="nav-item" *ngIf="isAuthenticated">
-                <a class="qwe nav-link" (click)="onPatchMaxes()">Patch 1RM</a>
             </li>
             <li class="nav-item" *ngIf="isAuthenticated">
                 <a class="qwe nav-link" (click)="qwe()">qwe</a>

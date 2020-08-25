@@ -33,10 +33,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.userSub = this.authService.userSubject.subscribe(
 			user => {
-				this.isAuthenticated = !!user 
+				this.isAuthenticated = !!user
 				// This makes it so if we get a null user, we will assign 'false'
-		})
-		
+			})
+
 	}
 
 	ngOnDestroy() { this.userSub.unsubscribe() }
@@ -53,6 +53,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 	onSaveData() {
 		this.workoutService.storeWorkout();
+		this.repMaxService.patchDayMaxes(this.workoutService.workout);
+		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
 	onFetchData() {
@@ -60,23 +62,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.workoutService.fetchWorkout(date);
 	}
 
-	onPatchMaxes() {
-		this.repMaxService.patchDayMaxes(this.workoutService.workout)
-	}
-
 	// Button method for posting dayMaxes to database
 	// qwe() {
 	// 	this.repMaxService.setTodaysRecords(this.workoutService.workout)
 	// }
 
-	
+
 	onNavigateToToday() {
 		const today = this.stripWeekday(
 			new Date().toDateString()
 		)
 		const toNavigate = 'workout/' + today;
 		this.router.navigate([toNavigate]);
-		this.workoutService.fetchWorkout(today)
+		if (this.workoutService.workout.date !== today) {
+			this.workoutService.fetchWorkout(today);
+		}
 	}
 
 	stripWeekday(dateString: string) {
