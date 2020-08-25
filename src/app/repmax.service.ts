@@ -11,6 +11,7 @@ import { RepMaxRecord } from './shared/repMaxRecord.model';
 export class RepmaxService {
 
   recordMaxes: JSON;
+  updatedRecordMaxes = new Object();
   dayMaxes: JSON;
   todaysMaxes: RepMaxRecord[] = [];
   recordMaxUpdated = new Subject<JSON>();
@@ -32,26 +33,38 @@ export class RepmaxService {
   // Takes an exercise, and calculates the 1rm of the best set (if any).
   // [this.setPercentEffort]
   calculateBestMax(exercise: Exercise) {
+    console.log("METHOD: calculateBestMax()")
+
     if (exercise.sets) {
       let maxArray: number[] = []
       exercise.sets.forEach(set => {
         maxArray.push(this.calculateMax(set.reps, set.weight))
       })
+
+      console.log("CLOSED: calculateBestMax() with RETURN " + Math.max(...maxArray))
       return Math.max(...maxArray)
     }
+
+    console.log("CLOSED: calculateBestMax() with NO RETURN")
+
   }
 
   // Look-up all-time record by name of exercise
   getRecordMaxFromName(exerciseName: string) {
+    console.log("METHOD: getRecordMaxFromName()")
+
     console.log('search for ' + exerciseName + ' in records...')
     let records = this.recordMaxes
     for (var key in records) {
       if (records.hasOwnProperty(key)) {
         if (key == exerciseName) {
+          console.log("CLOSED: getRecordMaxFromName() with RETURN: " + records[key])
           return (records[key])
         }
       }
     }
+
+    console.log("CLOSED: getRecordMaxFromName() with NO RETURN")
   }
 
 
@@ -82,6 +95,8 @@ export class RepmaxService {
   // This fetches day-records AND all-time records. [SetListComponent: ngOnInit]
   // If they've already been fetched, then do nothing.
   fetchRecords() {
+    console.log("METHOD: fetchRecords()")
+
     if (!this.recordMaxes) {
       let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
       this.http.get(recordMaxUrl).subscribe(response => {
@@ -99,6 +114,7 @@ export class RepmaxService {
       });
     }
 
+    console.log("CLOSED: fetchRecords()")
   }
 
   getRecordNames(): string[] {
@@ -128,29 +144,19 @@ export class RepmaxService {
   }
 
   patchRecordMaxes(recordMaxes: JSON) {
+    console.log('METHOD: patchRecordMaxes()');
+
     const url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
-    this.http.patch(url, this.recordMaxes).subscribe( response => {console.log(response)} )
+    this.http.patch(url, this.recordMaxes).subscribe(
+      response => {
+        console.log("repsonse for patchRecordMaxes:")
+        console.log(response);
+      }
+    )
+    
+    console.log("CLOSED: patchRecordMaxes()")
   }
 
-  // asdMethod() {
-  //   for (var exerciseName in this.recordMaxes) {
-  //     for (var key in this.asd) {
-  //       if (this.asd.hasOwnProperty(key)) {
-  //         if (key == exerciseName) {
-  //           let liftObj = this.asd[key];
-  //           for (var date in liftObj) {
-  //             let dayMax = liftObj[date]['ORM'];
-  //             if (dayMax > this.recordMaxes[exerciseName]) {
-  //               console.log('bigger! ' + dayMax + ' ' + this.recordMaxes[exerciseName] + ' ' + exerciseName)
-  //               this.recordMaxes[exerciseName] = dayMax
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   const url = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json'
-  //   this.http.patch(url, this.recordMaxes).subscribe(response => { console.log(response) })
 
 }
 
