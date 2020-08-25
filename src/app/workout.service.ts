@@ -37,32 +37,60 @@ export class WorkoutService {
   getExercise(exerciseIndex: number): Exercise { return { ...this.workout.exercises[exerciseIndex] }; }
 
   addExercise(newExercise: Exercise) {
+    console.log("METHOD: addExercise()")
+
     newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
-    // Check to see if a repmax record exists...
-    // If not, then calculate it from the sets, and set the record
-    let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName)
-    console.log("Record max " + recordMax)
-    if (!recordMax && newExercise.sets.length > 0) {
-      recordMax = this.repMaxService.calculateBestMax(newExercise);
-      this.repMaxService.recordMaxes[newExercise.exerciseName] = recordMax;
+
+    if (newExercise.sets.length > 0) {
+
+      let bestSet = this.repMaxService.calculateBestMax(newExercise);
+      let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName);
+
+      if (!recordMax) {
+        this.repMaxService.setPercentEffort(newExercise, bestSet) 
+        this.repMaxService.recordMaxes[newExercise.exerciseName] = bestSet;
+      }
+      else if (bestSet > recordMax) {
+        this.repMaxService.setPercentEffort(newExercise, recordMax) 
+        this.repMaxService.updatedRecordMaxes[newExercise.exerciseName] = bestSet;
+      }
+      else {
+        this.repMaxService.setPercentEffort(newExercise, recordMax)
+      }
     }
-    this.repMaxService.setPercentEffort(newExercise, recordMax)
+
     this.workout.exercises.push(newExercise);
     this.exerciseUpdated.next(this.getExercises())
+
+    console.log("CLOSED: addExercise()")
   }
 
   updateExercise(exerciseIndex: number, updatedExercise: Exercise) {
+    console.log("METHOD: updateExercise()")
+
     updatedExercise.exerciseName = updatedExercise.exerciseName.toLowerCase();
-    // Check to see if a repmax record exists...
-    // If not, then calculate it from the sets
-    let recordMax = this.repMaxService.getRecordMaxFromName(updatedExercise.exerciseName)
-    if (!recordMax && updatedExercise.sets.length > 0) {
-      recordMax = this.repMaxService.calculateBestMax(updatedExercise);
-      this.repMaxService.recordMaxes[updatedExercise.exerciseName] = recordMax;
+    if (updatedExercise.sets.length > 0) {
+
+      let bestSet = this.repMaxService.calculateBestMax(updatedExercise);
+      let recordMax = this.repMaxService.getRecordMaxFromName(updatedExercise.exerciseName);
+
+      if (!recordMax) {
+        this.repMaxService.setPercentEffort(updatedExercise, bestSet) 
+        this.repMaxService.recordMaxes[updatedExercise.exerciseName] = bestSet;
+      }
+      else if (bestSet > recordMax) {
+        this.repMaxService.setPercentEffort(updatedExercise, recordMax) 
+        this.repMaxService.updatedRecordMaxes[updatedExercise.exerciseName] = bestSet;
+      }
+      else {
+        this.repMaxService.setPercentEffort(updatedExercise, recordMax)
+      }
     }
-    this.repMaxService.setPercentEffort(updatedExercise, recordMax);
+
     this.workout.exercises[exerciseIndex] = updatedExercise;
     this.exerciseUpdated.next(this.getExercises())
+
+    console.log("CLOSED: updateExercise()")
   }
 
   deleteSet(exerciseIndex: number, setIndex: number) {
@@ -94,8 +122,8 @@ export class WorkoutService {
   }
 
   fetchWorkout(dateString?: string) {
-
     console.log("METHOD: fetchWorkout")
+
     // Set the url. If no datestring provided, use current date.
     let url: string;
     if (dateString) {
@@ -129,8 +157,8 @@ export class WorkoutService {
           this.workout = workout;
           console.log('fetched workout: ' + workout)
           this.exerciseUpdated.next(this.workout.exercises)
-        } 
-        
+        }
+
         else {
           // If no workout is returned, then we just set the displayed data to null
           let emptyWorkout: Workout = {
@@ -144,6 +172,8 @@ export class WorkoutService {
         }
       }
     )
+    console.log("CLOSED: fetchWorkout")
+
   }
 
   // Note...test runtime for this in two different condition
@@ -153,7 +183,7 @@ export class WorkoutService {
     this.workout.exercises.forEach(exercise => {
       this.repMaxService.setPercentEffort(
         exercise, this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
-        );
+      );
     })
     this.exerciseUpdated.next(this.workout.exercises)
   }

@@ -36,6 +36,8 @@ export class SetListComponent implements OnInit, OnDestroy{
 		private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
+		console.log("INIT: SetListComponent")
+		
 		// Setup sub for repMaxes
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
 			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
@@ -52,6 +54,7 @@ export class SetListComponent implements OnInit, OnDestroy{
 		// 	However, it will need to be removed if I ever fix the navigate-to-today problem.
 		//  	(this is the problem where the old exercises (if any) are still displayed after navigating to today)
 
+		console.log("INIT COMPLETE: SetListComponent")
 	}
 
 	ngOnDestroy() { if (this.exerciseSub) { this.exerciseSub.unsubscribe() } }

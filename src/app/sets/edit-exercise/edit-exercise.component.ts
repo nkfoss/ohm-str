@@ -192,11 +192,19 @@ export class EditExerciseComponent implements OnInit {
 
 
   onSubmit() {
-    console.log("Form value = " + JSON.stringify(this.setsForm.value) )
+    console.log("METHOD: onSubmit()")
+
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
     else { this.workoutService.addExercise(this.setsForm.value) }
     this.onNavigateBack();
     this.openSnackBar();
+
+    console.log("CLOSED: onSubmit()")
+  }
+
+  onNavigateBack() {
+    const date = this.workoutService.getFormattedDate()
+    this.router.navigate(['workout/' + date])
   }
 
 
@@ -232,11 +240,6 @@ export class EditExerciseComponent implements OnInit {
   onDeleteExercise() {
     this.workoutService.deleteExercise(this.exerciseId)
     this.onNavigateBack();
-  }
-
-  onNavigateBack() {
-    const date = this.workoutService.getFormattedDate()
-    this.router.navigate(['workout/' + date])
   }
 
   isRestPauseSet() {
