@@ -52,7 +52,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
+    HttpClientModule
   ],
   bootstrap: [AppComponent] // This defines which component(s) is available in the index.html file.
 })
