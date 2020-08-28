@@ -41,7 +41,9 @@ export class WorkoutService {
 
     newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
 
-    if (newExercise.sets.length > 0) {
+    if (newExercise.sets.length > 0 
+      && newExercise.setType !== "clusters" 
+      && newExercise.setType !== "mtor") {
 
       let bestSet = this.repMaxService.calculateBestMax(newExercise);
       let recordMax = this.repMaxService.getRecordMaxFromName(newExercise.exerciseName);
