@@ -81,7 +81,8 @@ export class RepmaxService {
       let calculatedMax = this.calculateBestMax(exercise)
       let entry = {
         date: workout.date,
-        ORM: calculatedMax
+        ORM: calculatedMax,
+        notes: exercise.exerciseNotes
       }
       // Send the entry to the database. Print the response.
       const url = 'https://strengthpractice-7e443.firebaseio.com/daymaxes/'
