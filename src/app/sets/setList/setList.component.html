@@ -1,7 +1,7 @@
-<hr>
 
 <h4>Workout for: {{ date }} </h4>
-<div *ngFor="let exercise of exercises; let i = index" class="container" style="margin-top: 30px">
+<div *ngFor="let exercise of exercises; let i = index" class="container" 
+style="margin-top: 30px; margin-left: 5px;">
 
 	<div class="row">
 		<h4 style="margin-right: 10px;"(click)="onEditExercise(i)" class="exercise-title">{{ exercise.exerciseName }}</h4>
@@ -30,3 +30,5 @@
 <hr>
 
 <button class="btn btn-success" (click)="onNewExercise()">Add Exercise</button>
+|
+<button class="btn btn-primary" (click)="onSaveWorkout()" [disabled]="!getExercisesLength() > 0">Save Workout</button>

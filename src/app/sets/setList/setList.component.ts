@@ -83,6 +83,8 @@ export class SetListComponent implements OnInit, OnDestroy{
 
 	onSaveWorkout() {
 		this.workoutService.storeWorkout();
+		this.repMaxService.patchDayMaxes(this.workoutService.workout);
+		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
 	getRecordMax(exerciseName) {
@@ -92,6 +94,10 @@ export class SetListComponent implements OnInit, OnDestroy{
 	calculateMax(reps: number, weight: number) {
 		let unrounded = weight * (1 + (reps / 30));
 		return +unrounded.toFixed(2)
+	}
+
+	getExercisesLength(){
+		return this.workoutService.workout.exercises.length;
 	}
 
 }

@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
 import { BehaviorSubject } from 'rxjs';
@@ -205,8 +205,6 @@ export class WorkoutService {
   checkExerciseHasRecord(exerciseName: string) {
     return this.repMaxService.getRecordMaxFromName(exerciseName)
   }
-
-
 
 }
 

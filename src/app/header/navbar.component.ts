@@ -26,7 +26,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	// =====================================================
 
 	constructor(private workoutService: WorkoutService,
-		private repMaxService: RepmaxService,
 		private router: Router,
 		private authService: AuthService) { }
 
@@ -51,22 +50,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.router.navigate(['home'])
 	}
 
-	onSaveData() {
-		this.workoutService.storeWorkout();
-		this.repMaxService.patchDayMaxes(this.workoutService.workout);
-		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
-	}
-
 	onFetchData() {
 		const date = new Date().toDateString();
 		this.workoutService.fetchWorkout(date);
 	}
-
-	// Button method for posting dayMaxes to database
-	// qwe() {
-	// 	this.repMaxService.setTodaysRecords(this.workoutService.workout)
-	// }
-
 
 	onNavigateToToday() {
 		const today = this.stripWeekday(
