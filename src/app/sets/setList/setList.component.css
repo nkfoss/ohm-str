@@ -6,3 +6,8 @@
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+#workout-day {
+	justify-content: center;
+	text-align: center;
+}
