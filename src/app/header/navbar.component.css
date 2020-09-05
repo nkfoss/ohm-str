@@ -10,3 +10,7 @@
 .logout {
 	float: right;
 }
+
+.active-link {
+    border: 1px solid black;
+}
