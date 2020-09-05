@@ -1,13 +1,22 @@
-.exercise-title {
+/* .exercise-title {
 	color: blue;
 }
 
 .exercise-title:hover {
 	cursor: pointer;
 	text-decoration: underline;
-}
+} */
 
 #workout-day {
 	justify-content: center;
 	text-align: center;
+}
+
+.container {
+	border: 2px solid grey;
+	cursor: pointer;
+}
+
+.row {
+	padding: 0.5rem;
 }
