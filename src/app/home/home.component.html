@@ -4,7 +4,7 @@
 		<div class="col">
 			<h3>Pick a workout date</h3>
 			<mat-form-field appearance="fill">
-				<mat-label>Input disabled</mat-label>
+				<mat-label>Date</mat-label>
 
 				<input matInput [matDatepicker]="dp" disabled (dateChange)="setSelectedDate($event)">
 				<!-- ^ The dateChange property must be used in place of 'value'. For some reason, value doens't work. -->
