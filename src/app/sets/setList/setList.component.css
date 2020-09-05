@@ -15,8 +15,13 @@
 .container {
 	border: 2px solid grey;
 	cursor: pointer;
+	position:relative;
 }
 
 .row {
 	padding: 0.5rem;
+}
+
+#edit-icon {
+	position:absolute;right:0;top: -2px
 }

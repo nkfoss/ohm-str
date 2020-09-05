@@ -3,6 +3,9 @@
 	<div *ngFor="let exercise of exercises; let i = index" class="container" style="margin-top: 30px;"
 		(click)="onEditExercise(i)">
 
+		<span class="material-icons" id="edit-icon">
+			create
+		</span>
 		<div class="row">
 			<h4 class="exercise-title">
 				{{ exercise.exerciseName }}
