@@ -37,6 +37,7 @@
         </mat-form-field>
 
         <hr>
+        
         <!-- #endregion -->
 
         <!--#region SET TYPES --------------------------------------------------->
@@ -54,17 +55,20 @@
           </mat-select>
         </mat-form-field>
 
-
         <hr>
 
         <!-- #endregion -->
 
         <!-- #region NOTES --------------------------------------------------->
 
-        <mat-form-field appearance="outline" style="width: 350px;">
-          <mat-label for="notesInput">Exercise notes</mat-label>
-          <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6" matInput> </textarea>
-        </mat-form-field>
+        <div class="col">
+          <mat-form-field appearance="outline" style="width: 350px;">
+            <mat-label for="notesInput">Exercise notes</mat-label>
+            <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"
+              matInput> </textarea>
+          </mat-form-field>
+          <button class="btn btn-info" type="button" (click)="openDialog()">Old Notes</button>
+        </div>
         <hr>
 
         <!-- #endregion --------------------------------------------------->
@@ -205,7 +209,8 @@
               </td>
             </tr>
 
-            <!-- #region Rest Pause Sets -->
+            <!-- #region Rest Pause Sets -------------------- -->
+
             <tr *ngFor="let restPauseSetForm of this.getRestPauseFormArray(i).controls; let restPauseIndex = index">
 
               <th scope="row"> R/P </th>
@@ -238,6 +243,7 @@
 
             </tr>
             <!-- #endregion -->
+          
           </tbody>
         </table>
 
