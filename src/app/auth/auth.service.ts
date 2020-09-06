@@ -66,16 +66,19 @@ export class AuthService {
     )
   }
 
+  // If token exists and is not expired, then auto-login will work.
   autoLogin() {
 
+    // Get user data from local storage.
     const userData: {
       email: string,
       id: string,
       _token: string,
       _tokenExpirationDate: string } = JSON.parse( localStorage.getItem('userData') )
 
-    if ( !userData ) { return } 
+    if ( !userData ) { return } // If none, then user is not authenticated.
     
+    // Create user object
     const loadedUser = new User(
       userData.email, 
       userData.id, 
@@ -83,25 +86,29 @@ export class AuthService {
       new Date(userData._tokenExpirationDate) 
     );
 
+    // If token exists...
     if (loadedUser.token) { 
-      this.userSubject.next(loadedUser) 
-      const expirationDuration = 
-        new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
-      this.autoLogout(expirationDuration)
+      this.userSubject.next(loadedUser)     // Update anything subscribed to user
+      const expirationDuration =            // Calculate how long left until token expires (in milliseconds)
+        new Date(userData._tokenExpirationDate).getTime() - new Date().getTime() 
+      this.autoLogout(expirationDuration)   // Set timeout for auto-logout
     }
     
   }
 
+  // When you push the logout button, or token timer expires.
   logout() {
-    if (this.tokenTimer) { clearTimeout(this.tokenTimer )}
-    localStorage.removeItem('userData');
-    this.userSubject.next(null)
-    this.router.navigate(['/auth'])
+    if (this.tokenTimer) { clearTimeout( this.tokenTimer )}  // Reset the timer
+    localStorage.removeItem('userData');                     // Clear user data
+    this.userSubject.next(null)                              // Update user subscriptions will null
+    this.router.navigate(['/auth'])                          // Go back to login page.
   }
 
+  // Sets a timer (ms) that logs out upon access token expiration.
   autoLogout(expirationDuration: number) {
     this.tokenTimer = setTimeout( () => { this.logout(); } , expirationDuration)
   }
+
 
 
   private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
