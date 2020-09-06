@@ -25,6 +25,8 @@ export class AuthComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+
+    // Build/populate the sign-in form.
     let email = '';
     let password = '';
     this.authForm = this.formBuilder.group({
@@ -35,21 +37,24 @@ export class AuthComponent implements OnInit {
 
   //===================================================================================
 
+  // Switch from login to sign-up mode.
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode
   }
 
+
   onSubmit() {
 
-    this.error=null;
-    if (!this.authForm.valid) { return }
+    this.error=null; // Reset any previous error message.
+    
+    if (!this.authForm.valid) { return } 
 
     const email = this.authForm.value.email;
     const password = this.authForm.value.password;
-
     let authObs: Observable<AuthResponseData>;
 
-    this.isLoading = true;
+    this.isLoading = true; // Displays the loading spinner
+
     if (this.isLoginMode) { authObs = this.authService.login(email, password) } 
     else { authObs = this.authService.signup(email, password) }
 
