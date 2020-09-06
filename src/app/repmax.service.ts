@@ -148,8 +148,7 @@ export class RepmaxService {
         notes: this.dayMaxes[exerciseName][key].notes
       });
     }
-    console.log(notesArr);
-    return null;
+    return notesArr;
   }
 
   // Return all recorded exercise names. 

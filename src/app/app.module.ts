@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthComponent } from './auth/auth/auth.component'
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { NotesDialog } from './sets/edit-exercise/edit-exercise.component';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -32,7 +33,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     NavbarComponent,
     HomeComponent,
     AuthComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    NotesDialog
   ],
   imports: [
     BrowserModule,

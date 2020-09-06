@@ -37,7 +37,7 @@
         </mat-form-field>
 
         <hr>
-        
+
         <!-- #endregion -->
 
         <!--#region SET TYPES --------------------------------------------------->
@@ -62,12 +62,16 @@
         <!-- #region NOTES --------------------------------------------------->
 
         <div class="col">
-          <mat-form-field appearance="outline" style="width: 350px;">
-            <mat-label for="notesInput">Exercise notes</mat-label>
-            <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"
-              matInput> </textarea>
-          </mat-form-field>
-          <button class="btn btn-info" type="button" (click)="openDialog()">Old Notes</button>
+          <div class="row">
+            <mat-form-field appearance="outline" style="width: 350px;">
+              <mat-label for="notesInput">Exercise notes</mat-label>
+              <textarea class="form-control" formControlName="exerciseNotes" id="notesInput" rows="6"
+                matInput> </textarea>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <button class="btn btn-info" type="button" (click)="openDialog()">Old Notes</button>
+          </div>
         </div>
         <hr>
 
@@ -243,7 +247,7 @@
 
             </tr>
             <!-- #endregion -->
-          
+
           </tbody>
         </table>
 

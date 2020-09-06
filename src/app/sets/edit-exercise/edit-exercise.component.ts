@@ -1,4 +1,4 @@
-import { OnInit, ViewChild, Component } from '@angular/core';
+import { OnInit, ViewChild, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { WorkoutService } from '../../workout.service';
@@ -6,16 +6,9 @@ import { Exercise } from '../../shared/exercise.model';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RepmaxService } from 'src/app/repmax.service';
 
-//========================================================================
-
-@Component({
-  selector: 'notes-dialog',
-  templateUrl: './notes-dialog.component.html'
-})
-export class NotesDialog {}
 
 //========================================================================
 
@@ -96,13 +89,12 @@ export class EditExerciseComponent implements OnInit {
 
   // A way to view previous sets/notes for this specific exercise. NOT IMPLEMENTED YET.
   private openDialog() {
+    
     this.repMaxService.getPreviousNotes(this.exercise.exerciseName);
-    // const dialogRef  = this.dialog.open(NotesDialog, {
-    //   width: '250px',
-    //   data: {}
-    // });
-
-    // dialogRef.afterClosed()
+    const dialogRef  = this.dialog.open(NotesDialog, {
+      width: '250px',
+      data: this.repMaxService.getPreviousNotes(this.exercise.exerciseName)
+    });
   }
 
   //#endregion
@@ -372,4 +364,26 @@ export class EditExerciseComponent implements OnInit {
 
 }
 
+//#region === Dialog Box =====================================================================
+
+export interface DialogData {
+  date: string,
+  notes: string
+}
+
+//========================================================================
+
+@Component({
+  selector: 'notes-dialog',
+  templateUrl: './notes-dialog.component.html'
+})
+export class NotesDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<NotesDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData[]
+  ) {}
+}
+
+//#endregion
 
