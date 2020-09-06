@@ -18,17 +18,17 @@ export class AuthGuard implements CanActivate {
 		return this.authService.userSubject.pipe(
 			take(1),
 			map(user => {
-				const isAuthenticated = !!user;
+				const isAuthenticated = !!user; // **see below
 				if (isAuthenticated) { return true }
 				else { return this.router.createUrlTree(['/auth']) }
 			}),
 		);
 	}
 	// What's happening here?
-	//    A boolean an observable holding a boolean is being returned in the end.
+	//    An observable holding a boolean is being returned in the end.
 	//	  If the boolean is true, then the user is granted access. Otherwise they are redirected.
-	//	  In our case, we are checking to see if a user object exists (meaning the user is authenticated).
+	//	  In our case, we are checking to see if a user object exists (implying the user is authenticated).
 	//  While the user subject IS an observable, it does not necessarily return a boolean in the end.
-	//    So instead of just returning this.service.userSubject, we use pipe/map to get a boolean.
+	//    ** So instead of just returning this.service.userSubject, we use pipe/map to get a boolean. 
 
 }
