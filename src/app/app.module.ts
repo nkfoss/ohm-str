@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppComponent } from './app.component';
 import { EditExerciseComponent } from './sets/edit-exercise/edit-exercise.component';
-import { SetItemComponent } from './sets/set-item/set-item.component';
 import { NavbarComponent } from './header/navbar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SetListComponent } from './sets/setList/setList.component';
@@ -23,12 +22,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditExerciseComponent,
-    SetItemComponent,
     SetListComponent,
     NavbarComponent,
     HomeComponent,
@@ -49,7 +48,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatButtonModule,
     MatIconModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
