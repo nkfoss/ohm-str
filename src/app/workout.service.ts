@@ -13,20 +13,93 @@ import { RepmaxService } from './repmax.service';
 
 export class WorkoutService {
 
+  //#region === Properties =======================================================
+
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   workout: Workout = {
     date: "",
     category: "",
     notes: "",
-    exercises: []
+    exercises: [],
+    bodyweight: null
   }
 
-  // =============================================================
+  //#endregion
+
+  //#region === Lifecycle Hooks ==================================================
 
   constructor(private http: HttpClient,
     private repMaxService: RepmaxService) { }
 
-  //========================================================
+  //#endregion
+
+  //#region === Database Functions ===============================================
+
+  fetchWorkout(dateString?: string) {
+    console.log("METHOD: fetchWorkout")
+
+    // Set the url. If no datestring provided, use current date.
+    let url: string;
+    if (dateString) {
+      this.workout.date = dateString
+      let URLdateString = dateString.split(' ').join('%20');
+      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
+    } else {
+      const date = new Date().toLocaleString()
+      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
+    }
+
+    console.log("URL " + url)
+    this.http.get(url).subscribe(
+      (workout: Workout) => {
+        if (workout) {
+          console.log('workout fetched')
+          workout.exercises.forEach(exercise => {
+
+            // Check each exercise has a recordMax. If not, then calculate and set it.
+            let recordMax = this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
+            if (!recordMax) {
+              recordMax = this.repMaxService.calculateBestMax(exercise);
+              this.repMaxService.recordMaxes[exercise.exerciseName] = recordMax;
+            }
+
+            // Set the percent effort.
+            this.repMaxService.setPercentEffort(exercise, recordMax)
+          })
+
+          // Set the official workout and send out the subscription.
+          this.workout = workout;
+          console.log('fetched workout: ' + workout)
+          this.exerciseUpdated.next(this.workout.exercises)
+        }
+
+        else {
+          // If no workout is returned, then we just set the displayed data to null
+          let emptyWorkout: Workout = {
+            date: dateString,
+            category: "",
+            notes: "",
+            exercises: [],
+            bodyweight: null
+          }
+          this.workout = emptyWorkout;
+          this.exerciseUpdated.next(this.workout.exercises);
+        }
+      }
+    )
+    console.log("CLOSED: fetchWorkout")
+
+  }
+
+  storeWorkout() {
+    this.convertToLowerCase(this.workout.exercises)
+    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json'
+    this.http.patch(url, this.workout).subscribe(response => { console.log(response) })
+  }
+
+  //#endregion
+
+  //#region === Other Functions ==================================================
 
   getWorkout() { return this.workout; }
 
@@ -105,77 +178,14 @@ export class WorkoutService {
     this.exerciseUpdated.next(this.getExercises())
   }
 
-
-  // ==========================================================================================
   getRecordNames(): string[] {
     return this.repMaxService.getRecordNames();
-  }
-
-  storeWorkout() {
-    this.convertToLowerCase(this.workout.exercises)
-    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json'
-    this.http.patch(url, this.workout).subscribe(response => { console.log(response) })
   }
 
   convertToLowerCase(exercises: Exercise[]) {
     exercises.forEach(exercise => {
       exercise.exerciseName = exercise.exerciseName.toLowerCase()
     })
-  }
-
-  fetchWorkout(dateString?: string) {
-    console.log("METHOD: fetchWorkout")
-
-    // Set the url. If no datestring provided, use current date.
-    let url: string;
-    if (dateString) {
-      this.workout.date = dateString
-      let URLdateString = dateString.split(' ').join('%20');
-      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
-    } else {
-      const date = new Date().toLocaleString()
-      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
-    }
-
-    console.log("URL " + url)
-    this.http.get(url).subscribe(
-      (workout: Workout) => {
-        if (workout) {
-          console.log('workout fetched')
-          workout.exercises.forEach(exercise => {
-
-            // Check each exercise has a recordMax. If not, then calculate and set it.
-            let recordMax = this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
-            if (!recordMax) {
-              recordMax = this.repMaxService.calculateBestMax(exercise);
-              this.repMaxService.recordMaxes[exercise.exerciseName] = recordMax;
-            }
-
-            // Set the percent effort.
-            this.repMaxService.setPercentEffort(exercise, recordMax)
-          })
-
-          // Set the official workout and send out the subscription.
-          this.workout = workout;
-          console.log('fetched workout: ' + workout)
-          this.exerciseUpdated.next(this.workout.exercises)
-        }
-
-        else {
-          // If no workout is returned, then we just set the displayed data to null
-          let emptyWorkout: Workout = {
-            date: dateString,
-            category: "",
-            notes: "",
-            exercises: []
-          }
-          this.workout = emptyWorkout;
-          this.exerciseUpdated.next(this.workout.exercises);
-        }
-      }
-    )
-    console.log("CLOSED: fetchWorkout")
-
   }
 
   // Note...test runtime for this in two different condition
@@ -189,7 +199,6 @@ export class WorkoutService {
     })
     this.exerciseUpdated.next(this.workout.exercises)
   }
-
 
   getExercisesByName(exerciseName: string) {
     let exercises = this.workout.exercises
@@ -205,6 +214,8 @@ export class WorkoutService {
   checkExerciseHasRecord(exerciseName: string) {
     return this.repMaxService.getRecordMaxFromName(exerciseName)
   }
+
+  //#endregion
 
 }
 
