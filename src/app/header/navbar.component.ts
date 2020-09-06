@@ -16,12 +16,10 @@ import { RepmaxService } from "../repmax.service";
 
 export class NavbarComponent implements OnInit, OnDestroy {
 
-	isAuthenticated = false;
-	isNavbarCollapsed = true;
-	logStatus = true;
-	logStatusChanged = false;
+	isAuthenticated = false; // Authenticated users see different things.
+	private userSub: Subscription; // also used for authentication.
 
-	private userSub: Subscription
+	isNavbarCollapsed = true; 
 
 	// =====================================================
 
@@ -35,7 +33,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				this.isAuthenticated = !!user
 				// This makes it so if we get a null user, we will assign 'false'
 			})
-
 	}
 
 	ngOnDestroy() { this.userSub.unsubscribe() }
@@ -60,6 +57,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			new Date().toDateString()
 		)
 		const toNavigate = 'workout/' + today;
+
 		this.router.navigate([toNavigate]);
 		if (this.workoutService.workout.date !== today) {
 			this.workoutService.fetchWorkout(today);
