@@ -1,4 +1,6 @@
 <h2 mat-dialog-title>Previous Notes</h2>
 <mat-dialog-content class='mat-typography'>
-	<h3></h3>
+	<h4 *ngFor="let notesEntry of this.data">
+		<b> {{ notesEntry.date }} </b> : {{ notesEntry.notes }}
+	</h4>
 </mat-dialog-content>
