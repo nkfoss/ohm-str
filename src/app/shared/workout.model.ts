@@ -6,5 +6,6 @@ export class Workout {
 		public date: string, 
 		public category: string, 
 		public notes: string, 
-		public exercises: Exercise[]) {}
+		public exercises: Exercise[],
+		public bodyweight?: number) {}
 }
