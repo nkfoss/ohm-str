@@ -17,17 +17,20 @@ import { RepMaxRecord } from "src/app/shared/repMaxRecord.model";
 
 export class SetListComponent implements OnInit, OnDestroy{
 
+	//#region === Properties ====================================================
+
 	exercises: Exercise[];
 	exerciseSub: Subscription;
 	todaysMaxes: RepMaxRecord[];
 	todaysMaxesSub: Subscription;
-	percentEffortArray: number[] = [];
+	
+	bodyWeight: number; // Not implemented yet.
 
-	isNavbarCollapsed = true;
-	date: string;
+	date: string; // The date of the loaded workout
 
+	//#endregion
 
-	// =====================================================
+	//#region === Lifecycle Hooks ===============================================
 
 	constructor(
 		private workoutService: WorkoutService,
@@ -37,6 +40,8 @@ export class SetListComponent implements OnInit, OnDestroy{
 
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
+
+		this.bodyWeight = this.workoutService.workout.bodyweight;
 		
 		// Setup sub for repMaxes
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
@@ -57,20 +62,21 @@ export class SetListComponent implements OnInit, OnDestroy{
 		console.log("INIT COMPLETE: SetListComponent")
 	}
 
-	ngOnDestroy() { if (this.exerciseSub) { this.exerciseSub.unsubscribe() } }
-
-
-	// =====================================================
-
-	getDateFromRoute() {
-		this.activatedRoute.url.subscribe(url => {
-			this.date = url[1].toString();
-			this.date = this.date.split('%20').join(' ');
-		});
+	ngOnDestroy() { 
+		if (this.exerciseSub) { this.exerciseSub.unsubscribe() } 
+		if (this.todaysMaxesSub) { this.todaysMaxesSub.unsubscribe() }
+		this.workoutService.workout.bodyweight = this.bodyWeight;
 	}
 
-	onDeleteSet(exerciseIndex, setIndex) {
-		this.workoutService.deleteSet(exerciseIndex, setIndex)
+	//#endregion
+
+	//#region === Functions =====================================================
+
+	onSaveWorkout() {
+		this.workoutService.workout.bodyweight = this.bodyWeight;
+		this.workoutService.storeWorkout();
+		this.repMaxService.patchDayMaxes(this.workoutService.workout);
+		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
 	onNewExercise() {
@@ -81,10 +87,11 @@ export class SetListComponent implements OnInit, OnDestroy{
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
 	}
 
-	onSaveWorkout() {
-		this.workoutService.storeWorkout();
-		this.repMaxService.patchDayMaxes(this.workoutService.workout);
-		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
+	getDateFromRoute() {
+		this.activatedRoute.url.subscribe(url => {
+			this.date = url[1].toString();
+			this.date = this.date.split('%20').join(' ');
+		});
 	}
 
 	getRecordMax(exerciseName) {
@@ -99,5 +106,7 @@ export class SetListComponent implements OnInit, OnDestroy{
 	getExercisesLength(){
 		return this.workoutService.workout.exercises.length;
 	}
+
+	//#endregion  
 
 }

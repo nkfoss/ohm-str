@@ -1,5 +1,12 @@
 
 <h4>Workout for: {{ date }} </h4>
+
+<mat-form-field>
+	<mat-label>Bodyweight</mat-label>
+	<input matInput type="number" min="1" max="999" [(value)]="bodyWeight">
+	<mat-hint align="start">Lbs. only.</mat-hint>
+</mat-form-field>
+
 <div *ngFor="let exercise of exercises; let i = index" class="container" 
 style="margin-top: 30px; margin-left: 5px;">
 
