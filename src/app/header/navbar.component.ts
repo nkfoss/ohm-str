@@ -44,7 +44,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	onNavigateHome() {
-		this.router.navigate(['home'])
+		this.router.navigate(['home']);
+		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 	}
 
 	onFetchData() {
@@ -59,6 +60,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		const toNavigate = 'workout/' + today;
 
 		this.router.navigate([toNavigate]);
+		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 		if (this.workoutService.workout.date !== today) {
 			this.workoutService.fetchWorkout(today);
 		}

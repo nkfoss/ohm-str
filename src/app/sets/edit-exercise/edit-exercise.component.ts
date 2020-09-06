@@ -88,7 +88,7 @@ export class EditExerciseComponent implements OnInit {
   // It opens a snackbar, ya dingus.
   private openSnackBar() {
     this._snackBar.open(
-      this.editMode ? 'Exercise successfully editted' : 'Exercise successfully added.', 
+      this.editMode ? 'Exercise successfully edited' : 'Exercise successfully added.', 
       'dismiss', 
       { duration: 5000 }
       )
