@@ -64,7 +64,7 @@ export class RepmaxService {
         console.log(response);
       }
     )
-    
+
     console.log("CLOSED: patchRecordMaxes()")
   }
 
@@ -72,21 +72,36 @@ export class RepmaxService {
   patchDayMaxes(workout: Workout) {
     workout.exercises.forEach(exercise => {
 
-      if (exercise.sets.length < 1 || exercise.setType === "clusters") { return; }
-      // This is essentially 'continue'... to skip iterations with no sets.
+      let entry;
 
-      // Find the highest 1rm from the sets, and create a record entry
-      let calculatedMax = this.calculateBestMax(exercise)
-      let entry = {
-        date: workout.date,
-        ORM: calculatedMax,
-        notes: exercise.exerciseNotes
+      if (exercise.sets.length < 1) { return; } // This skips to the next 'forEach' iteration
+
+      // For clusters/mtor, we only want to record the notes, since ORM does not apply.
+      else if (exercise.setType === "clusters" || exercise.setType === "mtor") {
+        entry = {
+          date: workout.date,
+          notes: exercise.exerciseNotes
+        }
       }
+
+      // For all other sets, record notes and calculate ORM.
+      else {
+        let calculatedMax = this.calculateBestMax(exercise)
+        entry = {
+          date: workout.date,
+          ORM: calculatedMax,
+          notes: exercise.exerciseNotes
+        }
+      }
+
       // Send the entry to the database. Print the response.
       const url = 'https://strengthpractice-7e443.firebaseio.com/daymaxes/'
         + exercise.exerciseName.toLowerCase() + '/' + entry.date + '.json'
 
-      this.http.patch(url, entry).subscribe(response => { console.log(response) })
+      this.http.patch(url, entry).subscribe(
+        response => { console.log(response) },
+        error => { console.log(error) }
+      )
     })
   }
 
@@ -140,7 +155,7 @@ export class RepmaxService {
 
   // From an exercise name, lookup and return an object with date/notes for that exercise
   // NOT IMPLEMENTED YET
-  getPreviousNotes(exerciseName: string): {date: string, notes: string}[] {
+  getPreviousNotes(exerciseName: string): { date: string, notes: string }[] {
     let notesArr = [];
     for (var key in this.dayMaxes[exerciseName]) {
       notesArr.push({

@@ -1,0 +1,7 @@
+
+chunk {} runtime.689ba4fd6cadb82c1ac2.js (runtime) 1.45 kB [entry] [rendered]
+chunk {1} main.e27270f7c0f03cfdc28d.js (main) 765 kB [initial] [rendered]
+chunk {2} polyfills.bc1082d9a00db40a276c.js (polyfills) 45 kB [initial] [rendered]
+chunk {3} polyfills-es5.2dfbcfc463ac2933c24f.js (polyfills-es5) 128 kB [initial] [rendered]
+chunk {4} styles.62565cd560d502d87ee0.css (styles) 204 kB [initial] [rendered]
+Date: 2020-08-27T00:21:22.303Z - Hash: a9676683e0412add569f - Time: 38584ms
