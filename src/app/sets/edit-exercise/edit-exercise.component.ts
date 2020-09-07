@@ -88,7 +88,7 @@ export class EditExerciseComponent implements OnInit {
   }
 
   // A way to view previous sets/notes for this specific exercise. NOT IMPLEMENTED YET.
-  private openDialog() {
+  openDialog() {
     
     this.repMaxService.getPreviousNotes(this.exercise.exerciseName);
     const dialogRef  = this.dialog.open(NotesDialog, {
@@ -120,7 +120,7 @@ export class EditExerciseComponent implements OnInit {
   }
 
   // Used by onSubmit() and onDeleteExercise()
-  private onNavigateBack() {
+  onNavigateBack() {
     const date = this.workoutService.getFormattedDate()
     this.router.navigate(['workout/' + date])
   }
