@@ -102,8 +102,8 @@ export class WorkoutService {
     newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
 
     // NEVER calculate records from a cluster or mtor set.
-    if (newExercise.sets.length > 0 
-      && newExercise.setType !== "clusters" 
+    if (newExercise.sets.length > 0
+      && newExercise.setType !== "clusters"
       && newExercise.setType !== "mtor") {
 
       let bestSet = this.repMaxService.calculateBestMax(newExercise);
@@ -117,7 +117,7 @@ export class WorkoutService {
 
       // If you best the record-max...
       else if (bestSet > recordMax) {
-        this.repMaxService.setPercentEffort(newExercise, recordMax) 
+        this.repMaxService.setPercentEffort(newExercise, recordMax)
         this.repMaxService.updatedRecordMaxes[newExercise.exerciseName] = bestSet;
       }
 
@@ -143,11 +143,11 @@ export class WorkoutService {
       let recordMax = this.repMaxService.getRecordMaxFromName(updatedExercise.exerciseName);
 
       if (!recordMax) {
-        this.repMaxService.setPercentEffort(updatedExercise, bestSet) 
+        this.repMaxService.setPercentEffort(updatedExercise, bestSet)
         this.repMaxService.recordMaxes[updatedExercise.exerciseName] = bestSet;
       }
       else if (bestSet > recordMax) {
-        this.repMaxService.setPercentEffort(updatedExercise, recordMax) 
+        this.repMaxService.setPercentEffort(updatedExercise, recordMax)
         this.repMaxService.updatedRecordMaxes[updatedExercise.exerciseName] = bestSet;
       }
       else {
