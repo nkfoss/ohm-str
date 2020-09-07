@@ -49,23 +49,10 @@ export class WorkoutService {
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
 
-    console.log("URL " + url)
     this.http.get(url).subscribe(
       (workout: Workout) => {
         if (workout) {
-          console.log('workout fetched')
-          workout.exercises.forEach(exercise => {
-
-            // Check each exercise has a recordMax. If not, then calculate and set it.
-            let recordMax = this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
-            if (!recordMax) {
-              recordMax = this.repMaxService.calculateBestMax(exercise);
-              this.repMaxService.recordMaxes[exercise.exerciseName] = recordMax;
-            }
-
-            // Set the percent effort.
-            this.repMaxService.setPercentEffort(exercise, recordMax)
-          })
+          console.log('workout fetched');
 
           // Set the official workout and send out the subscription.
           this.workout = workout;
