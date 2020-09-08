@@ -1,10 +1,12 @@
-import { Component, OnInit, DoCheck, OnDestroy, AfterContentInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { WorkoutService } from "../../workout.service";
 import { Exercise } from "../../shared/exercise.model";
-import { Subscription } from "rxjs";
+import { Subscription, Observable } from "rxjs";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { RepmaxService } from "src/app/repmax.service";
 import { RepMaxRecord } from "src/app/shared/repMaxRecord.model";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Workout } from "src/app/shared/workout.model";
 
 @Component({
 	selector: 'app-setList',
@@ -15,7 +17,7 @@ import { RepMaxRecord } from "src/app/shared/repMaxRecord.model";
 
 // =====================================================
 
-export class SetListComponent implements OnInit, OnDestroy{
+export class SetListComponent implements OnInit, OnDestroy {
 
 	//#region === Properties ====================================================
 
@@ -23,7 +25,7 @@ export class SetListComponent implements OnInit, OnDestroy{
 	exerciseSub: Subscription;
 	todaysMaxes: RepMaxRecord[];
 	todaysMaxesSub: Subscription;
-	
+
 	bodyWeight: number; // Not implemented yet.
 
 	date: string; // The date of the loaded workout
@@ -36,13 +38,14 @@ export class SetListComponent implements OnInit, OnDestroy{
 		private workoutService: WorkoutService,
 		private repMaxService: RepmaxService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute) { }
+		private activatedRoute: ActivatedRoute,
+		private _snackBar: MatSnackBar) { }
 
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
 
 		this.bodyWeight = this.workoutService.workout.bodyweight;
-		
+
 		// Setup sub for repMaxes
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
 			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
@@ -62,8 +65,8 @@ export class SetListComponent implements OnInit, OnDestroy{
 		console.log("INIT COMPLETE: SetListComponent")
 	}
 
-	ngOnDestroy() { 
-		if (this.exerciseSub) { this.exerciseSub.unsubscribe() } 
+	ngOnDestroy() {
+		if (this.exerciseSub) { this.exerciseSub.unsubscribe() }
 		if (this.todaysMaxesSub) { this.todaysMaxesSub.unsubscribe() }
 		this.workoutService.workout.bodyweight = this.bodyWeight;
 	}
@@ -74,7 +77,17 @@ export class SetListComponent implements OnInit, OnDestroy{
 
 	onSaveWorkout() {
 		this.workoutService.workout.bodyweight = this.bodyWeight;
-		this.workoutService.storeWorkout();
+		let workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
+		workoutObs.subscribe(
+			resData => {
+				console.log(resData);
+				this.openSnackBar("Workout saved successfully.")
+			},
+			errorMessage => {
+				this.openSnackBar(errorMessage)
+			}
+		)
+
 		this.repMaxService.patchDayMaxes(this.workoutService.workout);
 		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
@@ -103,8 +116,17 @@ export class SetListComponent implements OnInit, OnDestroy{
 		return +unrounded.toFixed(2)
 	}
 
-	getExercisesLength(){
+	getExercisesLength() {
 		return this.workoutService.workout.exercises.length;
+	}
+
+	// This snackbar is opened after the workout service attempts to store the workout.
+	private openSnackBar(responseMessage: string) {
+		this._snackBar.open(
+			responseMessage,
+			'dismiss',
+			{ duration: 3000 }
+		)
 	}
 
 	//#endregion  
