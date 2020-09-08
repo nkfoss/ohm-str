@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from './shared/exercise.model';
 import { Workout } from './shared/workout.model'
-import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RepmaxService } from './repmax.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -80,8 +81,21 @@ export class WorkoutService {
 
   storeWorkout() {
     this.convertToLowerCase(this.workout.exercises)
-    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json'
-    this.http.patch(url, this.workout).subscribe(response => { console.log(response) })
+    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json';
+    return this.http.patch<Workout>(url, this.workout).pipe(
+      catchError(this.handleErrorResponse)
+      // We don't use 'tap' here, since tap only produces side-effects, which we don't need to do.
+      // Without an error, the observable only wraps the response (a workout object),
+      // which our component is equipped to handle.
+    )
+  }
+
+  private handleErrorResponse(errRes: HttpErrorResponse) {
+    let statusCode = errRes.status.toString();
+    let statusText = errRes.statusText
+    let errMsg = "ERROR: " + statusCode + " " + statusText;
+    // Logic for handling specific error codes
+    return throwError(errMsg);
   }
 
   //#endregion
