@@ -91,7 +91,6 @@ export class EditExerciseComponent implements OnInit {
 
   // A way to view previous sets/notes for this specific exercise. NOT IMPLEMENTED YET.
   openDialog() {
-    this.repMaxService.getPreviousNotes(this.exerciseName);
     const dialogRef  = this.dialog.open(NotesDialog, {
       width: '250px',
       data: this.repMaxService.getPreviousNotes(this.exerciseName)
