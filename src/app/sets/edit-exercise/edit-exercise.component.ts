@@ -80,7 +80,7 @@ export class EditExerciseComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  // It opens a snackbar, ya dingus.
+  // It opens a snackbar, ya dingus. (mmmmm...snackbar... *drools*)
   private openSnackBar() {
     this._snackBar.open(
       this.editMode ? 'Exercise successfully edited' : 'Exercise successfully added.', 
