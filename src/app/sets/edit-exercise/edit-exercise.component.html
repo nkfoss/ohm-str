@@ -20,7 +20,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Exercise name</mat-label>
           <input id="exerciseName" type="text" formControlName="exerciseName" placeholder="ex. Deadlift"
-            aria-label="Number" matInput [matAutocomplete]="auto">
+            aria-label="Number" matInput [matAutocomplete]="auto" [(ngModel)]="exerciseName"> 
           <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
               {{option}}

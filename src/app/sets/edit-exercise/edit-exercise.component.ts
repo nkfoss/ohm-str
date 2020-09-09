@@ -24,14 +24,16 @@ export class EditExerciseComponent implements OnInit {
   
   //#region === Properties ================================================================
 
-  @ViewChild('setType') selectElement;
-  setsForm: FormGroup;
+  editMode = true; // False when adding new exercise, false when editing existing
+
   exerciseId: number;
   exercise: Exercise;
-  editMode = true; // False when adding new exercise, false when editing existing
+
+  @ViewChild('setType') selectElement;
+  setsForm: FormGroup;
+  exerciseName: string = '';
   stringSetType: string;
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
 
@@ -89,11 +91,10 @@ export class EditExerciseComponent implements OnInit {
 
   // A way to view previous sets/notes for this specific exercise. NOT IMPLEMENTED YET.
   openDialog() {
-    
-    this.repMaxService.getPreviousNotes(this.exercise.exerciseName);
+    this.repMaxService.getPreviousNotes(this.exerciseName);
     const dialogRef  = this.dialog.open(NotesDialog, {
       width: '250px',
-      data: this.repMaxService.getPreviousNotes(this.exercise.exerciseName)
+      data: this.repMaxService.getPreviousNotes(this.exerciseName)
     });
   }
 
@@ -206,9 +207,8 @@ export class EditExerciseComponent implements OnInit {
   // Setup (and populate) the form.
   private initForm() {
 
-    // Initial values of the form fields
-    let exerciseName = '';
-    let stringSetType = '';
+    // Initialize values of the form fields...
+    // (except exerciseName and stringSetType, which are properties of the component)
     let exerciseNotes = null;
     let warmupControlArray = new FormArray([]);
     let setsControlArray = new FormArray([]);
@@ -221,7 +221,7 @@ export class EditExerciseComponent implements OnInit {
       this.exercise = this.workoutService.getExercise(this.exerciseId);
 
       // ...get the exercise name, setType, and notes
-      exerciseName = this.exercise.exerciseName;
+      this.exerciseName = this.exercise.exerciseName;
       this.stringSetType = this.exercise.setType;
       exerciseNotes = this.exercise.exerciseNotes;
 
@@ -275,8 +275,8 @@ export class EditExerciseComponent implements OnInit {
 
     // Build the actual form to be used.
     this.setsForm = this.formBuilder.group({
-      exerciseName: this.formBuilder.control(exerciseName, [Validators.required, this.charLimit50]),
-      setType: this.formBuilder.control(stringSetType, null),
+      exerciseName: this.formBuilder.control(this.exerciseName, [Validators.required, this.charLimit50]),
+      setType: this.formBuilder.control(this.stringSetType, null),
       exerciseNotes: this.formBuilder.control(exerciseNotes, null),
       warmupSets: warmupControlArray,
       sets: setsControlArray
