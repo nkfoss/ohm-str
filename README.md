@@ -16,6 +16,6 @@ npm install --save jquery
 
 The endpoints to the project database are all in the code, but you still need the API key to read/write anything _(of course, that's privileged information)_.
 
-The .json file containing the API key is expected to be found in ./src/shared.
+The .json file containing the API key is expected to be found in the 'shared' folder.
 
 **~ Make sure your git-ignore includes this file! ~**
