@@ -24,7 +24,7 @@ export class EditExerciseComponent implements OnInit {
   
   //#region === Properties ================================================================
 
-  editMode = true; // False when adding new exercise, false when editing existing
+  editMode = true; // False when adding new exercise, true when editing existing
 
   exerciseId: number;
   exercise: Exercise;

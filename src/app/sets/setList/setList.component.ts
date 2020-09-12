@@ -26,7 +26,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	todaysMaxes: RepMaxRecord[];
 	todaysMaxesSub: Subscription;
 
-	bodyWeight: number; // Not implemented yet.
+	bodyweight: number;
 
 	date: string; // The date of the loaded workout
 
@@ -44,7 +44,12 @@ export class SetListComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
 
-		this.bodyWeight = this.workoutService.workout.bodyweight;
+		let workoutBW = this.workoutService.workout.bodyweight;
+		if (workoutBW) {
+			this.bodyweight = workoutBW;
+		} else {
+			this.bodyweight = null;
+		}
 
 		// Setup sub for repMaxes
 		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
@@ -68,7 +73,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		if (this.exerciseSub) { this.exerciseSub.unsubscribe() }
 		if (this.todaysMaxesSub) { this.todaysMaxesSub.unsubscribe() }
-		this.workoutService.workout.bodyweight = this.bodyWeight;
+		this.workoutService.workout.bodyweight = this.bodyweight;
 	}
 
 	//#endregion
@@ -76,7 +81,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	//#region === Functions =====================================================
 
 	onSaveWorkout() {
-		this.workoutService.workout.bodyweight = this.bodyWeight;
+		this.workoutService.workout.bodyweight = this.bodyweight;
 		let workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
 		workoutObs.subscribe(
 			resData => {
