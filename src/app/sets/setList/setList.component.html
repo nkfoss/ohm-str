@@ -13,7 +13,7 @@ style="margin-top: 30px; margin-left: 5px;">
 	<div class="row">
 		<h4 style="margin-right: 10px;"(click)="onEditExercise(i)" class="exercise-title">{{ exercise.exerciseName }}</h4>
 		<h4> ( {{ exercise.setType }} )</h4>
-		<h4 *ngIf="getRecordMax(exercise.exerciseName)"> ( recordMax = {{ getRecordMax(exercise.exerciseName) }} ) </h4>
+		<h4 *ngIf="recordMaxArray[i]"> ( recordMax = {{ recordMaxArray[i] }} ) </h4>
 	</div>
 
 	<table class="table table-bordered">

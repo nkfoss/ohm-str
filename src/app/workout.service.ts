@@ -31,8 +31,10 @@ export class WorkoutService {
 
   //#region === Lifecycle Hooks ==================================================
 
-  constructor(private http: HttpClient,
-    private repMaxService: RepmaxService) { }
+  constructor(
+    private http: HttpClient,
+    private repMaxService: RepmaxService
+    ) { }
 
   //#endregion
 
@@ -43,7 +45,8 @@ export class WorkoutService {
 
     const url = this.formatURL(dateString);
 
-    this.http.get(url).subscribe(
+    this.http.get(url)
+    .subscribe(
       (workout: Workout) => {
         this.handleFetchedWorkout(workout, dateString);
         this.exerciseUpdated.next(this.workout.exercises);
@@ -70,8 +73,6 @@ export class WorkoutService {
 
   private handleFetchedWorkout(workout?: Workout, dateString?: string) {
     if (workout) {
-      console.log('workout fetched');
-
       // Set the official workout and send out the subscription.
       this.workout = workout;
       console.log('fetched workout: ' + workout)
@@ -79,14 +80,13 @@ export class WorkoutService {
 
     else {
       // If no workout is returned, then we just set the displayed data to null
-      let emptyWorkout: Workout = {
+      this.workout = {
         date: dateString,
         category: "",
         notes: "",
         exercises: [],
         bodyweight: null
       }
-      this.workout = emptyWorkout;
     }
 
   }

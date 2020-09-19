@@ -33,6 +33,8 @@ export class SetListComponent implements OnInit, OnDestroy {
 	bodyweight: number;
 	bodyweightSub: Subscription;
 
+	recordMaxArray = [];
+
 	date: string; // The date of the loaded workout
 
 	//#endregion
@@ -44,8 +46,8 @@ export class SetListComponent implements OnInit, OnDestroy {
 		private repMaxService: RepmaxService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private _snackBar: MatSnackBar 
-		) { }
+		private _snackBar: MatSnackBar
+	) { }
 
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
@@ -53,13 +55,15 @@ export class SetListComponent implements OnInit, OnDestroy {
 		this.setupSubs();
 		this.setDateFromRoute();
 
-		this.repMaxService.fetchRecords();
 		if (this.workoutService.getExercises().length < 1) {
 			this.workoutService.fetchWorkout(this.date);
 		}
-		//  NOTE: The above line is important for updating the exercise list after edit/adding exercises.
-		// 	However, it will need to be removed if I ever fix the navigate-to-today problem.
-		//  	(this is the problem where the old exercises (if any) are still displayed after navigating to today)
+
+		// We need the record maxes for today's exercises. Get and store them in an array.
+		this.repMaxService.fetchRecords();
+		this.exercises.forEach(exercise => {
+			this.recordMaxArray.push(this.getRecordMax(exercise.exerciseName))
+		});
 
 		console.log("INIT COMPLETE: SetListComponent")
 	}
@@ -86,6 +90,14 @@ export class SetListComponent implements OnInit, OnDestroy {
 				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
 			);
 	}
+
+	private setDateFromRoute() {
+		this.activatedRoute.url.subscribe(url => {
+			this.date = url[1].toString();
+			this.date = this.date.split('%20').join(' ');
+		});
+	}
+
 
 	ngOnDestroy() {
 		console.log("DESTROY: SetListCompononent")
@@ -124,13 +136,6 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 	onEditExercise(exerciseIndex) {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
-	}
-
-	setDateFromRoute() {
-		this.activatedRoute.url.subscribe(url => {
-			this.date = url[1].toString();
-			this.date = this.date.split('%20').join(' ');
-		});
 	}
 
 	getRecordMax(exerciseName) {
