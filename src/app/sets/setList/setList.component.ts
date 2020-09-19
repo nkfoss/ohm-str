@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { WorkoutService } from "../../workout.service";
 import { Exercise } from "../../shared/exercise.model";
-import { Subscription, Observable } from "rxjs";
+import { Subscription, Observable, Subject } from "rxjs";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { RepmaxService } from "src/app/repmax.service";
 import { RepMaxRecord } from "src/app/shared/repMaxRecord.model";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Workout } from "src/app/shared/workout.model";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
 	selector: 'app-setList',
@@ -21,12 +22,16 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 	//#region === Properties ====================================================
 
+	unsubNotifier = new Subject();
+
 	exercises: Exercise[];
 	exerciseSub: Subscription;
+
 	todaysMaxes: RepMaxRecord[];
 	todaysMaxesSub: Subscription;
 
 	bodyweight: number;
+	bodyweightSub: Subscription;
 
 	date: string; // The date of the loaded workout
 
@@ -39,30 +44,19 @@ export class SetListComponent implements OnInit, OnDestroy {
 		private repMaxService: RepmaxService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private _snackBar: MatSnackBar) { }
+		private _snackBar: MatSnackBar 
+		) { }
 
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
 
-		let workoutBW = this.workoutService.workout.bodyweight;
-		if (workoutBW) {
-			this.bodyweight = workoutBW;
-		} else {
-			this.bodyweight = null;
+		this.setupSubs();
+		this.setDateFromRoute();
+
+		this.repMaxService.fetchRecords();
+		if (this.workoutService.getExercises().length < 1) {
+			this.workoutService.fetchWorkout(this.date);
 		}
-
-		// Setup sub for repMaxes
-		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated.subscribe(
-			(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
-		);
-		this.repMaxService.fetchRecords()
-
-		// Set up exercise subscription and fetch workout from DB for this date.
-		this.getDateFromRoute();
-		this.exerciseSub = this.workoutService.exerciseUpdated.subscribe(
-			(updatedExercises: Exercise[]) => { this.exercises = updatedExercises; }
-		);
-		if (this.workoutService.getExercises().length < 1) { this.workoutService.fetchWorkout(this.date); }
 		//  NOTE: The above line is important for updating the exercise list after edit/adding exercises.
 		// 	However, it will need to be removed if I ever fix the navigate-to-today problem.
 		//  	(this is the problem where the old exercises (if any) are still displayed after navigating to today)
@@ -70,10 +64,37 @@ export class SetListComponent implements OnInit, OnDestroy {
 		console.log("INIT COMPLETE: SetListComponent")
 	}
 
+	private setupSubs() {
+		// Setup subscriptions for rep-maxes, exercises, and bodyweight.
+		// Also automate the unsubscribe.
+
+		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated
+			.pipe(takeUntil(this.unsubNotifier))
+			.subscribe(
+				(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
+			);
+
+		this.exerciseSub = this.workoutService.exerciseUpdated
+			.pipe(takeUntil(this.unsubNotifier))
+			.subscribe(
+				(updatedExercises: Exercise[]) => { this.exercises = updatedExercises; }
+			);
+
+		this.bodyweightSub = this.workoutService.bodyweightUpdated
+			.pipe(takeUntil(this.unsubNotifier))
+			.subscribe(
+				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
+			);
+	}
+
 	ngOnDestroy() {
-		if (this.exerciseSub) { this.exerciseSub.unsubscribe() }
-		if (this.todaysMaxesSub) { this.todaysMaxesSub.unsubscribe() }
+		console.log("DESTROY: SetListCompononent")
+
+		this.unsubNotifier.next();
+		this.unsubNotifier.complete();
 		this.workoutService.workout.bodyweight = this.bodyweight;
+
+		console.log("DESTROY COMPLETE: SetListCompononent")
 	}
 
 	//#endregion
@@ -105,7 +126,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
 	}
 
-	getDateFromRoute() {
+	setDateFromRoute() {
 		this.activatedRoute.url.subscribe(url => {
 			this.date = url[1].toString();
 			this.date = this.date.split('%20').join(' ');
