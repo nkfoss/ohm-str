@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { Exercise } from './shared/exercise.model';
 import { RepMaxRecord } from './shared/repMaxRecord.model';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,24 +34,30 @@ export class RepmaxService {
   // If they've already been fetched, then do nothing.
   fetchRecords() {
     console.log("METHOD: fetchRecords()")
-
     if (!this.recordMaxes) {
-      let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
-      this.http.get(recordMaxUrl).subscribe(response => {
-        console.log("Fetching record maxes...");
-        console.log(response);
-        this.recordMaxes = <JSON>response;
-      });
-      this.recordMaxUpdated.next(this.recordMaxes)
+      this.fetchDayMaxes();
+      return this.fetchRecordMaxes();
+    }
+  }
 
-      let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
+  private fetchDayMaxes() {
+    let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
       this.http.get(dayMaxUrl).subscribe(response => {
         console.log("Fetching day maxes...");
         console.log(response);
         this.dayMaxes = <JSON>response;
       });
-    }
-    console.log("CLOSED: fetchRecords()")
+  }
+
+  private fetchRecordMaxes() {
+    let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
+     this.http.get(recordMaxUrl).subscribe(response => {
+          console.log("Fetching record maxes...");
+          console.log(response);
+          this.recordMaxes = <JSON>response;
+          this.recordMaxUpdated.next(this.recordMaxes);
+          console.log("CLOSED: fetchRecords()")
+        })
   }
 
   // Update (patch) record-maxes in the database

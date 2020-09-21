@@ -17,6 +17,8 @@ export class WorkoutService {
   //#region === Properties =======================================================
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
+  bodyweightUpdated = new BehaviorSubject<number>(null);
+
   workout: Workout = {
     date: "",
     category: "",
@@ -29,8 +31,10 @@ export class WorkoutService {
 
   //#region === Lifecycle Hooks ==================================================
 
-  constructor(private http: HttpClient,
-    private repMaxService: RepmaxService) { }
+  constructor(
+    private http: HttpClient,
+    private repMaxService: RepmaxService
+    ) { }
 
   //#endregion
 
@@ -39,43 +43,51 @@ export class WorkoutService {
   fetchWorkout(dateString?: string) {
     console.log("METHOD: fetchWorkout")
 
+    const url = this.formatURL(dateString);
+
+    this.http.get(url)
+    .subscribe(
+      (workout: Workout) => {
+        this.handleFetchedWorkout(workout, dateString);
+        this.exerciseUpdated.next(this.workout.exercises);
+        this.bodyweightUpdated.next(this.workout.bodyweight);
+      }
+    )
+    console.log("CLOSED: fetchWorkout")
+
+  }
+
+  private formatURL(dateString?: string): string {
     // Set the url. If no datestring provided, use current date.
     let url: string;
     if (dateString) {
-      this.workout.date = dateString
+      this.workout.date = dateString;
       let URLdateString = dateString.split(' ').join('%20');
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
     } else {
       const date = new Date().toLocaleString()
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
     }
+    return url;
+  }
 
-    this.http.get(url).subscribe(
-      (workout: Workout) => {
-        if (workout) {
-          console.log('workout fetched');
+  private handleFetchedWorkout(workout?: Workout, dateString?: string) {
+    if (workout) {
+      // Set the official workout and send out the subscription.
+      this.workout = workout;
+      console.log('fetched workout: ' + workout)
+    }
 
-          // Set the official workout and send out the subscription.
-          this.workout = workout;
-          console.log('fetched workout: ' + workout)
-          this.exerciseUpdated.next(this.workout.exercises)
-        }
-
-        else {
-          // If no workout is returned, then we just set the displayed data to null
-          let emptyWorkout: Workout = {
-            date: dateString,
-            category: "",
-            notes: "",
-            exercises: [],
-            bodyweight: null
-          }
-          this.workout = emptyWorkout;
-          this.exerciseUpdated.next(this.workout.exercises);
-        }
+    else {
+      // If no workout is returned, then we just set the displayed data to null
+      this.workout = {
+        date: dateString,
+        category: "",
+        notes: "",
+        exercises: [],
+        bodyweight: null
       }
-    )
-    console.log("CLOSED: fetchWorkout")
+    }
 
   }
 
@@ -187,12 +199,14 @@ export class WorkoutService {
   // 1) Calling repMaxService inside the foreach
   // 2) Calling repMaxService, and its own method uses forEach (current implementation)
   setPercentEffort() {
+    console.log("METHOD: SetPercentEffort()")
     this.workout.exercises.forEach(exercise => {
       this.repMaxService.setPercentEffort(
         exercise, this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
       );
     })
     this.exerciseUpdated.next(this.workout.exercises)
+    console.log("CLOSED: SetPercentEffort()")
   }
 
   getExercisesByName(exerciseName: string) {
