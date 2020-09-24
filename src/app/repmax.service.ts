@@ -81,7 +81,9 @@ export class RepmaxService {
 
       let entry;
 
-      if (exercise.sets.length < 1) { return; } // This skips to the next 'forEach' iteration
+      // We store exercises without sets, but we don't deal with them here.
+      // This line skips to the next 'forEach' iteration.
+      if (exercise.sets.length < 1) { return; } 
 
       // For clusters/mtor, we only want to record the notes, since ORM does not apply.
       else if (exercise.setType === "clusters" || exercise.setType === "mtor") {
@@ -93,7 +95,12 @@ export class RepmaxService {
 
       // For all other sets, record notes and calculate ORM.
       else {
-        let calculatedMax = this.calculateBestMax(exercise)
+        let calculatedMax = this.calculateBestMax(exercise);
+
+        // We need to update record max if it was broken.
+        this.compareMaxes(exercise.exerciseName, calculatedMax)
+        
+        // Now construct the entry for the dayMax
         entry = {
           date: workout.date,
           ORM: calculatedMax,
@@ -111,6 +118,22 @@ export class RepmaxService {
       )
     })
   }
+
+  private compareMaxes(exerciseName: string, calculatedMax: number) {
+    let records = this.recordMaxes
+    for (var key in records) {
+      if (records.hasOwnProperty(key)) {
+        if (key == exerciseName) {
+          
+          let currentMax = (records[key])
+          if (calculatedMax > currentMax) { records[key] = calculatedMax }  // Update recordMax
+
+        }
+      }
+    }
+  }
+
+
 
   //#endregion
 
