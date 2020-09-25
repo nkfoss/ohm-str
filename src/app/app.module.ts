@@ -24,15 +24,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { EditRoutineComponent } from './routineDesigner/edit-routine/edit-routine.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditExerciseComponent,
-    SetListComponent,
     NavbarComponent,
-    HomeComponent,
     AuthComponent,
+    SetListComponent,
+    EditExerciseComponent,
+    EditRoutineComponent,
+    HomeComponent,
     LoadingSpinnerComponent,
     NotesDialog
   ],
