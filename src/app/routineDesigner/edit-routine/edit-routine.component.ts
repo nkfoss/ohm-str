@@ -19,23 +19,41 @@ export class EditRoutineComponent implements OnInit {
 
 	//#region === Properties ================================================================
 
+	editMode = true;
+	routineForm: FormGroup;
 
+	routineName: string;
+	routineNotes: string;
+	numCycles: number;
 
 	//#endregion
 
 	//#region === Lifecycle hooks ==========================================================
 
-	constructor() { }
+	constructor(private formBuilder: FormBuilder) { }
 
 	ngOnInit() {
-
+		this.initForm();
 	}
 
 	//#endregion
 
 	//#region === Form Functions ==========================================================
 
-	onAddExercise() { }
+	private initForm() {
+
+		let routineNotes = null;
+		let daysControlArray = new FormArray([])
+
+		this.routineForm = this.formBuilder.group({
+			name: this.formBuilder.control(this.routineName, []),
+			notes: this.formBuilder.control(this.routineNotes, []),
+			numCycles: this.formBuilder.control(this.numCycles, []),
+			days: daysControlArray
+		})
+	}
+
+	onAddDay() { }
 
 	onDeleteRoutine() { }
 

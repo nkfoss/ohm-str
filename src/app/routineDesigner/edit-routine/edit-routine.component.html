@@ -19,7 +19,8 @@
 
 				<mat-form-field appearance="outline">
 					<mat-label>Routine name</mat-label>
-					<input id="routineName" type="text" formControlName="routineName" placeholder="ex. 5-3-1">
+					<input id="routineName" type="text" formControlName="routineName" placeholder="ex. 5-3-1"
+						[(ngModel)]="routineName">
 					<!-- <mat-error
 						*ngIf="!setsForm.get('exerciseName').valid && setsForm.get('exerciseName').touched && setsForm.get('exerciseName').errors['charLimit50']">
 						Maximum 50 characters.
@@ -41,7 +42,7 @@
 						<mat-form-field appearance="outline" style="width: 350px;">
 							<mat-label for="notesInput">Exercise notes</mat-label>
 							<textarea class="form-control" formControlName="routineNotes" id="notesInput" rows="6"
-								matInput> </textarea>
+								matInput [(ngModel)]="routineNotes"> </textarea>
 						</mat-form-field>
 					</div>
 				</div>
@@ -49,11 +50,21 @@
 
 				<!-- #endregion --------------------------------------------------->
 
-				<!-- #region EXERCISES ------------------------------------------------------------------>
+				<!-- #region NUM CYCLES ------------------------------------------------------------------>
+
+				<mat-form-field>
+					<mat-label for="numCyclesInput">Number of weeks</mat-label>
+					<input class="form-control" formControlName="numCycles" id="numCyclesInput" type="number"
+						matInput [(ngModel)]="numCycles">
+				</mat-form-field>
+
+				<!-- #endregion ---------------------------------------------------------------------------->
+
+				<!-- #region ROUTINE DAYS ------------------------------------------------------------------>
 
 				<div class="row">
 					<div class="col-1">
-						<button mat-mini-fab (click)="onAddExercise()" color="primary" aria-label="add set" type="button">
+						<button mat-mini-fab (click)="onAddDay()" color="primary" aria-label="add set" type="button">
 							<mat-icon>add</mat-icon>
 						</button>
 					</div>
@@ -64,7 +75,7 @@
 						
 						<mat-expansion-panel-header>
 							<mat-panel-title>
-								Back Squat
+								Squat Day 
 							</mat-panel-title>
 							<mat-panel-description>
 								mat panel description
