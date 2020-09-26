@@ -5,31 +5,43 @@ import { SetListComponent } from './sets/setList/setList.component';
 import { HomeComponent } from './home/home.component';
 import { AuthComponent } from './auth/auth/auth.component';
 import { AuthGuard } from './auth/auth/auth.guard';
+import { EditRoutineComponent } from './routineDesigner/edit-routine/edit-routine.component';
 
 // ======================================================
 
 const appRoutes: Routes = [
 
-  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
 
-  {path: 'auth', component: AuthComponent},
+  { path: 'auth', component: AuthComponent },
 
-  {path: 'workout/:date', component: SetListComponent, canActivate: [AuthGuard]},
+  { path: 'workout/:date', component: SetListComponent, canActivate: [AuthGuard] },
 
-  {path: 'exercise', 
-  canActivate: [AuthGuard],
-  children: [
-    {path: ':exerciseId/edit', component: EditExerciseComponent},
-    {path: 'new', component: EditExerciseComponent}
-  ]},
+  {
+    path: 'exercise',
+    canActivate: [AuthGuard],
+    children: [
+      { path: ':exerciseId/edit', component: EditExerciseComponent },
+      { path: 'new', component: EditExerciseComponent }
+    ]
+  },
 
-  {path: '', redirectTo: 'auth', pathMatch: 'full'}
+  {
+    path: 'routine',
+    canActivate: [AuthGuard],
+    children: [
+      { path: ':routineId/edit', component: EditRoutineComponent },
+      { path: 'new', component: EditRoutineComponent }
+    ]
+  },
+
+  { path: '', redirectTo: 'auth', pathMatch: 'full' }
 
 ]
 
 @NgModule({
-  imports: [ RouterModule.forRoot(appRoutes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule]
 })
 
 // ======================================================
