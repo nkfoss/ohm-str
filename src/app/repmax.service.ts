@@ -17,7 +17,6 @@ export class RepmaxService {
   updatedRecordMaxes = new Object();
   dayMaxes: JSON;
   todaysMaxes: RepMaxRecord[] = [];
-  recordMaxUpdated = new Subject<JSON>();
   todaysMaxesUpdated = new Subject<RepMaxRecord[]>();
 
   //#endregion
@@ -57,7 +56,6 @@ export class RepmaxService {
       console.log("Fetching record maxes...");
       console.log(response);
       this.recordMaxes = <JSON>response;
-      this.recordMaxUpdated.next(this.recordMaxes);
       console.log("CLOSED: fetchRecords()")
     })
   }
