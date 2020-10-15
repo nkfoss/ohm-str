@@ -27,9 +27,6 @@ export class SetListComponent implements OnInit, OnDestroy {
 	exercises: Exercise[];
 	exerciseSub: Subscription;
 
-	todaysMaxes: RepMaxRecord[];
-	todaysMaxesSub: Subscription;
-
 	bodyweight: number;
 	bodyweightSub: Subscription;
 
@@ -77,12 +74,6 @@ export class SetListComponent implements OnInit, OnDestroy {
 	private setupSubs() {
 		// Setup subscriptions for rep-maxes, exercises, and bodyweight.
 		// Also automate the unsubscribe.
-
-		this.todaysMaxesSub = this.repMaxService.todaysMaxesUpdated
-			.pipe(takeUntil(this.unsubNotifier))
-			.subscribe(
-				(updatedTodaysMaxes: RepMaxRecord[]) => { this.todaysMaxes = updatedTodaysMaxes; }
-			);
 
 		this.exerciseSub = this.workoutService.exerciseUpdated
 			.pipe(takeUntil(this.unsubNotifier))
