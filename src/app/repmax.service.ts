@@ -30,35 +30,39 @@ export class RepmaxService {
 
   //#region === Database Functions ============================================================
 
+  //----------------------------------------------------------------------------------------------------
+
   // This fetches day-records AND all-time records. [SetListComponent: ngOnInit]
   // If they've already been fetched, then do nothing.
   fetchRecords() {
     console.log("METHOD: fetchRecords()")
-    if (!this.recordMaxes) {
-      this.fetchDayMaxes();
-      return this.fetchRecordMaxes();
-    }
+    this.fetchDayMaxes();
+    this.fetchRecordMaxes();
   }
 
+  // Fetch AND set dayMaxes
   private fetchDayMaxes() {
     let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
-      this.http.get(dayMaxUrl).subscribe(response => {
-        console.log("Fetching day maxes...");
-        console.log(response);
-        this.dayMaxes = <JSON>response;
-      });
+    this.http.get(dayMaxUrl).subscribe(response => {
+      console.log("Fetching day maxes...");
+      console.log(response);
+      this.dayMaxes = <JSON>response;
+    });
   }
 
+  // Fetch AND set recordMaxes
   private fetchRecordMaxes() {
     let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
-     this.http.get(recordMaxUrl).subscribe(response => {
-          console.log("Fetching record maxes...");
-          console.log(response);
-          this.recordMaxes = <JSON>response;
-          this.recordMaxUpdated.next(this.recordMaxes);
-          console.log("CLOSED: fetchRecords()")
-        })
+    this.http.get(recordMaxUrl).subscribe(response => {
+      console.log("Fetching record maxes...");
+      console.log(response);
+      this.recordMaxes = <JSON>response;
+      this.recordMaxUpdated.next(this.recordMaxes);
+      console.log("CLOSED: fetchRecords()")
+    })
   }
+
+  //------------------------------------------------------------------------------------------------
 
   // Update (patch) record-maxes in the database
   patchRecordMaxes(recordMaxes: JSON) {
@@ -83,7 +87,7 @@ export class RepmaxService {
 
       // We store exercises without sets, but we don't deal with them here.
       // This line skips to the next 'forEach' iteration.
-      if (exercise.sets.length < 1) { return; } 
+      if (exercise.sets.length < 1) { return; }
 
       // For clusters/mtor, we only want to record the notes, since ORM does not apply.
       else if (exercise.setType === "clusters" || exercise.setType === "mtor") {
@@ -99,7 +103,7 @@ export class RepmaxService {
 
         // We need to update record max if it was broken.
         this.compareMaxes(exercise.exerciseName, calculatedMax)
-        
+
         // Now construct the entry for the dayMax
         entry = {
           date: workout.date,
@@ -124,7 +128,7 @@ export class RepmaxService {
     for (var key in records) {
       if (records.hasOwnProperty(key)) {
         if (key == exerciseName) {
-          
+
           let currentMax = (records[key])
           if (calculatedMax > currentMax) { records[key] = calculatedMax }  // Update recordMax
 

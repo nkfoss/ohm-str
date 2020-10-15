@@ -20,7 +20,7 @@ import { takeUntil } from "rxjs/operators";
 
 export class SetListComponent implements OnInit, OnDestroy {
 
-	//#region === Properties ====================================================
+	//#region === Properties ===================================================================================
 
 	unsubNotifier = new Subject();
 
@@ -39,7 +39,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 	//#endregion
 
-	//#region === Lifecycle Hooks ===============================================
+	//#region === Lifecycle Hooks ===================================================================================
 
 	constructor(
 		private workoutService: WorkoutService,
@@ -49,18 +49,24 @@ export class SetListComponent implements OnInit, OnDestroy {
 		private _snackBar: MatSnackBar
 	) { }
 
+	//-------------------------------------------------------
 	ngOnInit() {
 		console.log("INIT: SetListComponent")
 
 		this.setupSubs();
 		this.setDateFromRoute();
 
+		// Only attempt to fetch a workout if the service has none.
 		if (this.workoutService.getExercises().length < 1) {
 			this.workoutService.fetchWorkout(this.date);
 		}
 
-		// We need the record maxes for today's exercises. Get and store them in an array.
-		this.repMaxService.fetchRecords();
+		// Only attempt to fetch records if the service has none.
+		if (!this.repMaxService.recordMaxes) {
+			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
+		}
+
+		// Populate the record-max array. These values are for display only.
 		this.exercises.forEach(exercise => {
 			this.recordMaxArray.push(this.getRecordMax(exercise.exerciseName))
 		});
@@ -90,13 +96,14 @@ export class SetListComponent implements OnInit, OnDestroy {
 				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
 			);
 	}
-
+	
 	private setDateFromRoute() {
 		this.activatedRoute.url.subscribe(url => {
 			this.date = url[1].toString();
 			this.date = this.date.split('%20').join(' ');
 		});
 	}
+	//-------------------------------------------------------
 
 
 	ngOnDestroy() {
