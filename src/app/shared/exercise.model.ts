@@ -6,6 +6,7 @@ export class Exercise {
         public exerciseName: string,
         public setType: string,
         public exerciseNotes: string,
+        public currentMax: number,
         public warmupSets: WeightReps[],
         public sets: WeightReps[]
     ) { }
