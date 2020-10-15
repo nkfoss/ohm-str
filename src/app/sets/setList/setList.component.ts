@@ -63,7 +63,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
 		}
 
-		// Populate the record-max array. These values are for display only.
+		// Populate the record-max array. These values are displayed with each exercise.
 		this.exercises.forEach(exercise => {
 			this.recordMaxArray.push(this.getRecordMax(exercise.exerciseName))
 		});
