@@ -152,19 +152,19 @@ export class WorkoutService {
       && exercise.setType !== "clusters"
       && exercise.setType !== "mtor") {
 
-      let bestSet = this.repMaxService.calculateBestMax(exercise);
-      let recordMax = this.repMaxService.getRecordMaxFromName(exercise.exerciseName);
+      let bestSetMax = this.repMaxService.calculateBestMax(exercise);
+      let recordMax = exercise.momentaryMax;
 
       // If no existing record, create one...
       if (!recordMax) {
-        this.repMaxService.setPercentEffort(exercise, bestSet); // Use bestSet instead of recordMax
-        this.repMaxService.recordMaxes[exercise.exerciseName] = bestSet;
+        this.repMaxService.setPercentEffort(exercise, bestSetMax); // Use bestSetMax instead of recordMax
+        this.repMaxService.recordMaxes[exercise.exerciseName] = bestSetMax;
       }
 
       // If you best the record-max...
-      else if (bestSet > recordMax) {
+      else if (bestSetMax > recordMax) {
         this.repMaxService.setPercentEffort(exercise, recordMax);
-        this.repMaxService.updatedRecordMaxes[exercise.exerciseName] = bestSet;
+        this.repMaxService.updatedRecordMaxes[exercise.exerciseName] = bestSetMax;
       }
 
       // If you didn't beat the record, only set percent effort.
