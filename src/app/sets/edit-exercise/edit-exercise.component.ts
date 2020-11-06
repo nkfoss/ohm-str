@@ -37,6 +37,8 @@ export class EditExerciseComponent implements OnInit {
   options: string[] = [];
   filteredOptions: Observable<string[]>;
 
+  momentaryMax: number;
+
   //#endregion
 
   //#region === Lifecycle hooks ==========================================================
@@ -50,6 +52,7 @@ export class EditExerciseComponent implements OnInit {
     private _snackBar: MatSnackBar,
     public dialog: MatDialog) { }
 
+  //----------------------------------------------------------------------------------------
   ngOnInit() {
     this.activatedRoute.params.subscribe(
       (params: Params) => {
@@ -60,9 +63,90 @@ export class EditExerciseComponent implements OnInit {
     this.initForm();
     this.setOptions();
   }
-  //#endregion
 
-  //#region === Mat-design functions ======================================================
+  // Setup and populate the form
+  private initForm() {
+
+    // Initialize values of the form fields...
+    // (except exerciseName and stringSetType, which are properties of the component)
+    let exerciseNotes = null;
+    let warmupControlArray = new FormArray([]);
+    let setsControlArray = new FormArray([]);
+
+    // Edit mode is when you are editing EXISTING an exercise. Determined in OnInit.
+    if (this.editMode) { 
+
+      console.log('edit mode')
+
+      // From the target exercise object...
+      this.exercise = this.workoutService.getExercise(this.exerciseId);
+
+      // ...get the attributes not related to dynamic forms.
+      this.exerciseName = this.exercise.exerciseName;
+      this.stringSetType = this.exercise.setType;
+      exerciseNotes = this.exercise.exerciseNotes;
+      this.momentaryMax = this.exercise.hasOwnProperty('momentaryMax') ? this.exercise.momentaryMax : null
+      console.log("exercise cm " + this.exercise.momentaryMax);
+      console.log("this cm " + this.momentaryMax);
+
+      // From that, define a formgroup to be used with each warmup set
+      if (this.exercise['warmupSets']) {
+        for (let warmupSet of this.exercise.warmupSets) {
+          warmupControlArray.push(
+            new FormGroup({
+              weight: new FormControl(warmupSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+              reps: new FormControl(warmupSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
+            }));
+        }
+      }
+
+      // Do the same for regular sets
+      if (this.exercise['sets']) {
+        for (let set of this.exercise.sets) {
+
+          let formGroup = new FormGroup({
+            weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+            reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps]),
+            restPauseSets: new FormArray([]),
+            dropSets: new FormArray([])
+          })
+          setsControlArray.push(formGroup);
+
+          // Now check for rest-pause sets...
+          if (set.restPauseSets) {
+            for (let restPauseSet of set.restPauseSets) {
+              (<FormArray>formGroup.get('restPauseSets')).push
+                (new FormControl(
+                  restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight]));
+            }
+          }
+
+          // And drop sets...
+          if (set.dropSets) {
+            for (let dropSet of set.dropSets) {
+              (<FormArray>formGroup.get('dropSets')).push
+                (new FormGroup({
+                  weight: new FormControl(dropSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
+                  reps: new FormControl(dropSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
+                }))
+            }
+          }
+
+        }
+      }
+      //====== END EDIT MODE ===================//
+    }  
+
+    // Build the actual form to be used.
+    this.setsForm = this.formBuilder.group({
+      exerciseName: this.formBuilder.control(this.exerciseName, [Validators.required, this.charLimit50]),
+      setType: this.formBuilder.control(this.stringSetType, null),
+      exerciseNotes: this.formBuilder.control(exerciseNotes, null),
+      warmupSets: warmupControlArray,
+      sets: setsControlArray,
+      momentaryMax: this.momentaryMax //(the second 'currMax' is the number declared at the beginning of this function.)
+    });
+  }
 
   // A function to make the suggested options for the exercise name input. 
   private setOptions() {
@@ -73,6 +157,12 @@ export class EditExerciseComponent implements OnInit {
         map(value => this._filter(value))
       );
   }
+  //-------------------------------------------------------------------------------------------------
+
+  
+  //#endregion
+
+  //#region === Mat-design functions ======================================================
 
   // A filter function to be used with setOptions()
   private _filter(value: string): string[] {
@@ -106,7 +196,14 @@ export class EditExerciseComponent implements OnInit {
     console.log("METHOD: onSubmit()")
 
     if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value) }
-    else { this.workoutService.addExercise(this.setsForm.value) }
+    else { 
+      // The currMax needs to be added to the setsForm before sending it.
+      this.setsForm.patchValue({
+        momentaryMax: this.repMaxService.getRecordMaxFromName(this.exerciseName)
+      })
+      this.workoutService.addExercise(this.setsForm.value) 
+    }
+
     this.onNavigateBack();
     this.openSnackBar();
 
@@ -202,85 +299,6 @@ export class EditExerciseComponent implements OnInit {
   //#endregion
 
   //#region === Form Functions ==============================================================
-
-  // Setup (and populate) the form.
-  private initForm() {
-
-    // Initialize values of the form fields...
-    // (except exerciseName and stringSetType, which are properties of the component)
-    let exerciseNotes = null;
-    let warmupControlArray = new FormArray([]);
-    let setsControlArray = new FormArray([]);
-
-    // Edit mode is when you are editing EXISTING an exercise. Determined in OnInit.
-    if (this.editMode) { //=================== EDIT MODE ================///
-      console.log('edit mode')
-
-      // From the target exercise object...
-      this.exercise = this.workoutService.getExercise(this.exerciseId);
-
-      // ...get the exercise name, setType, and notes
-      this.exerciseName = this.exercise.exerciseName;
-      this.stringSetType = this.exercise.setType;
-      exerciseNotes = this.exercise.exerciseNotes;
-
-      // From that, define a formgroup to be used with each warmup set
-      if (this.exercise['warmupSets']) {
-        for (let warmupSet of this.exercise.warmupSets) {
-          warmupControlArray.push(
-            new FormGroup({
-              weight: new FormControl(warmupSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
-              reps: new FormControl(warmupSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
-            }));
-        }
-      }
-
-      // Do the same for regular sets
-      if (this.exercise['sets']) {
-        for (let set of this.exercise.sets) {
-
-          let formGroup = new FormGroup({
-            weight: new FormControl(set.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
-            reps: new FormControl(set.reps, [Validators.required, this.negativeNumbers, this.largeReps]),
-            restPauseSets: new FormArray([]),
-            dropSets: new FormArray([])
-          })
-          setsControlArray.push(formGroup);
-
-          // Now check for rest-pause sets...
-          if (set.restPauseSets) {
-            for (let restPauseSet of set.restPauseSets) {
-              (<FormArray>formGroup.get('restPauseSets')).push
-                (new FormControl(
-                  restPauseSet, [Validators.required, this.negativeNumbers, this.largeWeight]));
-            }
-          }
-
-          // And drop sets...
-          if (set.dropSets) {
-            for (let dropSet of set.dropSets) {
-              (<FormArray>formGroup.get('dropSets')).push
-                (new FormGroup({
-                  weight: new FormControl(dropSet.weight, [Validators.required, this.negativeNumbers, this.largeWeight]),
-                  reps: new FormControl(dropSet.reps, [Validators.required, this.negativeNumbers, this.largeReps])
-                }))
-            }
-          }
-
-        }
-      }
-      //====== END EDIT MODE ===================//
-    }  
-
-    // Build the actual form to be used.
-    this.setsForm = this.formBuilder.group({
-      exerciseName: this.formBuilder.control(this.exerciseName, [Validators.required, this.charLimit50]),
-      setType: this.formBuilder.control(this.stringSetType, null),
-      exerciseNotes: this.formBuilder.control(exerciseNotes, null),
-      warmupSets: warmupControlArray,
-      sets: setsControlArray
-    });
-  }
 
   // Checks the 'setType' property to determine if it is a type of rest-pause set.
   isRestPauseSet(): boolean {
