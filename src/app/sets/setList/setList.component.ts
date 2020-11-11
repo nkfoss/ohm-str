@@ -46,19 +46,23 @@ export class SetListComponent implements OnInit, OnDestroy {
 		private _snackBar: MatSnackBar
 	) { }
 
-	//-------------------------------------------------------
 	ngOnInit() {
-		console.log("INIT: SetListComponent")
+		console.log("INIT: SetListComponent");
 
 		this.setupSubs();
-		this.setDateFromRoute();
+		this.handleRouteParams();
 
-		// Only attempt to fetch a workout if the service has none.
-		if (this.workoutService.getExercises().length < 1) {
+		// Attempt to fetch a workout if the service has none. The exercises/bodyweight subscription will  be received
+		if (!this.workoutService.workout) {
+			console.log("No workout found");
 			this.workoutService.fetchWorkout(this.date);
+		} 
+		else if (this.date !== this.workoutService.workout.date) {
+			console.log("Dates don't match... " + this.date + ' _ ' + this.workoutService.workout.date);
+			this.workoutService.fetchWorkout(this.date)
 		}
 
-		// Only attempt to fetch records if the service has none.
+		// If record maxes not loaded, then get them. 
 		if (!this.repMaxService.recordMaxes) {
 			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
 		}
@@ -86,16 +90,30 @@ export class SetListComponent implements OnInit, OnDestroy {
 			.subscribe(
 				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
 			);
-	}
-	
-	private setDateFromRoute() {
-		this.activatedRoute.url.subscribe(url => {
-			this.date = url[1].toString();
-			this.date = this.date.split('%20').join(' ');
-		});
-	}
-	//-------------------------------------------------------
 
+		// this.dateSub = this.workoutService.dateUpdated
+		// 	.pipe(takeUntil(this.unsubNotifier))
+		// 	.subscribe(
+		// 		(updatedDate: string) => { 
+		// 			this.date = updatedDate;
+		// 		}	
+		// 	);
+	}
+	/**
+	 * Extract the date param from the route, and also setup the params subscription.
+	 * This enables the SLC to update the exercise array when the date is changed,
+	 * but without having to reload the comp.
+	 */
+	private handleRouteParams() {
+		this.date = this.activatedRoute.snapshot.params['date'];
+		this.activatedRoute.params
+		.subscribe(
+			(params: Params) => {
+				this.date = params['date'];
+				this.workoutService.fetchWorkout(this.date);
+			}
+		)
+	}
 
 	ngOnDestroy() {
 		console.log("DESTROY: SetListCompononent")
