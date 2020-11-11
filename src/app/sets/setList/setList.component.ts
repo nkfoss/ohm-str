@@ -22,20 +22,38 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 	//#region === Properties ===================================================================================
 
+	/**
+	 * Used once during OnDestroy(). Automatically unsubscribes from all subscriptions.
+	 */
 	unsubNotifier = new Subject();
-
+	/**
+	 * An array of exercises for the selected date's workout. Used for display purposes only.
+	 */
 	exercises: Exercise[];
+	/**
+	 * Used for updating the component's exercise array. Receives updates from the WorkoutService.
+	 */
 	exerciseSub: Subscription;
 
+	/**
+	 * The user's bodyweight for this workout.
+	 */
 	bodyweight: number;
+	/**
+	 * Used for updating the user's bodyweight. Updated when a new workout is loaded.
+	 */
 	bodyweightSub: Subscription;
-
+	/**
+	 * An array of reccord maxes for the component's exercises. For display purposes only.
+	 */
 	recordMaxArray = [];
-
+	/**
+	 * The current date. Retrieved from the activated route.
+	 */
 	date: string; // The date of the loaded workout
+	// dateSub: Subscription;
 
 	//#endregion
-
 	//#region === Lifecycle Hooks ===================================================================================
 
 	constructor(
@@ -74,10 +92,11 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 		console.log("INIT COMPLETE: SetListComponent")
 	}
-
+	/**
+	 * Setup Subscriptions for exercise array, bodyweight, and current date.
+	 * Also automate unsubscribe for OnDestroy()
+	 */
 	private setupSubs() {
-		// Setup subscriptions for rep-maxes, exercises, and bodyweight.
-		// Also automate the unsubscribe.
 
 		this.exerciseSub = this.workoutService.exerciseUpdated
 			.pipe(takeUntil(this.unsubNotifier))
@@ -124,11 +143,14 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 		console.log("DESTROY COMPLETE: SetListCompononent")
 	}
-
 	//#endregion
-
 	//#region === Functions =====================================================
 
+	/**
+	 * 1.) Sets the workout's bodyweight... 2.) Asks the WorkoutService to store the workout in the database.
+	 * Also sets up a subscription for the service's response, which opens a snackbar that indicates success or failure...
+	 * 3.) Updates the day-maxes for in the database... 4.) Updates the all-time maxes in the database.
+	 */
 	onSaveWorkout() {
 		this.workoutService.workout.bodyweight = this.bodyweight;
 		let workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
@@ -146,18 +168,36 @@ export class SetListComponent implements OnInit, OnDestroy {
 		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
+	/**
+	 * Button function. Navigates to the EditExercise component to create a new exercise.
+	 */
 	onNewExercise() {
 		this.router.navigate(['exercise/new'])
 	}
 
+	/**
+	 * Button function. Navigates to the EditExercise component to edit an existing exercise.
+	 * @param exerciseIndex - For the WorkoutService, the index of the exercise selected from the Exercise array.
+	 */
 	onEditExercise(exerciseIndex) {
 		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
 	}
 
-	getRecordMax(exerciseName) {
+	/**
+	 * Asks the RepMaxService for the record (calculated) 1rm of an exercise.
+	 * @param exerciseName - The name of the exercise to lookup.
+	 * @returns The record calculated 1rm of the exercise
+	 */
+	getRecordMax(exerciseName): number {
 		return this.repMaxService.getRecordMaxFromName(exerciseName)
 	}
 
+	/**
+	 * Calculates the 1rm using the Epley formula. Source:
+	 * https://en.wikipedia.org/wiki/One-repetition_maximum
+	 * @param reps - The number of reps.
+	 * @param weight - The amount of weight used.
+	 */
 	calculateMax(reps: number, weight: number) {
 		let unrounded = weight * (1 + (reps / 30));
 		return +unrounded.toFixed(2)
@@ -167,7 +207,10 @@ export class SetListComponent implements OnInit, OnDestroy {
 		return this.workoutService.workout.exercises.length;
 	}
 
-	// This snackbar is opened after the workout service attempts to store the workout.
+	/**
+	 * Open the snackbar for three seconds with a message.
+	 * @param responseMessage - The message to be displayed.
+	 */
 	private openSnackBar(responseMessage: string) {
 		this._snackBar.open(
 			responseMessage,
