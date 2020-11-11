@@ -43,9 +43,9 @@ export class HomeComponent {
     )
     const toNavigate = 'workout/' + formattedDate;
     this.router.navigate([toNavigate]);
-    if (this.workoutService.workout.date !== formattedDate) {
-			this.workoutService.fetchWorkout(formattedDate);
-		}
+    // if (this.workoutService.workout.date !== formattedDate) {
+		// 	this.workoutService.fetchWorkout(formattedDate);
+		// }
   }
 
 }
