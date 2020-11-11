@@ -76,10 +76,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	 * Button function. Navigates to the current date.
 	 */
 	onNavigateToToday() {
-		const today = this.stripWeekday( new Date().toDateString() )
-		const toNavigate = 'workout/' + today;
-
-		this.router.navigate([toNavigate]);
+		const today = this.stripWeekday( new Date().toDateString() );
+		this.router.navigate(['/workout', today]);
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 		// if (this.workoutService.workout.date !== today) {
 		// 	this.workoutService.fetchWorkout(today);

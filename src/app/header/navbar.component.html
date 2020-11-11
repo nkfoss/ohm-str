@@ -10,12 +10,12 @@
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item" *ngIf="isAuthenticated">
-                <a class="home nav-link" id="home" (click)="onNavigateHome()" routerLink="/home"
+                <a class="home nav-link" id="home" (click)="onNavigateHome()" 
                     routerLinkActive="active-link">
                     <span class="material-icons">home</span>Homepage</a>
             </li>
             <li class="nav-item" *ngIf="isAuthenticated">
-                <a class="today nav-link" (click)="onNavigateToToday()" routerLink="/workout/"
+                <a class="today nav-link" (click)="onNavigateToToday()"
                     routerLinkActive="active-link">
                     <span class="material-icons">today</span>Today</a>
             </li>
