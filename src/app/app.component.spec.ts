@@ -7,6 +7,7 @@ import { NavbarComponent } from './header/navbar.component';
 
 // What is this 'async' import? 
 
+// Here, we are bootstrapping the application. 
 describe('App: Ohm-str', () => {
 
 	beforeEach(() => {
