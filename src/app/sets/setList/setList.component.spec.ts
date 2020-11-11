@@ -25,7 +25,7 @@ describe("setList", () => {
       providers: [
         { provide: WorkoutService, useValue: workoutServiceStub },
         { provide: RepmaxService, useValue: repmaxServiceStub },
-      ],
+      ]
     });
   });
 
