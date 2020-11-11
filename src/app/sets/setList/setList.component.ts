@@ -4,7 +4,6 @@ import { Exercise } from "../../shared/exercise.model";
 import { Subscription, Observable, Subject } from "rxjs";
 import { Router, ActivatedRoute, Params } from "@angular/router";
 import { RepmaxService } from "src/app/repmax.service";
-import { RepMaxRecord } from "src/app/shared/repMaxRecord.model";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Workout } from "src/app/shared/workout.model";
 import { takeUntil } from "rxjs/operators";
@@ -36,11 +35,11 @@ export class SetListComponent implements OnInit, OnDestroy {
 	exerciseSub: Subscription;
 
 	/**
-	 * The user's bodyweight for this workout.
+	 * The user's bodyweight for this workout. Updated by sub when a new workout is loaded.
 	 */
 	bodyweight: number;
 	/**
-	 * Used for updating the user's bodyweight. Updated when a new workout is loaded.
+	 * Used for updating the user's bodyweight. 
 	 */
 	bodyweightSub: Subscription;
 	/**
@@ -48,10 +47,14 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	recordMaxArray = [];
 	/**
-	 * The current date. Retrieved from the activated route.
+	 * The current date. Updated by the paramsSub
 	 */
 	date: string; // The date of the loaded workout
-	// dateSub: Subscription;
+	/**
+	 * Sub for the route's date-params. 
+	 */
+	paramsSub: Subscription;
+
 
 	//#endregion
 	//#region === Lifecycle Hooks ===================================================================================
@@ -68,16 +71,16 @@ export class SetListComponent implements OnInit, OnDestroy {
 		console.log("INIT: SetListComponent");
 
 		this.setupSubs();
-		this.handleRouteParams();
+		this.date = this.activatedRoute.snapshot.params['date'];
 
 		// Attempt to fetch a workout if the service has none. The exercises/bodyweight subscription will  be received
 		if (!this.workoutService.workout) {
 			console.log("No workout found");
-			this.workoutService.fetchWorkout(this.date);
+			this.handleRouteParams();
 		} 
 		else if (this.date !== this.workoutService.workout.date) {
 			console.log("Dates don't match... " + this.date + ' _ ' + this.workoutService.workout.date);
-			this.workoutService.fetchWorkout(this.date)
+			this.handleRouteParams();
 		}
 
 		// If record maxes not loaded, then get them. 
@@ -93,8 +96,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 		console.log("INIT COMPLETE: SetListComponent")
 	}
 	/**
-	 * Setup Subscriptions for exercise array, bodyweight, and current date.
-	 * Also automate unsubscribe for OnDestroy()
+	 * Setup Subscriptions for  exercise array and bodyweight (and unsubscribes)...
 	 */
 	private setupSubs() {
 
@@ -110,22 +112,16 @@ export class SetListComponent implements OnInit, OnDestroy {
 				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
 			);
 
-		// this.dateSub = this.workoutService.dateUpdated
-		// 	.pipe(takeUntil(this.unsubNotifier))
-		// 	.subscribe(
-		// 		(updatedDate: string) => { 
-		// 			this.date = updatedDate;
-		// 		}	
-		// 	);
 	}
+
 	/**
-	 * Extract the date param from the route, and also setup the params subscription.
-	 * This enables the SLC to update the exercise array when the date is changed,
-	 * but without having to reload the comp.
+	 * Setup the params subscription. This will also trigger the functions designated in the subscription.
+	 * Also setup unsubscribe.
 	 */
 	private handleRouteParams() {
-		this.date = this.activatedRoute.snapshot.params['date'];
-		this.activatedRoute.params
+		
+		this.paramsSub = this.activatedRoute.params
+		.pipe(takeUntil(this.unsubNotifier))
 		.subscribe(
 			(params: Params) => {
 				this.date = params['date'];
