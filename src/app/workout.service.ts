@@ -18,14 +18,10 @@ export class WorkoutService {
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   bodyweightUpdated = new BehaviorSubject<number>(null);
+  dateUpdated = new BehaviorSubject<string>(null);
 
-  workout: Workout = {
-    date: "",
-    category: "",
-    notes: "",
-    exercises: [],
-    bodyweight: null
-  }
+  workout: Workout;
+  date: string;
 
   //#endregion
 
@@ -42,6 +38,11 @@ export class WorkoutService {
 
   fetchWorkout(dateString?: string) {
     console.log("METHOD: fetchWorkout")
+
+    if (dateString) { 
+      this.date = dateString;
+      this.dateUpdated.next(this.date);
+    }
 
     const url = this.formatURL(dateString);
 
@@ -61,7 +62,7 @@ export class WorkoutService {
     // Set the url. If no datestring provided, use current date.
     let url: string;
     if (dateString) {
-      this.workout.date = dateString;
+      // this.workout.date = dateString;
       let URLdateString = dateString.split(' ').join('%20');
       url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
     } else {
@@ -80,6 +81,7 @@ export class WorkoutService {
 
     else {
       // If no workout is returned, then we just set the displayed data to null
+      console.log("no workout fetched");
       this.workout = {
         date: dateString,
         category: "",
@@ -128,7 +130,7 @@ export class WorkoutService {
     newExercise.exerciseName = newExercise.exerciseName.toLowerCase();
     this.handleRecordAndEffort(newExercise);
     this.workout.exercises.push(newExercise);
-    this.exerciseUpdated.next(this.getExercises());
+    this.exerciseUpdated.next( this.getExercises() );
 
     console.log("CLOSED: addExercise()")
   }
