@@ -168,7 +168,7 @@ export class RepmaxService {
   }
 
   // Look-up all-time record by name of exercise
-  getRecordMaxFromName(exerciseName: string) {
+  getRecordMaxFromName(exerciseName: string): number {
     console.log("METHOD: getRecordMaxFromName()")
 
     console.log('search for ' + exerciseName + ' in records...')
