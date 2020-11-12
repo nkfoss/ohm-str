@@ -5,11 +5,10 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"type": "chrome",
+			"type": "pwa-chrome",
 			"request": "launch",
-			"name": "Launch chrome against localhost",
-			"url": "http://localhost:4200",
-			"webRoot": "${workspaceFolder}"
+			"name": "Open edit-exercise.component.html",
+			"file": "c:\\Users\\fossp\\Desktop\\udemy\\Z-str\\Z-str\\src\\app\\sets\\edit-exercise\\edit-exercise.component.html"
 		}
 	]
 }
