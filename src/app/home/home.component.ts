@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StringHandlerService } from '../string-handler.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { WorkoutService } from '../workout.service';
 
@@ -21,7 +20,6 @@ export class HomeComponent {
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
-    private stringHandlerService: StringHandlerService,
     private workoutService: WorkoutService) { }
 
   // =============================================================
