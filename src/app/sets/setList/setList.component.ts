@@ -90,7 +90,9 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 		// Populate the record-max array. These values are displayed with each exercise.
 		this.exercises.forEach(exercise => {
-			this.recordMaxArray.push(this.getRecordMax(exercise.exerciseName))
+			this.recordMaxArray.push(
+				this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
+			)
 		});
 
 		console.log("INIT COMPLETE: SetListComponent")
@@ -184,9 +186,9 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * @param exerciseName - The name of the exercise to lookup.
 	 * @returns The record calculated 1rm of the exercise
 	 */
-	getRecordMax(exerciseName): number {
-		return this.repMaxService.getRecordMaxFromName(exerciseName)
-	}
+	// getRecordMax(exerciseName): number {
+	// 	return this.repMaxService.getRecordMaxFromName(exerciseName)
+	// }
 
 	/**
 	 * Calculates the 1rm using the Epley formula. Source:
