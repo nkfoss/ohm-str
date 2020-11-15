@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { WorkoutService } from "../workout.service";
 import { AuthService } from "../auth/auth.service";
 import { Subscription } from "rxjs";
-import { RepmaxService } from "../repmax.service";
 import { DatePipe } from '@angular/common';
+
 
 @Component({
 	selector: 'app-navbar',

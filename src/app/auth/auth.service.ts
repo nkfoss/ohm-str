@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError,  BehaviorSubject } from 'rxjs';
-import * as data from '../shared/credentials.json';
 import { User } from './user.model';
 import { Router } from '@angular/router';
 
@@ -34,9 +33,8 @@ export class AuthService {
   // =====================================================================
 
   signup(email: string, password: string) {
-    let secret = data.apiKey;
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + secret,
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAnpf5hAduOHAsfazcEGVfEwOgFUo_igm8',
       {
         email: email,
         password: password,
@@ -50,9 +48,8 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    let secret = data.apiKey
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + secret,
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAnpf5hAduOHAsfazcEGVfEwOgFUo_igm8',
       {
         email: email,
         password: password,
