@@ -2,10 +2,10 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
 import { NavbarComponent } from './header/navbar.component';
 
 // What is this 'async' import? 
+// It's for testing with methods that are asynchronous. 
 
 // Here, we are bootstrapping the application. 
 describe('App: Ohm-str', () => {
