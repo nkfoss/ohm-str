@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StringHandlerService } from '../string-handler.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { WorkoutService } from '../workout.service';
 
@@ -15,37 +15,30 @@ import { WorkoutService } from '../workout.service';
 export class HomeComponent {
 
   selectedDate: Date;
+  formatDatePipe = new DatePipe('en-US');
+  formattedDate: String;
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
-    private stringHandlerService: StringHandlerService,
     private workoutService: WorkoutService) { }
-
 
   // =============================================================
 
   getTodaysWorkout() {
-    const today = this.stringHandlerService.stripWeekday( 
-      new Date().toDateString()
-    )
+    const today = this.formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
     const toNavigate = 'workout/' + today;
-    this.router.navigate([toNavigate])
+    this.router.navigate([toNavigate]);
   }
 
   setSelectedDate(event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = event.value;
-    console.log(event.value)
+    this.formattedDate = this.formatDatePipe.transform(this.selectedDate, 'LLL d y');
+    console.log(event.value);
   }
 
   navigateToDate() {
-    const formattedDate = this.stringHandlerService.stripWeekday(
-      this.selectedDate.toDateString()
-    )
-    const toNavigate = 'workout/' + formattedDate;
+    const toNavigate = 'workout/' + this.formattedDate;
     this.router.navigate([toNavigate]);
-    // if (this.workoutService.workout.date !== formattedDate) {
-		// 	this.workoutService.fetchWorkout(formattedDate);
-		// }
   }
 
 }

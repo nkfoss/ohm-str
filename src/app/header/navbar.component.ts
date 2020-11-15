@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { WorkoutService } from "../workout.service";
 import { AuthService } from "../auth/auth.service";
 import { Subscription } from "rxjs";
+import { DatePipe } from '@angular/common';
+
 
 @Component({
 	selector: 'app-navbar',
@@ -19,10 +21,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	 * The user's authentication status. Unauthenticated users can only interact with the login page.
 	 * Automatically updated by the userSub.
 	 */
-	isAuthenticated = false; 
+	isAuthenticated = false;
 
 	/**
-	 * Used to update isAuthenticated. 
+	 * Used to update isAuthenticated.
 	 * If no User object is received, then the current user is unauthenticated.
 	 */
 	private userSub: Subscription; // also used for authentication.
@@ -30,7 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	/**
 	* Used to open the navbar element. Toggled when the user clicks on the navbar.
 	*/
-	isNavbarCollapsed = true; 
+	isNavbarCollapsed = true;
 
 	// =====================================================
 
@@ -75,24 +77,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	 * Button function. Navigates to the current date.
 	 */
 	onNavigateToToday() {
-		const today = this.stripWeekday( new Date().toDateString() );
-		this.router.navigate(['/workout', today]);
+    const formatDatePipe = new DatePipe('en-US');
+    const today = formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
+		const toNavigate = 'workout/' + today;
+
+		this.router.navigate([toNavigate]);
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 		// if (this.workoutService.workout.date !== today) {
 		// 	this.workoutService.fetchWorkout(today);
 		// }
 	}
-
-	/**
-	 * Remove the weekday from a Date object that was converted to a string.
-	 * @param dateString - A date object converted to a string.
-	 * @returns A correctly formatted date-string to be used in navigation.
-	 */
-	private stripWeekday(dateString: string): string {
-		const regex = /^.{4}/gi
-		return dateString.replace(regex, '')
-	}
-
 }
 
 
