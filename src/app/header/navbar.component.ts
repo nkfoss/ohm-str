@@ -69,12 +69,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 	}
 
-
-	// onFetchData() {
-	// 	const date = new Date().toDateString();
-	// 	this.workoutService.fetchWorkout(date);
-	// }
-
 	/**
 	 * Button function. Navigates to the current date.
 	 */
