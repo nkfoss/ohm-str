@@ -11,14 +11,14 @@ describe("home", () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				RouterTestingModule
+				RouterTestingModule.withRoutes([])
 			],
 			declarations: [HomeComponent]
 		});
 
-		let fixture = TestBed.createComponent(HomeComponent);
-		let de = fixture.debugElement;
-		let home = de.componentInstance
+		fixture = TestBed.createComponent(HomeComponent);
+		de = fixture.debugElement;
+		home = de.componentInstance
 
 		fixture.detectChanges();
 	});
