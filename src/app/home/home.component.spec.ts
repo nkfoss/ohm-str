@@ -1,30 +1,29 @@
+import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { WorkoutService } from "../workout.service";
 import { HomeComponent } from "./home.component"
 
 describe("home", () => {
 	let home: HomeComponent;
 	let fixture: ComponentFixture<HomeComponent>;
-
-	let workoutServiceStub: {};
+	let de: DebugElement;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RouterTestingModule
 			],
-			declarations: [HomeComponent],
-			providers: [
-				{ provide: WorkoutService, useValue: workoutServiceStub }
-			]
-
+			declarations: [HomeComponent]
 		});
+
+		let fixture = TestBed.createComponent(HomeComponent);
+		let de = fixture.debugElement;
+		let home = de.componentInstance
+
+		fixture.detectChanges();
 	});
 
 	it('should create the Home Component', () => {
-		let fixture = TestBed.createComponent(HomeComponent);
-		let HC = fixture.debugElement.componentInstance;
-		expect(HC).toBeTruthy();
+		expect(home).toBeTruthy();
 	})
 })
