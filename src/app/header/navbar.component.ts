@@ -33,9 +33,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	*/
 	isNavbarCollapsed = true;
 
+	/**
+	 * Used for navigation
+	 */
+	formatDatePipe = new DatePipe('en-US');
+
 	// =====================================================
 
-	constructor( private router: Router, private authService: AuthService) { }
+	constructor(private router: Router, private authService: AuthService) { }
 
 	ngOnInit() {
 		this.userSub = this.authService.userSubject.subscribe(
@@ -74,8 +79,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	 * Button function. Navigates to the current date.
 	 */
 	onNavigateToToday() {
-    const formatDatePipe = new DatePipe('en-US');
-    const today = formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
+		const today = this.formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
 		const toNavigate = 'workout/' + today;
 
 		this.router.navigate([toNavigate]);
