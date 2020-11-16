@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { WorkoutService } from '../workout.service';
+
 
 @Component({
   selector: 'app-home',
@@ -18,9 +18,7 @@ export class HomeComponent {
   formatDatePipe = new DatePipe('en-US');
   formattedDate: String;
 
-  constructor(private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private workoutService: WorkoutService) { }
+  constructor( private router: Router ) {}
 
   // =============================================================
 
