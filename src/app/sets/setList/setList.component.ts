@@ -79,7 +79,8 @@ export class SetListComponent implements OnInit, OnDestroy {
 			this.handleRouteParams();
 		} 
 		else if (this.date !== this.workoutService.workout.date) {
-			console.log("Dates don't match... " + this.date + ' _ ' + this.workoutService.workout.date);
+			console.log("Dates don't match");
+			console.log(this.date + ' _ ' + this.workoutService.workout.date)
 			this.handleRouteParams();
 		}
 

@@ -57,12 +57,22 @@ describe("setList", () => {
     expect(setList.exerciseSub).toBeDefined();
   });
 
-  it('should indicate that a workout was not initially found', () => {
-    let consoleSpy = spyOn(console, 'log');
-    let workoutService = fixture.debugElement.injector.get(WorkoutService);
+  it('should indicate if a workout was not found', () => {
+    const consoleSpy = spyOn(console, 'log');
+    const workoutService = fixture.debugElement.injector.get(WorkoutService);
+
     workoutService.workout = null;
     setList.ngOnInit();
     expect(consoleSpy).toHaveBeenCalledWith("No workout found");
+  });
+
+  it('should indicate if component\'s data does not match service\'s workout date', () => {
+    const consoleSpy = spyOn(console, 'log');
+    const workoutService = fixture.debugElement.injector.get(WorkoutService);
+
+    workoutService.workout.date = "Nov 20 2020";
+    setList.ngOnInit();
+    expect(consoleSpy).toHaveBeenCalledWith("Dates don't match");
   });
 
   it('should have the exercise array and bodyweight updated', () => {
@@ -96,8 +106,27 @@ describe("setList", () => {
   });
 
   it('should have the date property match the service\'s workout date', () => {
-    let workoutService = fixture.debugElement.injector.get(WorkoutService);
+    const workoutService = fixture.debugElement.injector.get(WorkoutService);
     expect(setList.date).toEqual(workoutService.workout.date);
   });
+
+  it('should have the RepMaxService fetch records', () => {
+    const repMaxService = fixture.debugElement.injector.get(RepmaxService);
+    const serviceSpy = spyOn(repMaxService, 'fetchRecords');
+
+    repMaxService.recordMaxes = null;
+    setList.ngOnInit();
+    expect(serviceSpy).toHaveBeenCalled();
+  });
+
+  it('should have the service call getRecordMaxFromName a certain number of times', () => {
+    const repMaxService = fixture.debugElement.injector.get(RepmaxService);
+    const serviceSpy = spyOn(repMaxService, 'getRecordMaxFromName');
+
+    setList.ngOnInit();
+    expect(serviceSpy).toHaveBeenCalledTimes(setList.exercises.length)
+  })
+
+
 
 });
