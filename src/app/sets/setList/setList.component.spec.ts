@@ -128,14 +128,14 @@ describe("setList", () => {
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onNewExercise();
-    expect(navigateSpy).toHaveBeenCalledWith(['exerice/new'])
+    expect(navigateSpy).toHaveBeenCalledWith(['exercise/new'])
   });
 
   it('should navigate to exercise/x/edit when calling onNewExercise()', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onEditExercise(2);
-    expect(navigateSpy).toHaveBeenCalledWith(['exerice/2/edit'])
+    expect(navigateSpy).toHaveBeenCalledWith(['exercise/2/edit'])
   });
 
 });
