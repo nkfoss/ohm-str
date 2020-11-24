@@ -29,5 +29,8 @@ export class RepmaxServiceStub {
 		  }
 		}
 	  }
+
+	patchDayMaxes() {};
+	patchRecordMaxes() {};
 	
 }
