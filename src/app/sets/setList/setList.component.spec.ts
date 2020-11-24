@@ -42,9 +42,6 @@ describe("setList", () => {
     fixture = TestBed.createComponent(SetListComponent);
     setList = fixture.debugElement.componentInstance;
 
-
-    // let workoutService = fixture.debugElement.injector.get(WorkoutService);
-
     fixture.detectChanges();
   }));
 
@@ -125,8 +122,67 @@ describe("setList", () => {
 
     setList.ngOnInit();
     expect(serviceSpy).toHaveBeenCalledTimes(setList.exercises.length)
-  })
+  });
 
+  it('should navigate to exercise/new when calling onNewExercise()', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    setList.onNewExercise();
+    expect(navigateSpy).toHaveBeenCalledWith(['exerice/new'])
+  });
 
+  it('should navigate to exercise/x/edit when calling onNewExercise()', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    setList.onEditExercise(2);
+    expect(navigateSpy).toHaveBeenCalledWith(['exerice/2/edit'])
+  });
 
 });
+
+describe("setList: onSaveWorkout()", () => {
+  let setList: SetListComponent;
+  let fixture: ComponentFixture<SetListComponent>;
+  let workoutService: WorkoutService;
+  let repmaxService: RepmaxService;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        MatSnackBarModule
+      ],
+      declarations: [SetListComponent],
+      providers: [
+        { provide: WorkoutService, useClass: WorkoutServiceStub },
+        { provide: RepmaxService, useClass: RepmaxServiceStub }
+      ]
+    });
+
+    fixture = TestBed.createComponent(SetListComponent);
+    setList = fixture.debugElement.componentInstance;
+    workoutService = fixture.debugElement.injector.get(WorkoutService);
+    repmaxService = fixture.debugElement.injector.get(RepmaxService);
+
+    fixture.detectChanges();
+  }));
+
+  it("should set the workoutservice's bodyweight property", () =>  {
+    setList.bodyweight = 170;
+    setList.onSaveWorkout();
+    expect(workoutService.workout.bodyweight).toEqual(170);
+  });
+
+  it("should have the repMax service call patchDayMaxes", () => {
+    let spy = spyOn(repmaxService, 'patchDayMaxes');
+    setList.onSaveWorkout();
+    expect(spy).toHaveBeenCalledWith(workoutService.workout);
+  });
+
+  it("should have the repMax service call patchRecordMaxes", () => {
+    let spy = spyOn(repmaxService, 'patchRecordMaxes');
+    setList.onSaveWorkout();
+    expect(spy).toHaveBeenCalledWith(repmaxService.recordMaxes);
+  });
+
+})
