@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { Exercise } from './shared/exercise.model';
 import { RepMaxRecord } from './shared/repMaxRecord.model';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
