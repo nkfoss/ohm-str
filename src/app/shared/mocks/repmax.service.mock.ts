@@ -30,6 +30,12 @@ export class RepmaxServiceStub {
 		}
 	  }
 
+	getRecordNames() {
+		return([
+			"Bench Press", "Squat", "Deadlift"
+		])
+	}
+
 	patchDayMaxes() {};
 	patchRecordMaxes() {};
 	

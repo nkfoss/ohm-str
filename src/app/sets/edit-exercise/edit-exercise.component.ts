@@ -24,7 +24,7 @@ export class EditExerciseComponent implements OnInit {
   
   //#region === Properties ================================================================
 
-  editMode = true; // False when adding new exercise, true when editing existing
+  editMode = false; // False when adding new exercise, true when editing existing
 
   exerciseId: number;
   exercise: Exercise;
@@ -79,15 +79,13 @@ export class EditExerciseComponent implements OnInit {
       console.log('edit mode')
 
       // From the target exercise object...
-      this.exercise = this.workoutService.getExercise(this.exerciseId);
+      this.exercise = this.workoutService.workout.exercises[this.exerciseId]
 
       // ...get the attributes not related to dynamic forms.
       this.exerciseName = this.exercise.exerciseName;
       this.stringSetType = this.exercise.setType;
       exerciseNotes = this.exercise.exerciseNotes;
       this.momentaryMax = this.exercise.hasOwnProperty('momentaryMax') ? this.exercise.momentaryMax : null
-      console.log("exercise cm " + this.exercise.momentaryMax);
-      console.log("this cm " + this.momentaryMax);
 
       // From that, define a formgroup to be used with each warmup set
       if (this.exercise['warmupSets']) {
@@ -150,7 +148,7 @@ export class EditExerciseComponent implements OnInit {
 
   // A function to make the suggested options for the exercise name input. 
   private setOptions() {
-    this.options = this.workoutService.getRecordNames(); // Get all exercises names ever recorded
+    this.options = this.repMaxService.getRecordNames(); // Get all exercises names ever recorded
     this.filteredOptions = this.setsForm.get('exerciseName').valueChanges // Suggest names as user types
       .pipe(
         startWith(''),

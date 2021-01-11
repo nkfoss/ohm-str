@@ -83,6 +83,9 @@ export class SetListComponent implements OnInit, OnDestroy {
 			console.log(this.date + ' _ ' + this.workoutService.workout.date)
 			this.handleRouteParams();
 		}
+		else {
+			this.exercises = this.workoutService.workout.exercises
+		}
 
 		// If record maxes not loaded, then get them. 
 		if (!this.repMaxService.recordMaxes) {
