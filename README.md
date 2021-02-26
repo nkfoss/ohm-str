@@ -1,21 +1,27 @@
-## Installing Bootstrap
+# Omega-Strength
 
-Bootstrap (version 4) is installed locally for this project using the command line. Make sure you're inside the _project folder_ (not /src).
+Omega-Strength (abrv: Ohm-str) is a web application for strength trainers. It allows the users to record their training, track records, and compare current performance with those records. It was created in Angular, uses Firebases's Realtime Database (NoSQL), and is hosted by Firebase as well.
 
-```bash
-npm install --save bootstrap@4
-```
+## Table of Contents
++ [Introduction](#introduction)
++ [Technologies](#technologies)
 
-In addition, jQuery must also be installed.
+## Introduction
 
-```bash
-npm install --save jquery
-```
+This project was created by me ([Nathan Foss](https://www.nathankfoss.me)) as way to exhibit my continuous learning of Angular. As a new grad, I figured it would useful for potential employers to see what I can do on my own. It also shows one of my primary interests: strength training. This application is also a tool that I use in my own training regimen.
 
-## Firebase
+The application was built mobile-first with an eye for simplicity. The functionality and interface are meant to emulate a strength logbook (of which many trainers still use). With the addition of material-design components, the application is very straight-forward.
 
-The endpoints to the project database are all in the code, but you still need the API key to read/write anything _(of course, that's privileged information)_.
+While this particular version of Ohm-Str is no longer in active development, I am currrently rebuilding it in React. Much of the functionality is the same, though the stack differs. Check out the progress in my [repository here](https://github.com/nkfoss/Ohm-str-react).
 
-The .json file containing the API key is expected to be found in the 'shared' folder.
+## Technologies
 
-**~ Make sure your git-ignore includes this file! ~**
+- Angular 8+
+- Typescript
+- RxJS
+- Bootstrap 4+
+- Karma / Jasmine
+- Angular-Material
+- Node.js
+
+
