@@ -36,9 +36,9 @@ Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can 
 
 <table>
   <tr>
-    <td>Authentication</td>
-     <td>Home page</td>
-     <td>Datepicker</td>
+    <td><strong> Authentication </strong></td>
+    <td><strong> Home page </strong></td>
+    <td><strong> Datepicker </strong></td>
   </tr>
   <tr>
     <td><img src="./src/assets/images/login.png" ></td>
