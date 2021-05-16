@@ -28,8 +28,6 @@ While this particular version of Ohm-Str is no longer in active development, I a
 
 ## Functionality
 
-Lorem ipsum, and then some. Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.Lorem ipsum, and then some.
-
 ### Login and getting started
 
 Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can sign in, but all new sers must personally ask me to sign up. Once signed in, the landing page displays a datepicker. You can chose a past date when you worked out, the current day, or plan workouts for a future date.
