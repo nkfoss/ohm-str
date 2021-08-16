@@ -125,6 +125,7 @@ describe('setList', () => {
   });
 
   it('should navigate to exercise/new when calling onNewExercise()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onNewExercise();
@@ -132,6 +133,7 @@ describe('setList', () => {
   });
 
   it('should navigate to exercise/x/edit when calling onNewExercise()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onEditExercise(2);

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
 
@@ -17,7 +17,7 @@ export class AuthComponent implements OnInit {
 
   public authForm: FormGroup;
 
-  //=====================================================================
+  // =====================================================================
 
 
   constructor(private formBuilder: FormBuilder,
@@ -27,27 +27,27 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {
 
     // Build/populate the sign-in form.
-    let email = '';
-    let password = '';
+    const email = '';
+    const password = '';
     this.authForm = this.formBuilder.group({
       email: this.formBuilder.control(email, [Validators.required, Validators.email]),
       password: this.formBuilder.control(password, [Validators.required, Validators.minLength(6)])
-    })
+    });
   }
 
-  //===================================================================================
+  // ===================================================================================
 
   // Switch from login to sign-up mode.
   onSwitchMode() {
-    this.isLoginMode = !this.isLoginMode
+    this.isLoginMode = !this.isLoginMode;
   }
 
 
   onSubmit() {
 
-    this.error=null; // Reset any previous error message.
-    
-    if (!this.authForm.valid) { return } 
+    this.error = null; // Reset any previous error message.
+
+    if (!this.authForm.valid) { return; }
 
     const email = this.authForm.value.email;
     const password = this.authForm.value.password;
@@ -55,20 +55,23 @@ export class AuthComponent implements OnInit {
 
     this.isLoading = true; // Displays the loading spinner
 
-    if (this.isLoginMode) { authObs = this.authService.login(email, password) } 
-    else { authObs = this.authService.signup(email, password) }
+    if (this.isLoginMode) {
+      authObs = this.authService.login(email, password);
+    } else {
+        authObs = this.authService.signup(email, password);
+    }
 
-    authObs.subscribe( 
+    authObs.subscribe(
       resData => {
         console.log(resData);
         this.isLoading = false;
-        this.router.navigate(['/home'])
-      }, 
+        this.router.navigate(['/home']);
+      },
       errorMessage => {
-        this.error = errorMessage
+        this.error = errorMessage;
         this.isLoading = false;
       }
-    )
+    );
   }
 
 

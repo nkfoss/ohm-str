@@ -15,7 +15,7 @@ import { RepmaxService } from 'src/app/repmax.service';
 @Component({
   selector: 'app-edit-exercise',
   templateUrl: './edit-exercise.component.html',
-  styleUrls: ['./edit-exercise.component.css']
+  styleUrls: ['./edit-exercise.component.scss']
 })
 
 // ..........................................................................
