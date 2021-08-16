@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { WorkoutService } from "../../workout.service";
-import { Exercise } from "../../shared/exercise.model";
-import { Subscription, Observable, Subject } from "rxjs";
-import { Router, ActivatedRoute, Params } from "@angular/router";
-import { RepmaxService } from "src/app/repmax.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Workout } from "src/app/shared/workout.model";
-import { takeUntil } from "rxjs/operators";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { WorkoutService } from '../../workout.service';
+import { Exercise } from '../../shared/exercise.model';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { RepmaxService } from 'src/app/repmax.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Workout } from 'src/app/shared/workout.model';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-setList',
@@ -39,7 +39,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	bodyweight: number;
 	/**
-	 * Used for updating the user's bodyweight. 
+	 * Used for updating the user's bodyweight.
 	 */
 	bodyweightSub: Subscription;
 	/**
@@ -51,7 +51,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	date: string; // The date of the loaded workout
 	/**
-	 * Sub for the route's date-params. 
+	 * Sub for the route's date-params.
 	 */
 	paramsSub: Subscription;
 
@@ -68,26 +68,24 @@ export class SetListComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		console.log("INIT: SetListComponent");
+		console.log('INIT: SetListComponent');
 
 		this.setupSubs();
 		this.date = this.activatedRoute.snapshot.params['date'];
 
 		// Attempt to fetch a workout if the service has none. The exercises/bodyweight subscription will  be received
 		if (!this.workoutService.workout) {
-			console.log("No workout found");
+			console.log('No workout found');
 			this.handleRouteParams();
-		} 
-		else if (this.date !== this.workoutService.workout.date) {
-			console.log("Dates don't match");
-			console.log(this.date + ' _ ' + this.workoutService.workout.date)
+		} else if (this.date !== this.workoutService.workout.date) {
+			console.log('Dates don\'t match');
+			console.log(this.date + ' _ ' + this.workoutService.workout.date);
 			this.handleRouteParams();
-		}
-		else {
-			this.exercises = this.workoutService.workout.exercises
+		} else {
+			this.exercises = this.workoutService.workout.exercises;
 		}
 
-		// If record maxes not loaded, then get them. 
+		// If record maxes not loaded, then get them.
 		if (!this.repMaxService.recordMaxes) {
 			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
 		}
@@ -96,10 +94,10 @@ export class SetListComponent implements OnInit, OnDestroy {
 		this.exercises.forEach(exercise => {
 			this.recordMaxArray.push(
 				this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
-			)
+			);
 		});
 
-		console.log("INIT COMPLETE: SetListComponent")
+		console.log('INIT COMPLETE: SetListComponent');
 	}
 	/**
 	 * Setup Subscriptions for  exercise array and bodyweight (and unsubscribes)...
@@ -115,7 +113,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 		this.bodyweightSub = this.workoutService.bodyweightUpdated
 			.pipe(takeUntil(this.unsubNotifier))
 			.subscribe(
-				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
+				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight; }
 			);
 
 	}
@@ -125,7 +123,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * Also setup unsubscribe.
 	 */
 	private handleRouteParams() {
-		
+
 		this.paramsSub = this.activatedRoute.params
 		.pipe(takeUntil(this.unsubNotifier))
 		.subscribe(
@@ -133,17 +131,17 @@ export class SetListComponent implements OnInit, OnDestroy {
 				this.date = params['date'];
 				this.workoutService.fetchWorkout(this.date);
 			}
-		)
+		);
 	}
 
 	ngOnDestroy() {
-		console.log("DESTROY: SetListCompononent")
+		console.log('DESTROY: SetListCompononent');
 
 		this.unsubNotifier.next();
 		this.unsubNotifier.complete();
 		this.workoutService.workout.bodyweight = this.bodyweight;
 
-		console.log("DESTROY COMPLETE: SetListCompononent")
+		console.log('DESTROY COMPLETE: SetListCompononent');
 	}
 	//#endregion
 	//#region === Functions =====================================================
@@ -155,16 +153,16 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	onSaveWorkout() {
 		this.workoutService.workout.bodyweight = this.bodyweight;
-		let workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
+		const workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
 		workoutObs.subscribe(
 			resData => {
 				console.log(resData);
-				this.openSnackBar("Workout saved successfully.")
+				this.openSnackBar('Workout saved successfully.');
 			},
 			errorMessage => {
-				this.openSnackBar(errorMessage)
+				this.openSnackBar(errorMessage);
 			}
-		)
+		);
 
 		this.repMaxService.patchDayMaxes(this.workoutService.workout);
 		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
@@ -174,7 +172,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * Button function. Navigates to the EditExercise component to create a new exercise.
 	 */
 	onNewExercise() {
-		this.router.navigate(['exercise/new'])
+		this.router.navigate(['exercise/new']);
 	}
 
 	/**
@@ -182,7 +180,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * @param exerciseIndex - For the WorkoutService, the index of the exercise selected from the Exercise array.
 	 */
 	onEditExercise(exerciseIndex) {
-		this.router.navigate(['exercise/' + exerciseIndex + '/edit'])
+		this.router.navigate(['exercise/' + exerciseIndex + '/edit']);
 	}
 
 	/**
@@ -201,8 +199,8 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * @param weight - The amount of weight used.
 	 */
 	calculateMax(reps: number, weight: number) {
-		let unrounded = weight * (1 + (reps / 30));
-		return +unrounded.toFixed(2)
+		const unrounded = weight * (1 + (reps / 30));
+		return +unrounded.toFixed(2);
 	}
 
 	getExercisesLength() {
@@ -218,9 +216,9 @@ export class SetListComponent implements OnInit, OnDestroy {
 			responseMessage,
 			'dismiss',
 			{ duration: 3000 }
-		)
+		);
 	}
 
-	//#endregion  
+	//#endregion
 
 }

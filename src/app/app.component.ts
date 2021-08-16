@@ -11,14 +11,14 @@ import { RepmaxService } from './repmax.service';
   styleUrls: ['./app.component.css']
 })
 
-//========================================
+// ========================================
 
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   private exercises: Exercise[];
-  exerciseSub: Subscription
+  exerciseSub: Subscription;
 
-  //========================================
+  // ========================================
 
   constructor(private workoutService: WorkoutService,
       private authService: AuthService,

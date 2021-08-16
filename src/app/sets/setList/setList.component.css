@@ -6,3 +6,8 @@
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+.container {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}

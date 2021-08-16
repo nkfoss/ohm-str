@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { ReactiveFormsModule } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { AuthServiceStub } from "src/app/shared/mocks/auth.service.mock";
-import { AuthService } from "../auth.service";
-import { AuthComponent } from "./auth.component"
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthServiceStub } from 'src/app/shared/mocks/auth.service.mock';
+import { AuthService } from '../auth.service';
+import { AuthComponent } from './auth.component';
 
-describe("auth", () => {
+describe('auth', () => {
 	let auth: AuthComponent;
 	let fixture: ComponentFixture<AuthComponent>;
 
@@ -70,7 +70,7 @@ describe("auth", () => {
 
 		// Wait for the async tasks to complete. There's probably a better way to do this.
 		setTimeout(() => {
-			let authResponseObject = {
+			const authResponseObject = {
 				kind: 'kind value',
 				idToken: 'idToken value',
 				email: 'jacob@email.com',
@@ -78,10 +78,10 @@ describe("auth", () => {
 				expiresIn: 'expiresIn value',
 				localId: 'localId value',
 			};
-			expect(consoleSpy).toHaveBeenCalledWith(authResponseObject)
+			expect(consoleSpy).toHaveBeenCalledWith(authResponseObject);
 			expect(auth.isLoading).toBe(false);
-			expect(navigateSpy).toHaveBeenCalledWith(['/home'])
-		}, 1000)
+			expect(navigateSpy).toHaveBeenCalledWith(['/home']);
+		}, 1000);
 
 	}));
 
@@ -104,7 +104,7 @@ describe("auth", () => {
 		const loginSpy = spyOn(authService, 'login');
 		auth.onSubmit(); // Email and password left blank.
 		expect(loginSpy).not.toHaveBeenCalled();
-	})
+	});
 
 
-})
+});

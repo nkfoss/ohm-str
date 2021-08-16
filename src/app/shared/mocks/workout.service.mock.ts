@@ -1,6 +1,6 @@
-import { BehaviorSubject, Observable } from "rxjs";
-import { Exercise } from "../exercise.model";
-import { Workout } from "../workout.model";
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Exercise } from '../exercise.model';
+import { Workout } from '../workout.model';
 
 export class WorkoutServiceStub {
 
@@ -13,7 +13,7 @@ export class WorkoutServiceStub {
 
 	fetchWorkout(dateString?: string) {
 		this.workout = {
-			date: "Nov 05 2020",
+			date: 'Nov 05 2020',
 			category: '',
 			bodyweight: 170,
 			exercises: [
@@ -43,22 +43,21 @@ export class WorkoutServiceStub {
 				},
 			],
 			notes: ''
-		}
+		};
 		this.exerciseUpdated.next(this.workout.exercises);
 		this.bodyweightUpdated.next(this.workout.bodyweight);
-	};
+	}
 
 	storeWorkout() {
 		return Observable.create(observer => {
 			setTimeout(() => {
 				if (this.workout) {
-					observer.next(this.workout)
+					observer.next(this.workout);
+				} else {
+					observer.error('An error occurred');
 				}
-				else {
-					observer.error("An error occurred")
-				}
-			}, 1000)
-		})
+			}, 1000);
+		});
 	}
 
 

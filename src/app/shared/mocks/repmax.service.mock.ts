@@ -8,23 +8,23 @@ export class RepmaxServiceStub {
 	}
 
 	fetchDayMaxes() {
-		this.dayMaxes = {}
+		this.dayMaxes = {};
 	}
 
-	fetchRecordMaxes(){
+	fetchRecordMaxes() {
 		this.recordMaxes = {
-			"bench press": 200,
-			"deadlift": 300,
-			"squat": 275
-		}
+			'bench press': 200,
+			'deadlift': 300,
+			'squat': 275
+		};
 	}
 
 	getRecordMaxFromName(exerciseName: string): number {
-		let records = this.recordMaxes
-		for (var key in records) {
+		const records = this.recordMaxes;
+		for (const key in records) {
 		  if (records.hasOwnProperty(key)) {
-			if (key == exerciseName) {
-			  return (records[key])
+			if (key === exerciseName) {
+			  return (records[key]);
 			}
 		  }
 		}
@@ -32,11 +32,11 @@ export class RepmaxServiceStub {
 
 	getRecordNames() {
 		return([
-			"Bench Press", "Squat", "Deadlift"
-		])
+			'Bench Press', 'Squat', 'Deadlift'
+		]);
 	}
 
-	patchDayMaxes() {};
-	patchRecordMaxes() {};
-	
+	patchDayMaxes() {}
+	patchRecordMaxes() {}
+
 }

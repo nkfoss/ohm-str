@@ -1,19 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { EditExerciseComponent } from './sets/edit-exercise/edit-exercise.component';
 import { NavbarComponent } from './header/navbar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SetListComponent } from './sets/setList/setList.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthComponent } from './auth/auth/auth.component'
+import { AuthComponent } from './auth/auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { NotesDialog } from './sets/edit-exercise/edit-exercise.component';
+import { NotesDialogComponent } from './sets/edit-exercise/edit-exercise.component';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,7 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -34,7 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     HomeComponent,
     AuthComponent,
     LoadingSpinnerComponent,
-    NotesDialog
+    NotesDialogComponent
   ],
   imports: [
     BrowserModule,
