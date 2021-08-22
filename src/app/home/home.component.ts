@@ -7,7 +7,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 
 // ==================================================

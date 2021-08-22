@@ -1,15 +1,15 @@
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { SetListComponent } from "./setList.component";
-import { WorkoutService } from "../../workout.service";
-import { RepmaxService } from "src/app/repmax.service";
-import { RouterTestingModule } from "@angular/router/testing";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { WorkoutServiceStub } from "src/app/shared/mocks/workout.service.mock";
-import { RepmaxServiceStub } from "src/app/shared/mocks/repmax.service.mock";
-import { ActivatedRoute, Router } from "@angular/router";
-import { of } from "rxjs";
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { SetListComponent } from './setList.component';
+import { WorkoutService } from '../../workout.service';
+import { RepmaxService } from 'src/app/repmax.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { WorkoutServiceStub } from 'src/app/shared/mocks/workout.service.mock';
+import { RepmaxServiceStub } from 'src/app/shared/mocks/repmax.service.mock';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 
-describe("setList", () => {
+describe('setList', () => {
   let setList: SetListComponent;
   let fixture: ComponentFixture<SetListComponent>;
   let router: Router;
@@ -60,16 +60,16 @@ describe("setList", () => {
 
     workoutService.workout = null;
     setList.ngOnInit();
-    expect(consoleSpy).toHaveBeenCalledWith("No workout found");
+    expect(consoleSpy).toHaveBeenCalledWith('No workout found');
   });
 
   it('should indicate if component\'s data does not match service\'s workout date', () => {
     const consoleSpy = spyOn(console, 'log');
     const workoutService = fixture.debugElement.injector.get(WorkoutService);
 
-    workoutService.workout.date = "Nov 20 2020";
+    workoutService.workout.date = 'Nov 20 2020';
     setList.ngOnInit();
-    expect(consoleSpy).toHaveBeenCalledWith("Dates don't match");
+    expect(consoleSpy).toHaveBeenCalledWith('Dates don\'t match');
   });
 
   it('should have the exercise array and bodyweight updated', () => {
@@ -98,7 +98,7 @@ describe("setList", () => {
         warmupSets: [],
         sets: [{ weight: 300, reps: 1 }]
       },
-    ])
+    ]);
     expect(setList.bodyweight).toEqual(170);
   });
 
@@ -121,26 +121,28 @@ describe("setList", () => {
     const serviceSpy = spyOn(repMaxService, 'getRecordMaxFromName');
 
     setList.ngOnInit();
-    expect(serviceSpy).toHaveBeenCalledTimes(setList.exercises.length)
+    expect(serviceSpy).toHaveBeenCalledTimes(setList.exercises.length);
   });
 
   it('should navigate to exercise/new when calling onNewExercise()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onNewExercise();
-    expect(navigateSpy).toHaveBeenCalledWith(['exercise/new'])
+    expect(navigateSpy).toHaveBeenCalledWith(['exercise/new']);
   });
 
   it('should navigate to exercise/x/edit when calling onNewExercise()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const router = TestBed.inject(Router);
     const navigateSpy = spyOn(router, 'navigate');
     setList.onEditExercise(2);
-    expect(navigateSpy).toHaveBeenCalledWith(['exercise/2/edit'])
+    expect(navigateSpy).toHaveBeenCalledWith(['exercise/2/edit']);
   });
 
 });
 
-describe("setList: onSaveWorkout()", () => {
+describe('setList: onSaveWorkout()', () => {
   let setList: SetListComponent;
   let fixture: ComponentFixture<SetListComponent>;
   let workoutService: WorkoutService;
@@ -167,22 +169,22 @@ describe("setList: onSaveWorkout()", () => {
     fixture.detectChanges();
   }));
 
-  it("should set the workoutservice's bodyweight property", () =>  {
+  it('should set the workoutservice\'s bodyweight property', () =>  {
     setList.bodyweight = 170;
     setList.onSaveWorkout();
     expect(workoutService.workout.bodyweight).toEqual(170);
   });
 
-  it("should have the repMax service call patchDayMaxes", () => {
-    let spy = spyOn(repmaxService, 'patchDayMaxes');
+  it('should have the repMax service call patchDayMaxes', () => {
+    const spy = spyOn(repmaxService, 'patchDayMaxes');
     setList.onSaveWorkout();
     expect(spy).toHaveBeenCalledWith(workoutService.workout);
   });
 
-  it("should have the repMax service call patchRecordMaxes", () => {
-    let spy = spyOn(repmaxService, 'patchRecordMaxes');
+  it('should have the repMax service call patchRecordMaxes', () => {
+    const spy = spyOn(repmaxService, 'patchRecordMaxes');
     setList.onSaveWorkout();
     expect(spy).toHaveBeenCalledWith(repmaxService.recordMaxes);
   });
 
-})
+});

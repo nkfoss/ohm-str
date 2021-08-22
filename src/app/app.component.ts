@@ -8,17 +8,17 @@ import { RepmaxService } from './repmax.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 
-//========================================
+// ========================================
 
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   private exercises: Exercise[];
-  exerciseSub: Subscription
+  exerciseSub: Subscription;
 
-  //========================================
+  // ========================================
 
   constructor(private workoutService: WorkoutService,
       private authService: AuthService,

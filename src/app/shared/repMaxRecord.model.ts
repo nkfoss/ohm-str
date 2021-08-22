@@ -1,6 +1,6 @@
 export class RepMaxRecord {
-	constructor (
-		public exerciseName: string,
-		public oneRepMax: number
-	) {}
+  constructor (
+    public exerciseName: string,
+    public oneRepMax: number
+  ) {}
 }
