@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
@@ -27,9 +26,7 @@ export class HomeComponent {
     this.router.navigate(
       ["workouts"],
       { queryParams: {
-        year: this.selectedDate.getFullYear(),
-        month: this.selectedDate.getMonth() + 1,
-        date: this.selectedDate.getDate()
+          dateString: this.selectedDate.toISOString()
       }});
   }
 

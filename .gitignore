@@ -42,5 +42,5 @@ Thumbs.db
 credentials.json
 .angulardoc.json
 
-# Any Fireebase backups
+# Any Firebase backups
 *-backup.txt
