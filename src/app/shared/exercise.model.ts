@@ -1,4 +1,4 @@
-import { WeightReps } from "./weightReps.model"
+import { WeightReps } from './weightReps.model';
 
 export class Exercise {
 
