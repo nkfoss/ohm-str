@@ -14,7 +14,7 @@ const appRoutes: Routes = [
 
   {path: 'auth', component: AuthComponent},
 
-  {path: 'workout/:date', component: SetListComponent, canActivate: [AuthGuard]},
+  {path: 'workouts', component: SetListComponent, canActivate: [AuthGuard]},
 
   {path: 'exercise', 
   canActivate: [AuthGuard],

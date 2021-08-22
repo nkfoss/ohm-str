@@ -15,28 +15,22 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 export class HomeComponent {
 
   selectedDate: Date;
-  formatDatePipe = new DatePipe('en-US');
-  formattedDate: String;
-
   constructor( private router: Router ) {}
 
   // =============================================================
 
-  getTodaysWorkout() {
-    const today = this.formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
-    const toNavigate = 'workout/' + today;
-    this.router.navigate([toNavigate]);
-  }
-
   setSelectedDate(event: MatDatepickerInputEvent<Date>) {
     this.selectedDate = event.value;
-    this.formattedDate = this.formatDatePipe.transform(this.selectedDate, 'LLL d y');
-    console.log(event.value);
   }
 
   navigateToDate() {
-    const toNavigate = 'workout/' + this.formattedDate;
-    this.router.navigate([toNavigate]);
+    this.router.navigate(
+      ["workouts"],
+      { queryParams: {
+        year: this.selectedDate.getFullYear(),
+        month: this.selectedDate.getMonth() + 1,
+        date: this.selectedDate.getDate()
+      }});
   }
 
 }

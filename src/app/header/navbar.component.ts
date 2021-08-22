@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "../auth/auth.service";
 import { Subscription } from "rxjs";
 import { DatePipe } from '@angular/common';
-
+import * as moment from 'moment'
 
 @Component({
 	selector: 'app-navbar',
@@ -50,37 +50,29 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			})
 	}
 
-	ngOnDestroy() { if (this.userSub) {this.userSub.unsubscribe() }}
+	ngOnDestroy() {this.userSub.unsubscribe() }
 
 	// =====================================================
 
-	/**
-	 * Button function. Tells the AuthService to logout.
-	 */
 	onLogout() {
 		this.authService.logout()
 	}
 
-	/**
-	 * Button function. Navigates to the home page.
-	 */
 	onNavigateHome() {
 		this.router.navigate(['home']);
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 	}
 
-	/**
-	 * Button function. Navigates to the current date.
-	 */
 	onNavigateToToday() {
-		const today = this.formatDatePipe.transform(new Date().toDateString(), 'LLL d y');
-		const toNavigate = 'workout/' + today;
-
-		this.router.navigate([toNavigate]);
+		const today = new Date();
+		this.router.navigate( 
+			["workouts"], 
+			{ queryParams: {
+				year: today.getFullYear(),
+				month: today.getMonth() + 1,
+				date: today.getDate()
+			}});
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
-		// if (this.workoutService.workout.date !== today) {
-		// 	this.workoutService.fetchWorkout(today);
-		// }
 	}
 }
 

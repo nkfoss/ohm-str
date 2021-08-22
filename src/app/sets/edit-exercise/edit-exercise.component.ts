@@ -79,7 +79,7 @@ export class EditExerciseComponent implements OnInit {
       console.log('edit mode')
 
       // From the target exercise object...
-      this.exercise = this.workoutService.workout.exercises[this.exerciseId]
+      this.exercise = this.workoutService.getWorkout().exercises[this.exerciseId]
 
       // ...get the attributes not related to dynamic forms.
       this.exerciseName = this.exercise.exerciseName;
@@ -168,7 +168,7 @@ export class EditExerciseComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  // It opens a snackbar, ya dingus. (mmmmm...snackbar... *drools*)
+  // It opens a snackbar, ya dingus.
   private openSnackBar() {
     this._snackBar.open(
       this.editMode ? 'Exercise successfully edited' : 'Exercise successfully added.', 
@@ -216,8 +216,16 @@ export class EditExerciseComponent implements OnInit {
 
   // Used by onSubmit() and onDeleteExercise()
   onNavigateBack() {
-    const date = this.workoutService.getFormattedDate()
-    this.router.navigate(['workout/' + date])
+    const date = this.workoutService.getWorkout().date
+    console.log(date)
+    this.router.navigate(
+      ['workouts'],
+      {queryParams: {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        date: date.getDate()
+      }}
+      )
   }
 
   // Adds a basic set to the form.

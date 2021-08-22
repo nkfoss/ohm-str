@@ -5,6 +5,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RepmaxService } from './repmax.service';
 import { catchError } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,9 @@ export class WorkoutService {
 
   exerciseUpdated = new BehaviorSubject<Exercise[]>(null);
   bodyweightUpdated = new BehaviorSubject<number>(null);
-  dateUpdated = new BehaviorSubject<string>(null);
 
-  workout: Workout;
-  date: string;
+  private workout: Workout;
+  private date: string;
 
   //#endregion
 
@@ -36,66 +36,96 @@ export class WorkoutService {
 
   //#region === Database Functions ===============================================
 
-  fetchWorkout(dateString?: string) {
-    console.log("METHOD: fetchWorkout")
 
-    if (dateString) { 
-      this.date = dateString;
-      this.dateUpdated.next(this.date);
+  fetchWorkout(date?: Date) {
+    if (!date) {
+      date = new Date();
     }
+    const url = this.formatURL(date);
 
-    const url = this.formatURL(dateString);
-
-    this.http.get(url)
+    this.http.get<Workout>(url)
     .subscribe(
-      (workout: Workout) => {
-        this.handleFetchedWorkout(workout, dateString);
-        this.exerciseUpdated.next(this.workout.exercises);
-        this.bodyweightUpdated.next(this.workout.bodyweight);
+      (fetchedWorkout) => {
+        if (fetchedWorkout instanceof Workout) {
+          this.handleWorkoutsResponse(fetchedWorkout, date);
+          this.exerciseUpdated.next(this.workout.exercises);
+          this.bodyweightUpdated.next(this.workout.bodyweight);
+        } else if (Object.keys(fetchedWorkout).includes("date")) {
+          let dateString: String = fetchedWorkout['date'];
+          let dateSplit = dateString.split(' ');
+          let month = dateSplit[0] == "May" 
+            ? 4 : dateSplit[0] == "Jun"
+            ? 5 : 6
+          let date = new Date()
+          date.setFullYear(2021, month, +dateSplit[1])
+          let newWorkout: Workout = {
+            date: date,
+            category: "",
+            notes: fetchedWorkout["notes"],
+            exercises: fetchedWorkout["exercises"],
+            bodyweight: fetchedWorkout["bodyweight"]
+          }
+          this.handleWorkoutsResponse(newWorkout, date);
+          this.exerciseUpdated.next(this.workout.exercises);
+          this.bodyweightUpdated.next(this.workout.bodyweight);
+        }
+      
+
+      },
+      (error) => {
+        console.log(error)
       }
     )
-    console.log("CLOSED: fetchWorkout")
-
   }
 
-  private formatURL(dateString?: string): string {
-    // Set the url. If no datestring provided, use current date.
-    let url: string;
-    if (dateString) {
-      // this.workout.date = dateString;
-      let URLdateString = dateString.split(' ').join('%20');
-      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + URLdateString + '.json'
-    } else {
-      const date = new Date().toLocaleString()
-      url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + date + '.json'
-    }
+  private formatURL(date: Date): string {
+    console.log("METHOD: FORMAT URL")
+    const dateSplit = date.toDateString().split(' ').splice(1, 3);
+    console.log("datesplit: " + dateSplit)
+    const url = 
+    'https://strengthpractice-7e443.firebaseio.com/workouts/' 
+    + dateSplit[2]      // year
+    + '/' + dateSplit[0]  // month
+    + '/' + dateSplit[1]  // date
+    + '.json'
+    console.log(url)
+    console.log("CLOSED: FORMAT URL")
     return url;
   }
 
-  private handleFetchedWorkout(workout?: Workout, dateString?: string) {
+  private handleWorkoutsResponse(workout: Workout, date: Date) {
+    console.log("METHOD: HANDLE FETCHED WORKOUT")
     if (workout) {
-      // Set the official workout and send out the subscription.
       this.workout = workout;
-      console.log('fetched workout: ' + workout)
-    }
-
-    else {
-      // If no workout is returned, then we just set the displayed data to null
-      console.log("no workout fetched");
+    } else {
       this.workout = {
-        date: dateString,
+        date: date,
         category: "",
         notes: "",
         exercises: [],
         bodyweight: null
       }
     }
-
   }
 
   storeWorkout() {
+
     this.convertToLowerCase(this.workout.exercises)
-    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' + this.workout.date + '.json';
+    if (!(this.workout.date instanceof Date)) {
+      this.workout.date = this.convertDateStringToDate(this.workout.date)
+    }
+
+    console.log(this.workout.date)
+
+    let year = this.workout.date.getFullYear();
+    let month = this.workout.date.getMonth() + 1;
+    let day = this.workout.date.getDate();
+    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' 
+      + year + "/" + month + "/" + day
+      + '.json';
+
+    console.log(url)
+
     return this.http.patch<Workout>(url, this.workout).pipe(
       catchError(this.handleErrorResponse)
       // We don't use 'tap' here, since tap only produces side-effects, which we don't need to do.
@@ -117,8 +147,6 @@ export class WorkoutService {
   //#region === Other Functions ==================================================
 
   getWorkout() { return this.workout; }
-
-  getFormattedDate() { return this.workout.date }
 
   getExercises() { return this.workout.exercises.slice(); }
 
@@ -227,6 +255,42 @@ export class WorkoutService {
   }
 
   //#endregion
+
+
+  convertDateStringToDate(dateString: String): Date {
+    let dateSplit = dateString.split(' ');
+    let qwe;
+    switch(dateSplit[0]) {
+      case "Jan":
+        qwe = 0; break;
+      case "Feb":
+        qwe = 1; break;
+      case "Mar":
+        qwe = 2; break;
+      case "Apr":
+        qwe = 3; break;
+      case "May":
+        qwe = 4; break;
+      case "Jun":
+        qwe = 5; break;
+      case "Jul":
+        qwe = 6; break;
+      case "Aug":
+        qwe = 7; break;
+      case "Sep":
+        qwe = 8; break;
+      case "Oct":
+        qwe = 9; break;
+      case "Nov":
+        qwe = 10; break;
+      case "Dec":
+        qwe = 11; break;
+    }
+    console.log(dateSplit[2])
+    console.log(qwe)
+    console.log(dateSplit[0])
+    return new Date(+dateSplit[2], qwe, +dateSplit[1])
+  }
 
 }
 

@@ -49,7 +49,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	/**
 	 * The current date. Updated by the paramsSub
 	 */
-	date: string; // The date of the loaded workout
+	date: Date; // The date of the loaded workout
 	/**
 	 * Sub for the route's date-params. 
 	 */
@@ -71,29 +71,40 @@ export class SetListComponent implements OnInit, OnDestroy {
 		console.log("INIT: SetListComponent");
 
 		this.setupSubs();
-		this.date = this.activatedRoute.snapshot.params['date'];
+
+		let params = this.activatedRoute.snapshot.queryParams;
+		this.date = new Date();
+		this.date.setFullYear(params["year"], params["month"]-1, params["date"]);
+		this.workoutService.fetchWorkout(this.date)
 
 		// Attempt to fetch a workout if the service has none. The exercises/bodyweight subscription will  be received
-		if (!this.workoutService.workout) {
-			console.log("No workout found");
+		if (!this.workoutService.getWorkout()) {
+			console.log("No workout found. Calling workout service with route params..");
 			this.handleRouteParams();
 		} 
-		else if (this.date !== this.workoutService.workout.date) {
-			console.log("Dates don't match");
-			console.log(this.date + ' _ ' + this.workoutService.workout.date)
+		else if (this.date !== this.workoutService.getWorkout().date) {
+			console.log("Dates don't match! Calling workout service with route params...");
+			console.log(this.date + ' vs. ' + this.workoutService.getWorkout().date)
 			this.handleRouteParams();
 		}
 		else {
-			this.exercises = this.workoutService.workout.exercises
+			this.exercises = this.workoutService.getWorkout().exercises
 		}
 
 		// If record maxes not loaded, then get them. 
 		if (!this.repMaxService.recordMaxes) {
+			console.log("repmax Service has no records. Calling service...")
 			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
 		}
 
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// ~~~~~~~~~~~~~~~ TODO: FIX the aync propblem with day records ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 		// Populate the record-max array. These values are displayed with each exercise.
+		console.log("Populating record max array...")
 		this.exercises.forEach(exercise => {
+			console.log(exercise + " populating...")
 			this.recordMaxArray.push(
 				this.repMaxService.getRecordMaxFromName(exercise.exerciseName)
 			)
@@ -125,15 +136,16 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * Also setup unsubscribe.
 	 */
 	private handleRouteParams() {
-		
-		this.paramsSub = this.activatedRoute.params
+		console.log("METHOD: HANDLE ROUTE PARAMS")
+		this.paramsSub = this.activatedRoute.queryParams
 		.pipe(takeUntil(this.unsubNotifier))
 		.subscribe(
 			(params: Params) => {
-				this.date = params['date'];
+				this.date.setFullYear( params["year"], params["month"] - 1, params["date"] ); 
 				this.workoutService.fetchWorkout(this.date);
 			}
 		)
+		console.log("CLOSED: HANDLE ROUTE PARAMS")
 	}
 
 	ngOnDestroy() {
@@ -141,7 +153,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 		this.unsubNotifier.next();
 		this.unsubNotifier.complete();
-		this.workoutService.workout.bodyweight = this.bodyweight;
+		this.workoutService.getWorkout().bodyweight = this.bodyweight;
 
 		console.log("DESTROY COMPLETE: SetListCompononent")
 	}
@@ -154,7 +166,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * 3.) Updates the day-maxes for in the database... 4.) Updates the all-time maxes in the database.
 	 */
 	onSaveWorkout() {
-		this.workoutService.workout.bodyweight = this.bodyweight;
+		this.workoutService.getWorkout().bodyweight = this.bodyweight;
 		let workoutObs: Observable<Workout> = this.workoutService.storeWorkout();
 		workoutObs.subscribe(
 			resData => {
@@ -166,7 +178,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 			}
 		)
 
-		this.repMaxService.patchDayMaxes(this.workoutService.workout);
+		this.repMaxService.patchDayMaxes(this.workoutService.getWorkout());
 		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}
 
@@ -206,7 +218,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	}
 
 	getExercisesLength() {
-		return this.workoutService.workout.exercises.length;
+		return this.workoutService.getWorkout().exercises.length;
 	}
 
 	/**

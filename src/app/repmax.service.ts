@@ -36,26 +36,31 @@ export class RepmaxService {
     console.log("METHOD: fetchRecords()")
     this.fetchDayMaxes();
     this.fetchRecordMaxes();
+    console.log("CLOSED: fetchRecords()")
+
   }
 
   // Fetch AND set dayMaxes
   private fetchDayMaxes() {
+    console.log("METHOD: fetchDayMaxes()")
     let dayMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/daymaxes.json'
     this.http.get(dayMaxUrl).subscribe(response => {
       console.log("Fetching day maxes...");
       console.log(response);
       this.dayMaxes = <JSON>response;
     });
+    console.log("CLOSED: fetchDayMaxes()")
   }
 
   // Fetch AND set recordMaxes
   private fetchRecordMaxes() {
+    console.log("METHOD: fetchRecordMaxes()")
     let recordMaxUrl = 'https://strengthpractice-7e443.firebaseio.com/recordmaxes.json';
     this.http.get(recordMaxUrl).subscribe(response => {
       console.log("Fetching record maxes...");
       console.log(response);
-      this.recordMaxes = <JSON>response;
-      console.log("CLOSED: fetchRecords()")
+      this.recordMaxes = <JSON> response || <JSON> {}; // If response is null, return an empty JSON object.
+      console.log("CLOSED: fetchRecordMaxes()")
     })
   }
 
@@ -194,7 +199,12 @@ export class RepmaxService {
         notes: this.dayMaxes[exerciseName][key].notes
       });
     }
-    return notesArr;
+
+    let tempArr = [];
+    tempArr[0] = notesArr[1];
+    tempArr[1] = notesArr[2];
+    tempArr[2] = notesArr[0];
+    return tempArr;
   }
 
   // Return all recorded exercise names. 
