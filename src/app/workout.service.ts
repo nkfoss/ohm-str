@@ -58,7 +58,7 @@ export class WorkoutService {
         } else if (Object.keys(fetchedWorkout).includes("date")) {
           let dateString: String = fetchedWorkout['date'];
           let dateSplit = dateString.split(' ');
-          let month = dateSplit[0] == "May" 
+          let month = dateSplit[0] == "May"
             ? 4 : dateSplit[0] == "Jun"
             ? 5 : 6
           let date = new Date()
@@ -74,7 +74,7 @@ export class WorkoutService {
           this.exerciseUpdated.next(this.workout.exercises);
           this.bodyweightUpdated.next(this.workout.bodyweight);
         }
-      
+
 
       },
       (error) => {
@@ -85,11 +85,10 @@ export class WorkoutService {
 
   private formatURL(date: Date): string {
     console.log("METHOD: FORMAT URL")
-    const year = date.g
     const dateSplit = date.toDateString().split(' ').splice(1, 3);
     console.log("datesplit: " + dateSplit)
-    const url = 
-    'https://strengthpractice-7e443.firebaseio.com/workouts/' 
+    const url =
+    'https://strengthpractice-7e443.firebaseio.com/workouts/'
     + date.getFullYear      // year
     + '/' + date.getMonth  // month
     + '/' + date.getDate  // date
@@ -126,7 +125,7 @@ export class WorkoutService {
     let year = this.workout.date.getFullYear();
     let month = this.workout.date.getMonth() + 1;
     let day = this.workout.date.getDate();
-    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/' 
+    const url = 'https://strengthpractice-7e443.firebaseio.com/workouts/'
       + year + "/" + month + "/" + day
       + '.json';
 

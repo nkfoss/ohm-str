@@ -11,7 +11,7 @@ import { takeUntil } from "rxjs/operators";
 @Component({
 	selector: 'app-setList',
 	templateUrl: './setList.component.html',
-	styleUrls: ['./setList.component.css']
+	styleUrls: ['./setList.component.scss']
 })
 
 
@@ -39,7 +39,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	bodyweight: number;
 	/**
-	 * Used for updating the user's bodyweight. 
+	 * Used for updating the user's bodyweight.
 	 */
 	bodyweightSub: Subscription;
 	/**
@@ -51,7 +51,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 */
 	date: Date; // The date of the loaded workout
 	/**
-	 * Sub for the route's date-params. 
+	 * Sub for the route's date-params.
 	 */
 	paramsSub: Subscription;
 
@@ -82,7 +82,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 		if (!this.workoutService.getWorkout()) {
 			console.log("No workout found. Calling workout service with route params..");
 			this.handleRouteParams();
-		} 
+		}
 		else if (this.date !== this.workoutService.getWorkout().date) {
 			console.log("Dates don't match! Calling workout service with route params...");
 			console.log(this.date + ' vs. ' + this.workoutService.getWorkout().date)
@@ -92,7 +92,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 			this.exercises = this.workoutService.getWorkout().exercises
 		}
 
-		// If record maxes not loaded, then get them. 
+		// If record maxes not loaded, then get them.
 		if (!this.repMaxService.recordMaxes) {
 			console.log("repmax Service has no records. Calling service...")
 			this.repMaxService.fetchRecords(); // This needs to happen in order to populate the recordMaxArray
@@ -142,7 +142,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 		.pipe(takeUntil(this.unsubNotifier))
 		.subscribe(
 			(params: Params) => {
-				this.date = new Date( params['dateString'] ); 
+				this.date = new Date( params['dateString'] );
 				this.workoutService.fetchWorkout(this.date);
 			}
 		)
@@ -232,6 +232,6 @@ export class SetListComponent implements OnInit, OnDestroy {
 		)
 	}
 
-	//#endregion  
+	//#endregion
 
 }
