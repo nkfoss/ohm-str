@@ -24,10 +24,10 @@ export class HomeComponent {
 
   navigateToDate() {
     this.router.navigate(
-      ["workouts"],
-      { queryParams: {
-          dateString: this.selectedDate.toISOString()
-      }});
+		["workouts"],
+		{ queryParams: {
+			dateString: this.selectedDate.toLocaleDateString()
+		}});
   }
 
 }

@@ -67,7 +67,7 @@ describe('setList', () => {
     const consoleSpy = spyOn(console, 'log');
     const workoutService = fixture.debugElement.injector.get(WorkoutService);
 
-    workoutService.workout.date = 'Nov 20 2020';
+    workoutService.workout.dateString = 'Nov 20 2020';
     setList.ngOnInit();
     expect(consoleSpy).toHaveBeenCalledWith('Dates don\'t match');
   });
@@ -104,7 +104,7 @@ describe('setList', () => {
 
   it('should have the date property match the service\'s workout date', () => {
     const workoutService = fixture.debugElement.injector.get(WorkoutService);
-    expect(setList.date).toEqual(workoutService.workout.date);
+    expect(setList.dateString).toEqual(workoutService.workout.dateString);
   });
 
   it('should have the RepMaxService fetch records', () => {

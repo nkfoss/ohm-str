@@ -193,7 +193,9 @@ export class EditExerciseComponent implements OnInit {
   onSubmit() {
     console.log('METHOD: onSubmit()');
 
-    if (this.editMode) { this.workoutService.updateExercise(this.exerciseId, this.setsForm.value); } else {
+    if (this.editMode) { 
+      this.workoutService.updateExercise(this.exerciseId, this.setsForm.value); 
+    } else {
       // The currMax needs to be added to the setsForm before sending it.
       this.setsForm.patchValue({
         momentaryMax: this.repMaxService.getRecordMaxFromName(this.exerciseName)
@@ -215,15 +217,10 @@ export class EditExerciseComponent implements OnInit {
 
   // Used by onSubmit() and onDeleteExercise()
   onNavigateBack() {
-    const date = this.workoutService.getWorkout().date
-    console.log(date)
+    const dateString = this.workoutService.getWorkout().dateString
     this.router.navigate(
       ['workouts'],
-      {queryParams: {
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        date: date.getDate()
-      }}
+      {queryParams: {dateString: dateString}}
       )
   }
 
@@ -389,7 +386,7 @@ export class EditExerciseComponent implements OnInit {
 //#region === Dialog Box =====================================================================
 
 export interface DialogData {
-  date: string;
+  dateString: string;
   notes: string;
 }
 

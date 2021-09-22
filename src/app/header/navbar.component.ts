@@ -64,14 +64,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 	onNavigateToToday() {
-		const today = new Date();
+		const todayString = new Date().toLocaleDateString();
 		this.router.navigate( 
 			["workouts"], 
-			{ queryParams: {
-				year: today.getFullYear(),
-				month: today.getMonth() + 1,
-				date: today.getDate()
-			}});
+			{ queryParams: { dateString: todayString }}
+    );
 		this.isNavbarCollapsed = !this.isNavbarCollapsed;
 	}
 }

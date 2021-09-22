@@ -28,7 +28,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	/**
 	 * An array of exercises for the selected date's workout. Used for display purposes only.
 	 */
-	exercises: Exercise[];
+	exercises: Exercise[] = [];
 	/**
 	 * Used for updating the component's exercise array. Receives updates from the WorkoutService.
 	 */
@@ -49,7 +49,7 @@ export class SetListComponent implements OnInit, OnDestroy {
 	/**
 	 * The current date. Updated by the paramsSub
 	 */
-	date: Date; // The date of the loaded workout
+	dateString: string; // The date of the loaded workout
 	/**
 	 * Sub for the route's date-params.
 	 */
@@ -72,21 +72,17 @@ export class SetListComponent implements OnInit, OnDestroy {
 
 		this.setupSubs();
 
-		this.date = new Date(
-			this.activatedRoute.snapshot.queryParams['dateString']
-		);
-
-		this.workoutService.fetchWorkout(this.date)
-
+		this.dateString = this.activatedRoute.snapshot.queryParams['dateString'];
+		
 		// Attempt to fetch a workout if the service has none. The exercises/bodyweight subscription will  be received
 		if (!this.workoutService.getWorkout()) {
 			console.log("No workout found. Calling workout service with route params..");
-			this.handleRouteParams();
+			this.handleRouteParamsAndFetchWorkout();
 		}
-		else if (this.date !== this.workoutService.getWorkout().date) {
+		else if (this.dateString != this.workoutService.getWorkout().dateString) {
 			console.log("Dates don't match! Calling workout service with route params...");
-			console.log(this.date + ' vs. ' + this.workoutService.getWorkout().date)
-			this.handleRouteParams();
+			console.log(this.dateString + ' vs. ' + this.workoutService.getWorkout().dateString)
+			this.handleRouteParamsAndFetchWorkout();
 		}
 		else {
 			this.exercises = this.workoutService.getWorkout().exercises
@@ -117,35 +113,31 @@ export class SetListComponent implements OnInit, OnDestroy {
 	 * Setup Subscriptions for  exercise array and bodyweight (and unsubscribes)...
 	 */
 	private setupSubs() {
-
 		this.exerciseSub = this.workoutService.exerciseUpdated
 			.pipe(takeUntil(this.unsubNotifier))
 			.subscribe(
 				(updatedExercises: Exercise[]) => { this.exercises = updatedExercises; }
 			);
-
 		this.bodyweightSub = this.workoutService.bodyweightUpdated
 			.pipe(takeUntil(this.unsubNotifier))
 			.subscribe(
 				(updatedBodyweight: number) => { this.bodyweight = updatedBodyweight }
 			);
-
 	}
 
 	/**
 	 * Setup the params subscription. This will also trigger the functions designated in the subscription.
 	 * Also setup unsubscribe.
 	 */
-	private handleRouteParams() {
+	private handleRouteParamsAndFetchWorkout() {
 		console.log("METHOD: HANDLE ROUTE PARAMS")
 		this.paramsSub = this.activatedRoute.queryParams
-		.pipe(takeUntil(this.unsubNotifier))
-		.subscribe(
-			(params: Params) => {
-				this.date = new Date( params['dateString'] );
-				this.workoutService.fetchWorkout(this.date);
-			}
-		)
+			.pipe(takeUntil(this.unsubNotifier))
+			.subscribe(
+				(params: Params) => {
+					this.workoutService.fetchWorkout( this.dateString );
+				}
+			)
 		console.log("CLOSED: HANDLE ROUTE PARAMS")
 	}
 
@@ -176,7 +168,6 @@ export class SetListComponent implements OnInit, OnDestroy {
 				this.openSnackBar(errorMessage)
 			}
 		)
-
 		this.repMaxService.patchDayMaxes(this.workoutService.getWorkout());
 		this.repMaxService.patchRecordMaxes(this.repMaxService.recordMaxes);
 	}

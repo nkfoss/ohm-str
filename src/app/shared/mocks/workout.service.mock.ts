@@ -13,7 +13,7 @@ export class WorkoutServiceStub {
 
 	fetchWorkout(dateString?: string) {
 		this.workout = {
-			date: new Date(2020, 11, 5),
+			dateString: new Date(2020, 11, 5).toLocaleDateString(),
 			category: '',
 			bodyweight: 170,
 			exercises: [
