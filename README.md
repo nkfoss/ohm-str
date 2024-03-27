@@ -10,11 +10,11 @@ Omega-Strength (abrv: Ohm-str) is a web application for strength trainers. It al
 
 ## Introduction
 
-This project was created by me ([Nathan Foss](https://www.nathankfoss.me)) as way to exhibit my continuous learning of Angular. As a new grad, I figured it would useful for potential employers to see what I can do on my own. It also shows one of my primary interests: strength training. This application is also a tool that I use in my own training regimen.
+This project was created by me (Nathan Foss) to showcase my understanding of Angular and as a tool that I use in my own fitness regimen.
 
-The application was built mobile-first with an eye for simplicity. The functionality and interface are meant to emulate a strength logbook (of which many trainers still use). With the addition of material-design components, the application is very straight-forward.
+The application was built mobile-first with an eye for simplicity. The functionality and interface are meant to emulate a basic logbook. With the addition of material-design components, the process of recording works is very streamlined.
 
-While this particular version of Ohm-Str is no longer in active development, I am currrently rebuilding it in React. Much of the functionality is the same, though the stack differs. Check out the progress in my [repository here](https://github.com/nkfoss/Ohm-str-react).
+While this app is no longer in active development, I still use it nearly everyday in my training.
 
 ## Technologies
 
@@ -22,15 +22,13 @@ While this particular version of Ohm-Str is no longer in active development, I a
 - Typescript
 - RxJS
 - Bootstrap 4+
-- Karma / Jasmine
 - Angular-Material
-- Node.js
 
 ## Functionality
 
 ### Login and getting started
 
-Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can sign in, but all new sers must personally ask me to sign up. Once signed in, the landing page displays a datepicker. You can chose a past date when you worked out, the current day, or plan workouts for a future date.
+Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can sign in, but all new users must personally ask me to sign up. The sign-in form uses classes from Bootstrap 4. Once signed in, the landing page displays a datepicker (the Angular Material datepicker is used here). You can chose a past date when you worked out, the current day, or plan workouts for a future date.
 
 <table>
   <tr>
@@ -47,7 +45,7 @@ Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can 
 
  ### Entering exercises
 
-After picking a date, you can start adding exercise entries (as well as bodyweight) for that day. When adding an exercise, you can either enter a new name, or choose from a list of previously entered exercise names (taken from the database). We will use the "front squat" exercise for this example.
+After picking a date, you can start adding exercise entries for that day. You may choose from existing exercises within the database, using the Angular Material typeahead to make your selection. Alternatively you may enter a new exercise name. Saving a new exercise makes it available as a typeahead option. We will use the "front squat" exercise for this example.
 
 <table>
   <tr>
@@ -64,9 +62,9 @@ After picking a date, you can start adding exercise entries (as well as bodyweig
 
   ### Set-types, notes, and warm-ups
 
-You have some options for customizing the exercise. Ohm-Str supports different types of sets, including varieties of rest-pause and drop-sets (we will use regular sets for now). 
+You have some options for customizing the exercise (using the Angular Material select component). Ohm-Str supports different types of sets, including varieties of rest-pause and drop-sets (we will use regular sets for now). 
 
-Since this app is meant to emulate a logbook, you can write notes for an exercise and access notes from previous logs (for the current exercise). This can be informative for you to adjust your working sets in relation to your previous results.
+Since this app is meant to emulate a logbook, you can write notes for a block of sets and access notes from previous logs (for the current exercise). This has been helpful for me to adjust my workload and stay on track with my program. This exercise's notes are displayed in a modified Angular Material dialog component.
 
 In addition to working sets, you can enter your warm-up sets. 
 
@@ -88,11 +86,11 @@ In addition to working sets, you can enter your warm-up sets.
 
 After saving the exercise, the workout page displays your results (*notice that warm-up sets are not displayed*). Each exercise has a table with the exercise name, set-type, and the previously calculated **one-rep maximum record (1rm)**. Your calculated 1rm is the metric by which all strength-training progress is measured. **You can read more about it [here](https://en.wikipedia.org/wiki/One-repetition_maximum)**.
 
-Each row in the table represents a set performed for that exercise. It displays the weight and reps, but also a metric to compare your performance to the previously set record. In our example, this means that 190 lbs. at 7 repetitions calculated to a 1rm (about 228 lbs) that was *1.08 times that of the previous record*. 
+The tables are Bootstrap. Each row in the table represents a set performed for that exercise. It displays the weight and reps, but also a metric to compare your performance to the previously set record. In our example, this means that 190 lbs. at 7 repetitions calculated to a 1rm (about 228 lbs) that was *1.08 times that of the previous record*. 
 
-Similarly, sets that fall below the record are also shown. Both can be important for tracking your progress and adjusting your program.
+Sets that fall below the record are also shown. Knowing when you are progressing vs. regressing is important for adjusting your program to maintain progress.
 
-When you are done with your workout, you click the 'save workout' button. You should receive a notification from the server if your workout was saved succesfully, or if there was an error.
+When you are done with your workout, click the 'save workout' button. Once again the Angular Material Design library is used here to indicate a successful save (snackbar).
 
  <table>
   <tr>
@@ -107,7 +105,3 @@ When you are done with your workout, you click the 'save workout' button. You sh
   
   </tr>
  </table>
-
- ## Questions?
-
-If you have any questions or comments, please contact me through my personal website: [nathankfoss.me](https://www.nathankfoss.me). I usually will reply the same day.
