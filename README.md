@@ -6,7 +6,6 @@ Omega-Strength (abrv: Ohm-str) is a web application for strength trainers. It al
 + [Introduction](#introduction)
 + [Technologies](#technologies)
 + [Functionality](#functionality)
-+ [Questions?](#Questions?)
 
 ## Introduction
 
