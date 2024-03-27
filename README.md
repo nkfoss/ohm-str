@@ -17,10 +17,10 @@ While this app is no longer in active development, I still use it nearly everyda
 
 ## Technologies
 
-- Angular 8+
+- Angular 8
 - Typescript
 - RxJS
-- Bootstrap 4+
+- Bootstrap 4
 - Angular-Material
 
 ## Functionality
