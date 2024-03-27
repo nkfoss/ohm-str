@@ -52,7 +52,7 @@ After picking a date, you can start adding exercise entries for that day. You ma
   <tr>
     <td> <strong> The workout </strong> </td>
      <td><strong> Add exercise </strong> </td>
-     <td><strong> Name autofill </strong></td>
+     <td><strong> Name Typeahead </strong></td>
   </tr>
   <tr>
     <td><img src="./src/assets/images/editworkout.png" ></td>
