@@ -1,6 +1,6 @@
 # Omega-Strength
 
-Omega-Strength (abrv: Ohm-str) is a web application for strength trainers. It allows the users to record their training, track records, and compare current performance with those records. It was created in Angular, uses Firebases's Realtime Database (NoSQL), and is hosted by Firebase as well.
+Omega-Strength (abrv: Ohm-str) is a web application for strength trainers. It allows the users to record their training, track records, and compare current performance with those records. It was created in Angular, is hosted by Google Firebase, and uses Firebases's Realtime Database (NoSQL).
 
 ## Table of Contents
 + [Introduction](#introduction)
@@ -27,7 +27,9 @@ While this app is no longer in active development, I still use it nearly everyda
 
 ### Login and getting started
 
-Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can sign in, but all new users must personally ask me to sign up. The sign-in form uses classes from Bootstrap 4. Once signed in, the landing page displays a datepicker (the Angular Material datepicker is used here). You can chose a past date when you worked out, the current day, or plan workouts for a future date.
+Ohm-Str uses Firebase Authentication (leveraging OAuth 2.0). Existing users can sign in, but all new users must personally ask me to sign up. The sign-in form uses classes from Bootstrap 4. 
+
+Once signed in, the landing page displays a datepicker (the Angular Material datepicker is used here). You can chose a past date when you worked out, the current day, or plan workouts for a future date.
 
 <table>
   <tr>
@@ -61,7 +63,7 @@ After picking a date, you can start adding exercise entries for that day. You ma
 
   ### Set-types, notes, and warm-ups
 
-You have some options for customizing the exercise (using the Angular Material select component). Ohm-Str supports different types of sets, including varieties of rest-pause and drop-sets (we will use regular sets for now). 
+You have some options for customizing your sets (using the Angular Material select component). Ohm-Str supports different types of sets, including varieties of rest-pause and drop-sets (we will use regular sets for now). 
 
 Since this app is meant to emulate a logbook, you can write notes for a block of sets and access notes from previous logs (for the current exercise). This has been helpful for me to adjust my workload and stay on track with my program. This exercise's notes are displayed in a modified Angular Material dialog component.
 
@@ -83,9 +85,9 @@ In addition to working sets, you can enter your warm-up sets.
 
  ### Previous records and saving progress
 
-After saving the exercise, the workout page displays your results (*notice that warm-up sets are not displayed*). Each exercise has a table with the exercise name, set-type, and the previously calculated **one-rep maximum record (1rm)**. Your calculated 1rm is the metric by which all strength-training progress is measured. **You can read more about it [here](https://en.wikipedia.org/wiki/One-repetition_maximum)**.
+After saving the exercise, the workout page displays your results (*the warm-up sets are intentionally omitted*). Each exercise has a table (Bootstrap) with the exercise name, set-type, and the previously calculated **one-rep maximum record (1rm)**. Your calculated 1rm is the metric by which all strength-training progress is measured. **You can read more about it [here](https://en.wikipedia.org/wiki/One-repetition_maximum)**.
 
-The tables are Bootstrap. Each row in the table represents a set performed for that exercise. It displays the weight and reps, but also a metric to compare your performance to the previously set record. In our example, this means that 190 lbs. at 7 repetitions calculated to a 1rm (about 228 lbs) that was *1.08 times that of the previous record*. 
+Each row in the table represents a set performed for that exercise. It displays the weight and reps, but also a metric to compare your performance to the previously set record. In our example, this means that 190 lbs. at 7 repetitions calculated to a 1rm (about 228 lbs) that was *1.08 times that of the previous record* - a good sign that training is going well.
 
 Sets that fall below the record are also shown. Knowing when you are progressing vs. regressing is important for adjusting your program to maintain progress.
 
